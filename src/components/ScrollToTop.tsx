@@ -1,5 +1,6 @@
-import { useState, useEffect } from "react";
-import { FaArrowUp } from "react-icons/fa"; // Using FontAwesome for arrow icon
+import { useState, useEffect } from 'react';
+import { IconButton, useColorModeValue } from '@chakra-ui/react';
+import { FaArrowUp } from 'react-icons/fa';
 
 const ScrollToTop = () => {
   const [visible, setVisible] = useState(false);
@@ -13,20 +14,33 @@ const ScrollToTop = () => {
   };
 
   useEffect(() => {
-    window.addEventListener("scroll", handleScroll);
-    return () => window.removeEventListener("scroll", handleScroll);
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
   return (
-    <button
-      onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
-      className={`fixed bottom-10 right-10 p-4 bg-blue-600 text-white rounded-full shadow-lg transition-all duration-300 hover:scale-110 ${
-        visible ? "opacity-100" : "opacity-0 pointer-events-none"
-      }`}
+    <IconButton
+      onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
       aria-label="Scroll to top"
-    >
-      <FaArrowUp size={20} />
-    </button>
+      icon={<FaArrowUp />}
+      position="fixed"
+      bottom={10}
+      right={10}
+      p={4}
+      colorScheme="blue"
+      bg={useColorModeValue('blue.600', 'blue.500')}
+      color="white"
+      borderRadius="full"
+      shadow="lg"
+      transition="all 0.3s ease"
+      transform={visible ? 'scale(1)' : 'scale(0)'}
+      opacity={visible ? 1 : 0}
+      pointerEvents={visible ? 'auto' : 'none'}
+      _hover={{
+        transform: 'scale(1.1)',
+        bg: useColorModeValue('blue.700', 'blue.600'),
+      }}
+    />
   );
 };
 

@@ -1,5 +1,6 @@
 import { useRef, useEffect } from 'react';
 import Typed from 'typed.js';
+import { Box, Heading, Text, Button, VStack, Flex, Image } from '@chakra-ui/react';
 
 // Import local logos
 import DartLogo from '../assets/dart-logo.png';
@@ -21,60 +22,116 @@ const Home: React.FC<{ scrollToPortfolio: () => void }> = ({ scrollToPortfolio }
         loop: true,
       });
 
+      // Clean up Typed instance on component unmount
       return () => typed.destroy();
     }
   }, []);
 
   return (
-    <section
+    <Box
       id="home"
-      className="min-h-screen flex flex-col items-center justify-center bg-gradient-to-br from-[#0a192f] to-[#15314b] text-center text-white px-6 pt-20"
+      minH="100vh"
+      bgGradient="linear(to-br, #0a192f, #15314b)"
+      backgroundSize="400% 400%"
+      display="flex"
+      alignItems="center"
+      justifyContent="center"
+      px={6}
+      pt={20}
+      textAlign="center"
+      color="white"
     >
-      <div className="max-w-4xl p-10 bg-white/5 backdrop-blur-lg rounded-2xl shadow-2xl border border-white/10">
-        <h1 className="text-7xl font-extrabold leading-tight mb-6">
+      <Box
+        maxW="4xl"
+        p={10}
+        bg="rgba(255, 255, 255, 0.1)"
+        backdropFilter="blur(10px)"
+        borderRadius="2xl"
+        boxShadow="2xl"
+        border="1px solid"
+        borderColor="whiteAlpha.300"
+      >
+        {/* Title */}
+        <Heading as="h1" fontSize={['4xl', '6xl', '7xl']} fontWeight="extrabold" mb={6}>
           Welcome to{' '}
-          <span className="bg-clip-text text-transparent bg-gradient-to-r from-blue-400 to-blue-600">
-            My<span className="text-blue-300"> Portfolio</span>
-          </span>
-        </h1>
-        <h2 className="text-4xl font-medium mb-6">
-          <span ref={typedRef}></span>
-        </h2>
-        <p className="text-lg text-gray-300 mb-10 leading-relaxed">
+          <Text as="span" bgGradient="linear(to-r, blue.400, blue.600)" bgClip="text">
+            My{' '}
+            <Text as="span" color="blue.300">
+              Portfolio
+            </Text>
+          </Text>
+        </Heading>
+
+        {/* Subheading */}
+        <Heading as="h2" fontSize={['2xl', '3xl', '4xl']} fontWeight="medium" mb={6}>
+          <span ref={typedRef} style={{ display: 'inline-block' }}></span>
+        </Heading>
+
+        {/* Paragraph */}
+        <Text fontSize={['md', 'lg']} color="gray.300" mb={10}>
           Crafting high-performance web and mobile apps that stand out. Let's transform ideas into
           reality.
-        </p>
+        </Text>
 
-        <button
+        {/* Call-to-Action */}
+        <Text fontSize="lg" fontWeight="semibold" mb={4} color="blue.400">
+          Dive into my work and explore the magic!
+        </Text>
+
+        {/* Button */}
+        <Button
           onClick={scrollToPortfolio}
-          className="px-10 py-4 bg-gradient-to-r from-blue-500 to-indigo-600 hover:from-blue-600 hover:to-indigo-700 
-            rounded-xl text-lg font-medium shadow-xl transition-all transform hover:scale-105"
+          px={10}
+          py={4}
+          bgGradient="linear(to-r, blue.500, indigo.600)"
+          _hover={{
+            bgGradient: 'linear(to-l, blue.400, cyan.500)',
+            transform: 'scale(1.1)',
+            boxShadow: '0px 4px 15px rgba(66, 153, 225, 0.5)', // Glow effect
+          }}
+          _active={{
+            bgGradient: 'linear(to-r, indigo.500, blue.700)',
+            boxShadow: '0px 2px 10px rgba(66, 153, 225, 0.7)',
+          }}
+          borderRadius="xl"
+          fontSize="lg"
+          fontWeight="medium"
+          shadow="xl"
+          transition="all 0.4s ease"
         >
-          View Project →
-        </button>
+          View Projects →
+        </Button>
 
-        {/* Logo Section */}
-        <div className="flex justify-center space-x-12 mt-12">
-          <div className="text-center">
-            <img
+        {/* Logos Section */}
+        <Flex justifyContent="center" gap={12} mt={12}>
+          <VStack>
+            <Image
               src={DartLogo}
               alt="Dart Logo"
-              className="h-20 w-20 object-contain transition-transform transform hover:scale-110"
+              boxSize="80px"
+              objectFit="contain"
+              transition="transform 0.3s"
             />
-            <p className="text-sm text-gray-400 mt-2">Dart</p>
-          </div>
+            <Text fontSize="sm" color="gray.400">
+              Dart
+            </Text>
+          </VStack>
 
-          <div className="text-center">
-            <img
+          <VStack>
+            <Image
               src={FlutterLogo}
               alt="Flutter Logo"
-              className="h-20 w-20 object-contain transition-transform transform hover:scale-110"
+              boxSize="80px"
+              objectFit="contain"
+              transition="transform 0.3s"
             />
-            <p className="text-sm text-gray-400 mt-2">Flutter</p>
-          </div>
-        </div>
-      </div>
-    </section>
+            <Text fontSize="sm" color="gray.400">
+              Flutter
+            </Text>
+          </VStack>
+        </Flex>
+      </Box>
+    </Box>
   );
 };
 

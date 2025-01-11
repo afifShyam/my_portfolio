@@ -1,5 +1,20 @@
 import { useState } from 'react';
 import emailService from '../services/emailService';
+import {
+  Box,
+  Button,
+  Container,
+  Flex,
+  FormControl,
+  FormLabel,
+  Input,
+  Text,
+  Textarea,
+  Heading,
+  Alert,
+  AlertIcon,
+} from '@chakra-ui/react';
+import { FiSend } from 'react-icons/fi'; // Import Send Icon
 
 const Contact: React.FC = () => {
   const [formData, setFormData] = useState({
@@ -8,90 +23,153 @@ const Contact: React.FC = () => {
     message: '',
   });
 
-  const [loading] = useState(false);
-  const [success] = useState<string | null>(null);
+  const [loading, setLoading] = useState(false);
+  const [success, setSuccess] = useState<string | null>(null);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    // Call mailTo service
-    emailService.sendEmail(formData);
+    setLoading(true);
+    try {
+      emailService.sendEmail(formData);
+      setSuccess('Your message was sent successfully!');
+    } catch (error) {
+      setSuccess('Failed to send your message. Please try again later.');
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
-    <div className="container mx-auto px-5 py-28">
-      <h2 className="text-6xl font-extrabold text-center mb-16 text-white">Let's Connect</h2>
+    <Container maxW="container.xl" py={28}>
+      {/* Title */}
+      <Heading as="h2" size="2xl" fontWeight="extrabold" textAlign="center" mb={16} color="white">
+        Let's Connect
+      </Heading>
 
-      <div className="w-full max-w-4xl md:max-w-5xl lg:max-w-6xl mx-auto bg-white/5 backdrop-blur-lg border border-white/10 p-10 rounded-3xl shadow-2xl">
-        <p className="text-lg leading-relaxed text-gray-300 text-center mb-10">
+      {/* Form Card */}
+      <Box
+        maxW="6xl"
+        mx="auto"
+        bg="rgba(255, 255, 255, 0.1)"
+        backdropFilter="blur(10px)"
+        border="1px solid"
+        borderColor="whiteAlpha.300"
+        p={10}
+        borderRadius="3xl"
+        shadow="2xl"
+      >
+        {/* Description */}
+        <Text fontSize="lg" color="gray.300" textAlign="center" mb={10}>
           I'm open to collaborations, freelance projects, and exciting job opportunities. Feel free
           to reach out via the form below or connect with me on social media!
-        </p>
+        </Text>
 
+        {/* Success/Failure Message */}
         {success && (
-          <div
-            className={`text-center p-4 rounded-lg ${
-              success.includes('successfully') ? 'bg-green-600' : 'bg-red-600'
-            }`}
+          <Alert
+            status={success.includes('successfully') ? 'success' : 'error'}
+            borderRadius="lg"
+            size={'sm'}
+            mb={2}
+            textColor={'black'}
           >
+            <AlertIcon />
             {success}
-          </div>
+          </Alert>
         )}
 
-        <form onSubmit={handleSubmit} className="space-y-8">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <div>
-              <label className="block text-gray-300 mb-2">Name</label>
-              <input
-                type="text"
-                name="name"
-                value={formData.name}
-                onChange={handleChange}
-                className="w-full px-4 py-3 rounded-lg bg-gray-800 text-white border border-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-400"
-                required
-              />
-            </div>
-            <div>
-              <label className="block text-gray-300 mb-2">Email</label>
-              <input
-                type="email"
-                name="email"
-                value={formData.email}
-                onChange={handleChange}
-                className="w-full px-4 py-3 rounded-lg bg-gray-800 text-white border border-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-400"
-                required
-              />
-            </div>
-          </div>
+        {/* Contact Form */}
+        <form onSubmit={handleSubmit}>
+          <Flex direction="column" gap={8}>
+            <Flex direction={{ base: 'column', md: 'row' }} gap={6}>
+              <FormControl isRequired>
+                <FormLabel color="gray.300">Name</FormLabel>
+                <Input
+                  type="text"
+                  name="name"
+                  value={formData.name}
+                  onChange={handleChange}
+                  bg="gray.800"
+                  color="white"
+                  border="1px solid"
+                  borderColor="gray.700"
+                  _focus={{
+                    outline: 'none',
+                    ring: 2,
+                    ringColor: 'teal.400',
+                  }}
+                />
+              </FormControl>
 
-          <div>
-            <label className="block text-gray-300 mb-2">Message</label>
-            <textarea
-              name="message"
-              value={formData.message}
-              onChange={handleChange}
-              rows={5}
-              className="w-full px-4 py-3 rounded-lg bg-gray-800 text-white border border-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-400"
-              required
-            ></textarea>
-          </div>
+              <FormControl isRequired>
+                <FormLabel color="gray.300">Email</FormLabel>
+                <Input
+                  type="email"
+                  name="email"
+                  value={formData.email}
+                  onChange={handleChange}
+                  bg="gray.800"
+                  color="white"
+                  border="1px solid"
+                  borderColor="gray.700"
+                  _focus={{
+                    outline: 'none',
+                    ring: 2,
+                    ringColor: 'teal.400',
+                  }}
+                />
+              </FormControl>
+            </Flex>
 
-          <button
-            type="submit"
-            className={`w-full bg-gradient-to-r from-blue-500 to-indigo-600 hover:from-indigo-600 hover:to-blue-700 py-4 rounded-xl text-white font-semibold shadow-lg transform hover:scale-[1.03] transition-all ${
-              loading && 'opacity-50 cursor-not-allowed'
-            }`}
-            disabled={loading}
-          >
-            {loading ? 'Sending...' : 'Send Message'}
-          </button>
+            <FormControl isRequired>
+              <FormLabel color="gray.300">Message</FormLabel>
+              <Textarea
+                name="message"
+                value={formData.message}
+                onChange={handleChange}
+                rows={5}
+                bg="gray.800"
+                color="white"
+                border="1px solid"
+                borderColor="gray.700"
+                _focus={{
+                  outline: 'none',
+                  ring: 2,
+                  ringColor: 'teal.400',
+                }}
+              />
+            </FormControl>
+
+            <Button
+              type="submit"
+              isLoading={loading}
+              bgGradient="linear(to-r, teal.400, green.500)" // Changed button color
+              _hover={{
+                bgGradient: 'linear(to-r, green.500, teal.500)',
+                transform: 'scale(1.05)',
+              }}
+              _disabled={{ opacity: 0.5, cursor: 'not-allowed' }}
+              isDisabled={loading}
+              color="white"
+              fontWeight="semibold"
+              shadow="lg"
+              size="lg"
+              borderRadius="xl"
+              py={4}
+              transition="all 0.3s ease"
+              rightIcon={<FiSend />} // Added send icon
+            >
+              {loading ? 'Sending...' : 'Send Message'}
+            </Button>
+          </Flex>
         </form>
-      </div>
-    </div>
+      </Box>
+    </Container>
   );
 };
 

@@ -5,5 +5,10 @@ export interface Project {
   category: string;
   demoUrl?: string;
   repoUrl?: string;
+  image?: string;
+  video?: string;
+  githubLink?: string;
+  playStoreLink?: string;
+  appStoreLink?: string;
   techStack?: string[];
 }

@@ -1,10 +1,11 @@
 import { useRef, useState, useEffect } from 'react';
+import { Box } from '@chakra-ui/react'; // Chakra UI imports
 import Navbar from './components/Navbar';
 import PortfolioPage from './features/portfolio/pages/PortfolioPage';
 import About from './pages/About';
 import Contact from './pages/Contact';
 import Home from './pages/Home';
-import ErrorBoundary from './ErrorBoundary';
+import ScrollToTop from './components/ScrollToTop'; // ScrollToTop component
 
 const App: React.FC = () => {
   const homeRef = useRef<HTMLDivElement | null>(null);
@@ -62,7 +63,7 @@ const App: React.FC = () => {
   };
 
   return (
-    <div className="bg-[#0a192f] text-white">
+    <Box bgGradient="linear(to-br, #0a192f, #15314b)" color="white">
       {/* Navbar with dynamic background */}
       <Navbar
         scrolled={scrolled}
@@ -73,29 +74,29 @@ const App: React.FC = () => {
         scrollToContact={() => scrollToSection(contactRef)}
       />
 
-      {/* Wrap Sections in Error Boundary */}
-      {/* <ErrorBoundary> */}
       {/* Home Section */}
-      <section ref={homeRef}>
+      <Box ref={homeRef} as="section">
         <Home scrollToPortfolio={() => scrollToSection(portfolioRef)} />
-      </section>
+      </Box>
 
       {/* Portfolio Section */}
-      <section id="portfolio" ref={portfolioRef} className="py-20">
+      <Box ref={portfolioRef} as="section" py={20}>
         <PortfolioPage />
-      </section>
+      </Box>
 
       {/* About Section */}
-      <section id="about" ref={aboutRef} className="py-20">
+      <Box ref={aboutRef} as="section" py={20}>
         <About />
-      </section>
+      </Box>
 
       {/* Contact Section */}
-      <section id="contact" ref={contactRef} className="py-20">
+      <Box ref={contactRef} as="section" py={20}>
         <Contact />
-      </section>
-      {/* </ErrorBoundary> */}
-    </div>
+      </Box>
+
+      {/* Scroll To Top Button */}
+      <ScrollToTop />
+    </Box>
   );
 };
 
