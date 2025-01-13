@@ -28,7 +28,7 @@ const About: React.FC = () => (
     {/* Main Card */}
     <Flex justify="center">
       <Box
-        maxW="5xl"
+        maxW={{ base: 'full', md: '5xl' }}
         bg="rgba(255, 255, 255, 0.1)"
         backdropFilter="blur(10px)"
         border="1px solid"
@@ -69,7 +69,7 @@ const About: React.FC = () => (
         </Text>
 
         {/* Key Highlights */}
-        <SimpleGrid columns={{ base: 1, md: 3 }} spacing={12} mt={8}>
+        <SimpleGrid columns={{ base: 1, md: 3 }} spacing={{ base: 6, md: 12 }} mt={8}>
           {/* Education */}
           <VStack
             _hover={{ transform: 'scale(1.05)', transition: 'transform 0.3s ease' }}
@@ -151,13 +151,19 @@ const About: React.FC = () => (
         </Box>
 
         {/* Call-to-Action Links */}
-        <Flex justify="center" mt={16} gap={10}>
+        <Flex
+          justify="center"
+          mt={16}
+          gap={{ base: 6, md: 10 }}
+          direction={{ base: 'column', md: 'row' }}
+        >
           <Button
             as={Link}
             href="https://github.com/afifShyam"
             isExternal
-            px={8}
-            py={4}
+            px={{ base: 6, md: 8 }}
+            py={{ base: 3, md: 4 }}
+            fontSize={{ base: 'sm', md: 'md' }}
             borderRadius="xl"
             bgGradient="linear(to-tr, teal.500, green.400)"
             color="white"
@@ -176,8 +182,9 @@ const About: React.FC = () => (
             as={Link}
             href="https://www.linkedin.com/in/afif-shyamsul-1333bb279/"
             isExternal
-            px={8}
-            py={4}
+            px={{ base: 6, md: 8 }}
+            py={{ base: 3, md: 4 }}
+            fontSize={{ base: 'sm', md: 'md' }}
             borderRadius="xl"
             bgGradient="linear(to-r, teal.500, green.400)"
             _hover={{
