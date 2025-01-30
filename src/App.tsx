@@ -1,11 +1,11 @@
 import { useRef, useState, useEffect } from 'react';
-import { Box } from '@chakra-ui/react'; // Chakra UI imports
+import { Box } from '@chakra-ui/react';
 import Navbar from './components/Navbar';
 import PortfolioPage from './features/portfolio/pages/PortfolioPage';
 import About from './pages/About';
 import Contact from './pages/Contact';
 import Home from './pages/Home';
-import ScrollToTop from './components/ScrollToTop'; // ScrollToTop component
+import ScrollToTop from './components/ScrollToTop';
 
 const App: React.FC = () => {
   const homeRef = useRef<HTMLDivElement | null>(null);
@@ -43,12 +43,7 @@ const App: React.FC = () => {
         }
       }
 
-      // Dynamic navbar background after scrolling past the hero section
-      if (window.scrollY > 50) {
-        setScrolled(true);
-      } else {
-        setScrolled(false);
-      }
+      setScrolled(window.scrollY > 50);
     };
 
     window.addEventListener('scroll', handleScroll);
@@ -64,7 +59,7 @@ const App: React.FC = () => {
 
   return (
     <Box bgGradient="linear(to-br, #0a192f, #15314b)" color="white">
-      {/* Navbar with dynamic background */}
+      {/* Navbar */}
       <Navbar
         scrolled={scrolled}
         activeSection={activeSection}
@@ -74,27 +69,21 @@ const App: React.FC = () => {
         scrollToContact={() => scrollToSection(contactRef)}
       />
 
-      {/* Home Section */}
+      {/* Sections */}
       <Box ref={homeRef} as="section">
         <Home scrollToPortfolio={() => scrollToSection(portfolioRef)} />
       </Box>
-
-      {/* Portfolio Section */}
-      <Box ref={portfolioRef} as="section" py={20}>
+      <Box ref={portfolioRef} as="section">
         <PortfolioPage />
       </Box>
-
-      {/* About Section */}
-      <Box ref={aboutRef} as="section" py={20}>
+      <Box ref={aboutRef} as="section">
         <About />
       </Box>
-
-      {/* Contact Section */}
-      <Box ref={contactRef} as="section" py={20}>
+      <Box ref={contactRef} as="section">
         <Contact />
       </Box>
 
-      {/* Scroll To Top Button */}
+      {/* Scroll to Top */}
       <ScrollToTop />
     </Box>
   );
