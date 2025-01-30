@@ -83,14 +83,15 @@ const Home: React.FC<{ scrollToPortfolio: () => void }> = ({ scrollToPortfolio }
           onClick={scrollToPortfolio}
           px={10}
           py={4}
-          bgGradient="linear(to-r, blue.500, indigo.600)"
+          color="white"
+          bgGradient="linear(to-br, #2a6f97, #2c7da0)"
           _hover={{
-            bgGradient: 'linear(to-l, blue.400, cyan.500)',
+            bgGradient: 'linear(to-br, green.400, teal.500)',
             transform: 'scale(1.1)',
             boxShadow: '0px 4px 15px rgba(66, 153, 225, 0.5)', // Glow effect
           }}
           _active={{
-            bgGradient: 'linear(to-r, indigo.500, blue.700)',
+            bgGradient: 'linear(to-br, green.400, teal.500)',
             boxShadow: '0px 2px 10px rgba(66, 153, 225, 0.7)',
           }}
           borderRadius="xl"

@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { Project } from '../../../types/projectTypes';
 import ihsanmadaniImage from '../../../assets/ihsanmadani_preview.png';
 import pcariImage from '../../../assets/pcari_preview.png';
+import todoImage from '../../../assets/todo_kotlin_preview.png';
 
 // Mock data
 export const mockProjects: Project[] = [
@@ -53,6 +54,26 @@ export const mockProjects: Project[] = [
     playStoreLink: 'https://play.google.com/store/search?q=ihsan+madani&c=apps&hl=en',
     appStoreLink: 'https://apps.apple.com/my/app/ihsan-madani/id6479978503',
     techStack: ['Flutter', 'REST API', 'Figma', 'BLoC', 'GitHub'],
+  },
+  {
+    id: 5,
+    name: 'Todo App (Kotlin)',
+    description:
+      'Developed a fully functional To-Do app using Jetpack Compose (Kotlin), implementing complete CRUD operations with Room Database integration. Utilized StateFlow for efficient state management, Hilt for dependency injection, and MVVM architecture for scalability. Designed a responsive and modern UI, ensuring a seamless user experience.',
+    category: 'Mobile',
+    image: todoImage,
+    githubLink: 'https://github.com/afifShyam/TodoAppKT',
+    techStack: [
+      'Kotlin',
+      'Jetpack Compose',
+      'Room Database',
+      'StateFlow',
+      'Hilt',
+      'GitHub',
+      'Android Studio',
+      'View Model',
+      'Coroutine',
+    ],
   },
 ];
 
