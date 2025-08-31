@@ -1,5 +1,5 @@
-import { Box, Image, Heading, Text, Tag, Flex, Button, Icon, Link } from '@chakra-ui/react';
-import { FaGithub, FaGooglePlay, FaVideo, FaApple } from 'react-icons/fa';
+import { Box, Image, Heading, Text, Tag, Flex, Button, Icon, Link, Badge, HStack, useColorModeValue } from '@chakra-ui/react';
+import { FaGithub, FaGooglePlay, FaVideo, FaApple, FaExternalLinkAlt } from 'react-icons/fa';
 import { Project } from '../types/projectTypes';
 
 const ProjectCard: React.FC<{ project: Project }> = ({ project }) => {
@@ -8,6 +8,11 @@ const ProjectCard: React.FC<{ project: Project }> = ({ project }) => {
   const hasGithub = !!project.githubLink;
   const hasPlayStore = !!project.playStoreLink;
   const hasAppStore = !!project.appStoreLink;
+  const hasDemoUrl = !!project.demoUrl;
+  
+  // Define color variables
+  const textColor = useColorModeValue('gray.800', 'white');
+  const descriptionColor = useColorModeValue('gray.600', 'gray.300');
 
   return (
     <Box
@@ -22,19 +27,36 @@ const ProjectCard: React.FC<{ project: Project }> = ({ project }) => {
       }}
       cursor="pointer"
     >
+      {/* Project Category Badge */}
+      <Badge
+        position="absolute"
+        top={3}
+        right={3}
+        colorScheme="blue"
+        variant="solid"
+        fontSize="xs"
+        px={2}
+        py={1}
+        borderRadius="md"
+        zIndex={1}
+      >
+        {project.category}
+      </Badge>
+
       {/* Image or Placeholder */}
       {hasImage ? (
-        <Box mb={6}>
+        <Box mb={6} position="relative" overflow="hidden" borderRadius="lg">
           <Image
             src={project.image}
             alt={`${project.name} preview`}
-            borderRadius="lg"
             objectFit="cover"
             w="full"
             h="12rem"
             bg="gray.800"
-            onError={(e: any) => {
-              e.target.src = '/assets/placeholder.png';
+            transition="transform 0.5s ease"
+            _hover={{ transform: 'scale(1.05)' }}
+            onError={(e: React.SyntheticEvent<HTMLImageElement>) => {
+              e.currentTarget.src = '/assets/placeholder.png';
             }}
           />
         </Box>
@@ -54,77 +76,138 @@ const ProjectCard: React.FC<{ project: Project }> = ({ project }) => {
         </Box>
       )}
 
-      {/* Project Name */}
-      <Heading as="h3" size="lg" mb={4}>
+      {/* Project Title */}
+      <Heading size="md" mb={3} color={textColor} fontWeight="bold">
         {project.name}
       </Heading>
 
       {/* Project Description */}
-      <Text color="gray.400" mb={4}>
+      <Text color={descriptionColor} mb={4} fontSize="sm" flex="1">
         {project.description}
       </Text>
 
       {/* Tech Stack */}
-      <Flex wrap="wrap" gap={2} mt={4}>
-        {project.techStack?.length ? (
-          project.techStack.map((tech) => (
-            <Tag key={tech} bg="blue.600" color="white" size="sm" borderRadius="md">
-              {tech}
-            </Tag>
-          ))
-        ) : (
-          <Text color="gray.500" fontSize="sm">
-            No tech stack listed
+      {project.techStack && project.techStack.length > 0 ? (
+        <Box mb={5}>
+          <Text color={descriptionColor} fontSize="xs" mb={2} fontWeight="medium">
+            Tech Stack:
           </Text>
-        )}
-      </Flex>
-
-      {/* Actions: GitHub, Play Store, Video Demo */}
-      <Flex justifyContent="space-between" alignItems="center" mt={6}>
-        <Flex gap={4}>
-          {hasGithub && (
-            <Link href={project.githubLink} isExternal>
-              <Button
-                leftIcon={<Icon as={FaGithub} />}
-                colorScheme="blue"
-                variant="outline"
-                size="sm"
+          <Flex flexWrap="wrap" gap={2}>
+            {project.techStack.map((tech) => (
+              <Tag 
+                key={tech} 
+                size="sm" 
+                colorScheme="blue" 
+                variant="subtle"
+                borderRadius="full"
               >
-                GitHub
-              </Button>
-            </Link>
-          )}
+                {tech}
+              </Tag>
+            ))}
+          </Flex>
+        </Box>
+      ) : (
+        <Text color="gray.500" fontSize="sm">
+          No tech stack listed
+        </Text>
+      )}
 
+      {/* Links */}
+      <HStack spacing={4} mt={4} justifyContent="flex-start">
+        {hasGithub && (
+          <Link 
+            href={project.githubLink} 
+            isExternal
+            aria-label="GitHub Repository"
+          >
+            <Button 
+              leftIcon={<Icon as={FaGithub} />} 
+              size="sm" 
+              variant="outline" 
+              colorScheme="blue"
+              fontSize="xs"
+            >
+              Code
+            </Button>
+          </Link>
+        )}
+        
+        {hasDemoUrl && (
+          <Link 
+            href={project.demoUrl} 
+            isExternal
+            aria-label="Live Demo"
+          >
+            <Button 
+              leftIcon={<Icon as={FaExternalLinkAlt} />} 
+              size="sm" 
+              colorScheme="blue"
+              fontSize="xs"
+            >
+              Demo
+            </Button>
+          </Link>
+        )}
+        
+        {hasVideo && (
+          <Link 
+            href={project.video} 
+            isExternal
+            aria-label="Video Demo"
+          >
+            <Button 
+              leftIcon={<Icon as={FaVideo} />} 
+              size="sm" 
+              variant="ghost" 
+              colorScheme="blue"
+              fontSize="xs"
+            >
+              Video
+            </Button>
+          </Link>
+        )}
+      </HStack>
+      
+      {/* Mobile App Links */}
+      {(hasPlayStore || hasAppStore) && (
+        <HStack spacing={4} mt={3} justifyContent="flex-start">
           {hasPlayStore && (
-            <Link href={project.playStoreLink} isExternal>
-              <Button
-                leftIcon={<Icon as={FaGooglePlay} />}
+            <Link 
+              href={project.playStoreLink} 
+              isExternal
+              aria-label="Google Play Store"
+            >
+              <Button 
+                leftIcon={<Icon as={FaGooglePlay} />} 
+                size="sm" 
+                variant="outline" 
                 colorScheme="green"
-                variant="solid"
-                size="sm"
+                fontSize="xs"
               >
                 Play Store
               </Button>
             </Link>
           )}
-
+          
           {hasAppStore && (
-            <Link href={project.appStoreLink} isExternal aria-label="App Store Link">
-              <Button leftIcon={<Icon as={FaApple} />} colorScheme="gray" variant="solid" size="sm">
+            <Link 
+              href={project.appStoreLink} 
+              isExternal
+              aria-label="Apple App Store"
+            >
+              <Button 
+                leftIcon={<Icon as={FaApple} />} 
+                size="sm" 
+                variant="outline" 
+                colorScheme="gray"
+                fontSize="xs"
+              >
                 App Store
               </Button>
             </Link>
           )}
-        </Flex>
-
-        {hasVideo && (
-          <Link href={project.video} isExternal>
-            <Button leftIcon={<Icon as={FaVideo} />} colorScheme="red" variant="solid" size="sm">
-              Watch Demo
-            </Button>
-          </Link>
-        )}
-      </Flex>
+        </HStack>
+      )}
     </Box>
   );
 };

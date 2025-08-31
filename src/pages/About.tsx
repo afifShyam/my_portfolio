@@ -1,3 +1,4 @@
+import React, { memo } from 'react';
 import {
   Box,
   Container,
@@ -8,200 +9,367 @@ import {
   Link,
   Flex,
   Button,
+  Icon,
+  useColorModeValue,
+  HStack,
+  Divider,
 } from '@chakra-ui/react';
+import { motion } from 'framer-motion';
+import { FaGithub, FaLinkedin, FaGraduationCap, FaBriefcase, FaTrophy } from 'react-icons/fa';
 
-const About: React.FC = () => (
-  <Container maxW="container.xl" px={5} py={28}>
-    {/* Title */}
-    <Heading
-      as="h2"
-      size="2xl"
-      fontWeight="extrabold"
+// Motion components
+const MotionBox = motion(Box);
+const MotionFlex = motion(Flex);
+const MotionVStack = motion(VStack);
+const MotionHeading = motion(Heading);
+
+// Skill badge component
+interface SkillBadgeProps {
+  label: string;
+  colorScheme: string;
+}
+
+const SkillBadge = memo(function SkillBadge({ label, colorScheme }: SkillBadgeProps) {
+  const bgColor = useColorModeValue(`${colorScheme}.50`, `${colorScheme}.900`);
+  const textColor = useColorModeValue(`${colorScheme}.700`, `${colorScheme}.200`);
+  const borderColor = useColorModeValue(`${colorScheme}.200`, `${colorScheme}.700`);
+  
+  return (
+    <Box
+      py={2}
+      px={4}
+      bg={bgColor}
+      color={textColor}
+      borderRadius="full"
+      fontSize="sm"
+      fontWeight="medium"
       textAlign="center"
-      mb={16}
-      color="white"
-      lineHeight="tight"
+      border="1px solid"
+      borderColor={borderColor}
+      as={motion.div}
+      whileHover={{ scale: 1.05 }}
+      whileTap={{ scale: 0.95 }}
     >
-      About Me
-    </Heading>
+      {label}
+    </Box>
+  );
+});
 
-    {/* Main Card */}
-    <Flex justify="center">
-      <Box
-        maxW={{ base: 'full', md: '5xl' }}
-        bg="rgba(255, 255, 255, 0.1)"
-        backdropFilter="blur(10px)"
-        border="1px solid"
-        borderColor="whiteAlpha.300"
-        p={12}
-        borderRadius="3xl"
-        shadow="2xl"
+const About = memo(function About() {
+  // Dynamic color mode values
+  const bgColor = useColorModeValue('white', 'rgba(26, 32, 44, 0.8)');
+  const cardBg = useColorModeValue('gray.50', 'rgba(26, 32, 44, 0.6)');
+  const borderColor = useColorModeValue('gray.200', 'whiteAlpha.300');
+  const headingColor = useColorModeValue('gray.800', 'white');
+  const accentColor = useColorModeValue('blue.500', 'blue.300');
+  const textColor = useColorModeValue('gray.700', 'gray.300');
+  const secondaryTextColor = useColorModeValue('gray.600', 'gray.400');
+  
+  // Animation variants
+  const containerVariants = {
+    hidden: { opacity: 0 },
+    visible: {
+      opacity: 1,
+      transition: {
+        staggerChildren: 0.2
+      }
+    }
+  };
+  
+  const itemVariants = {
+    hidden: { y: 20, opacity: 0 },
+    visible: {
+      y: 0,
+      opacity: 1,
+      transition: {
+        type: 'spring',
+        stiffness: 100,
+        damping: 10
+      }
+    }
+  };
+  
+  return (
+    <Container maxW="container.xl" px={5} py={28} as={MotionBox} variants={containerVariants} initial="hidden" animate="visible">
+      {/* Title */}
+      <MotionHeading
+        as="h2"
+        size="2xl"
+        fontWeight="extrabold"
         textAlign="center"
+        mb={16}
+        color={headingColor}
+        lineHeight="tight"
+        variants={itemVariants}
+        bgGradient={useColorModeValue('linear(to-r, blue.600, teal.600)', 'linear(to-r, blue.400, teal.400)')}
+        bgClip="text"
       >
-        {/* Professional Summary */}
-        <Text fontSize="xl" color="gray.300" mb={12} lineHeight="relaxed">
-          🚀 I'm a{' '}
-          <Text as="span" fontWeight="semibold" color="blue.400">
-            Flutter and React Developer
-          </Text>{' '}
-          with{' '}
-          <Text as="span" fontWeight="semibold" color="blue.400">
-            1.5 years of experience in Flutter
-          </Text>{' '}
-          crafting intuitive mobile apps for{' '}
-          <Text as="span" fontWeight="semibold" color="white">
-            social media
-          </Text>
-          ,{' '}
-          <Text as="span" fontWeight="semibold" color="white">
-            e-commerce
-          </Text>
-          , and{' '}
-          <Text as="span" fontWeight="semibold" color="white">
-            food ordering
-          </Text>
-          . I'm currently expanding my skillset in{' '}
-          <Text as="span" fontWeight="semibold" color="blue.400">
-            React development
-          </Text>{' '}
-          to create seamless and dynamic web experiences. I enjoy solving complex problems,
-          collaborating with teams, and building solutions that deliver exceptional user value.
-        </Text>
+        About Me
+      </MotionHeading>
 
-        {/* Key Highlights */}
-        <SimpleGrid columns={{ base: 1, md: 3 }} spacing={{ base: 6, md: 12 }} mt={8}>
-          {/* Education */}
-          <VStack
-            _hover={{ transform: 'scale(1.05)', transition: 'transform 0.3s ease' }}
-            transition="transform 0.3s ease"
+      {/* Main Card */}
+      <MotionFlex justify="center" variants={itemVariants}>
+        <Box
+          maxW={{ base: 'full', md: '5xl' }}
+          bg={cardBg}
+          backdropFilter="blur(10px)"
+          border="1px solid"
+          borderColor={borderColor}
+          p={{ base: 6, md: 12 }}
+          borderRadius="3xl"
+          shadow="xl"
+          textAlign="center"
+          overflow="hidden"
+          position="relative"
+        >
+          {/* Background decoration */}
+          <Box 
+            position="absolute" 
+            top="-20%" 
+            right="-10%" 
+            width="300px" 
+            height="300px" 
+            borderRadius="full" 
+            bg={useColorModeValue('blue.50', 'blue.900')} 
+            opacity="0.1" 
+            zIndex="0" 
+          />
+          <Box 
+            position="absolute" 
+            bottom="-10%" 
+            left="-5%" 
+            width="200px" 
+            height="200px" 
+            borderRadius="full" 
+            bg={useColorModeValue('teal.50', 'teal.900')} 
+            opacity="0.1" 
+            zIndex="0" 
+          />
+          {/* Professional Summary */}
+          <MotionBox 
+            zIndex="1" 
+            position="relative"
+            variants={itemVariants}
           >
-            <Heading as="h3" size="lg" color="blue.400">
-              Education 🎓
-            </Heading>
-            <Text color="gray.300" mt={4}>
-              Bachelor of Computer Science
-              <Text as="span" fontSize="sm" display="block" color="gray.400">
+            <Text fontSize={{ base: "lg", md: "xl" }} color={textColor} mb={12} lineHeight="relaxed">
+              🚀 I'm a{' '}
+              <Text as="span" fontWeight="semibold" color={accentColor}>
+                Flutter and React Developer
+              </Text>{' '}
+              with{' '}
+              <Text as="span" fontWeight="semibold" color={accentColor}>
+                1.5 years of experience in Flutter
+              </Text>{' '}
+              crafting intuitive mobile apps for{' '}
+              <Text as="span" fontWeight="semibold" color={headingColor}>
+                social media
+              </Text>
+              ,{' '}
+              <Text as="span" fontWeight="semibold" color={headingColor}>
+                e-commerce
+              </Text>
+              , and{' '}
+              <Text as="span" fontWeight="semibold" color={headingColor}>
+                food ordering
+              </Text>
+              . I'm currently expanding my skillset in{' '}
+              <Text as="span" fontWeight="semibold" color={accentColor}>
+                React development
+              </Text>{' '}
+              to create seamless and dynamic web experiences. I enjoy solving complex problems,
+              collaborating with teams, and building solutions that deliver exceptional user value.
+            </Text>
+          </MotionBox>
+
+          {/* Key Highlights */}
+          <SimpleGrid columns={{ base: 1, md: 3 }} spacing={{ base: 8, md: 12 }} mt={8} position="relative" zIndex="1">
+            {/* Education */}
+            <MotionVStack
+              variants={itemVariants}
+              whileHover={{ y: -10 }}
+              transition={{ type: "spring", stiffness: 300 }}
+              p={5}
+              borderRadius="xl"
+              bg={useColorModeValue('white', 'gray.800')}
+              boxShadow="md"
+              border="1px solid"
+              borderColor={borderColor}
+            >
+              <Icon as={FaGraduationCap} boxSize={10} color={accentColor} mb={2} />
+              <Heading as="h3" size="md" color={accentColor}>
+                Education
+              </Heading>
+              <Divider my={3} />
+              <Text color={headingColor} fontWeight="medium">
+                Bachelor of Computer Science
+              </Text>
+              <Text fontSize="sm" color={secondaryTextColor}>
                 UiTM Kampus Terengganu
               </Text>
-            </Text>
-            <Text fontSize="sm" color="gray.500">
-              - Focus: Software Development and Machine Learning
-            </Text>
-          </VStack>
+              <Text fontSize="sm" color={secondaryTextColor} mt={2}>
+                Focus: Software Development and Machine Learning
+              </Text>
+            </MotionVStack>
 
-          {/* Experience */}
-          <VStack
-            _hover={{ transform: 'scale(1.05)', transition: 'transform 0.3s ease' }}
-            transition="transform 0.3s ease"
-          >
-            <Heading as="h3" size="lg" color="blue.400">
-              Experience 💼
-            </Heading>
-            <Text color="gray.300" mt={4}>
-              Mobile Developer
-              <Text as="span" fontSize="sm" display="block" color="gray.400">
+            {/* Experience */}
+            <MotionVStack
+              variants={itemVariants}
+              whileHover={{ y: -10 }}
+              transition={{ type: "spring", stiffness: 300 }}
+              p={5}
+              borderRadius="xl"
+              bg={useColorModeValue('white', 'gray.800')}
+              boxShadow="md"
+              border="1px solid"
+              borderColor={borderColor}
+            >
+              <Icon as={FaBriefcase} boxSize={10} color={accentColor} mb={2} />
+              <Heading as="h3" size="md" color={accentColor}>
+                Experience
+              </Heading>
+              <Divider my={3} />
+              <Text color={headingColor} fontWeight="medium">
+                Mobile Developer
+              </Text>
+              <Text fontSize="sm" color={secondaryTextColor}>
                 RF Infinite Sdn. Bhd.
               </Text>
-            </Text>
-            <Text fontSize="sm" color="gray.500">
-              - 1.5 years developing Flutter apps for social media, e-commerce, and food ordering.
-            </Text>
-            <Text fontSize="sm" color="gray.500">
-              - Integrated WebSockets for real-time communication and RESTful APIs for scalable
-              backends.
-            </Text>
-            <Text fontSize="sm" color="gray.500">
-              - Enhanced app performance by 20% using clean architecture and optimization.
-            </Text>
-          </VStack>
+              <VStack spacing={1} align="start" mt={2}>
+                <Text fontSize="sm" color={secondaryTextColor}>
+                  • 1.5 years developing Flutter apps for social media, e-commerce, and food ordering
+                </Text>
+                <Text fontSize="sm" color={secondaryTextColor}>
+                  • Integrated WebSockets for real-time communication and RESTful APIs
+                </Text>
+                <Text fontSize="sm" color={secondaryTextColor}>
+                  • Enhanced app performance by 20% using clean architecture
+                </Text>
+              </VStack>
+            </MotionVStack>
 
-          {/* Achievements */}
-          <VStack
-            _hover={{ transform: 'scale(1.05)', transition: 'transform 0.3s ease' }}
-            transition="transform 0.3s ease"
-          >
-            <Heading as="h3" size="lg" color="blue.400">
-              Achievements 🏆
-            </Heading>
-            <Text color="gray.300" mt={4}>
-              Flood Prediction App (Final Year Project)
-              <Text as="span" fontSize="sm" display="block" color="gray.400">
-                Achieved 90% accuracy using SVM
+            {/* Achievements */}
+            <MotionVStack
+              variants={itemVariants}
+              whileHover={{ y: -10 }}
+              transition={{ type: "spring", stiffness: 300 }}
+              p={5}
+              borderRadius="xl"
+              bg={useColorModeValue('white', 'gray.800')}
+              boxShadow="md"
+              border="1px solid"
+              borderColor={borderColor}
+            >
+              <Icon as={FaTrophy} boxSize={10} color={accentColor} mb={2} />
+              <Heading as="h3" size="md" color={accentColor}>
+                Achievements
+              </Heading>
+              <Divider my={3} />
+              <Text color={headingColor} fontWeight="medium">
+                Flood Prediction App
               </Text>
-            </Text>
-            <Text fontSize="sm" color="gray.500">
-              - Delivered real-time weather updates and forecasts for disaster prevention.
-            </Text>
-          </VStack>
-        </SimpleGrid>
-
-        {/* Technologies Used */}
-        <Box mt={12}>
-          <Heading as="h3" size="lg" color="blue.400" mb={4}>
-            Technologies I Work With 🛠️
-          </Heading>
-          <SimpleGrid columns={{ base: 1, md: 3 }} spacing={4}>
-            <Text color="gray.300">✅ Flutter & Dart</Text>
-            <Text color="gray.300">✅ React & TypeScript</Text>
-            <Text color="gray.300">✅ Firebase & REST APIs</Text>
-            <Text color="gray.300">✅ WebSockets for Real-time Apps</Text>
-            <Text color="gray.300">✅ Clean Architecture Principles</Text>
-            <Text color="gray.300">✅ Collaborative Team Development</Text>
+              <Text fontSize="sm" color={secondaryTextColor}>
+                Final Year Project
+              </Text>
+              <VStack spacing={1} align="start" mt={2}>
+                <Text fontSize="sm" color={secondaryTextColor}>
+                  • Achieved 90% accuracy using SVM
+                </Text>
+                <Text fontSize="sm" color={secondaryTextColor}>
+                  • Delivered real-time weather updates and forecasts for disaster prevention
+                </Text>
+              </VStack>
+            </MotionVStack>
           </SimpleGrid>
+
+          {/* Technologies Used */}
+          <MotionBox 
+            mt={16} 
+            variants={itemVariants}
+            p={6}
+            borderRadius="xl"
+            bg={useColorModeValue('white', 'gray.800')}
+            boxShadow="md"
+            border="1px solid"
+            borderColor={borderColor}
+            position="relative"
+            zIndex="1"
+          >
+            <Heading as="h3" size="lg" color={accentColor} mb={6}>
+              Technologies I Work With
+            </Heading>
+            <SimpleGrid columns={{ base: 2, md: 3 }} spacing={{ base: 4, md: 6 }}>
+              <SkillBadge label="Flutter & Dart" colorScheme="blue" />
+              <SkillBadge label="React & TypeScript" colorScheme="teal" />
+              <SkillBadge label="Firebase & REST APIs" colorScheme="orange" />
+              <SkillBadge label="WebSockets" colorScheme="purple" />
+              <SkillBadge label="Clean Architecture" colorScheme="green" />
+              <SkillBadge label="Team Development" colorScheme="pink" />
+            </SimpleGrid>
+          </MotionBox>
+
+          {/* Call-to-Action Links */}
+          <MotionFlex
+            justify="center"
+            mt={16}
+            gap={{ base: 6, md: 10 }}
+            direction={{ base: 'column', md: 'row' }}
+            variants={itemVariants}
+            position="relative"
+            zIndex="1"
+          >
+            <Button
+              as={Link}
+              href="https://github.com/afifShyam"
+              isExternal
+              px={{ base: 6, md: 8 }}
+              py={{ base: 3, md: 4 }}
+              fontSize={{ base: 'sm', md: 'md' }}
+              borderRadius="xl"
+              bgGradient={useColorModeValue(
+                'linear(to-tr, blue.600, teal.600)', 
+                'linear(to-tr, blue.400, teal.400)'
+              )}
+              color="white"
+              fontWeight="semibold"
+              shadow="lg"
+              leftIcon={<FaGithub />}
+              _hover={{
+                transform: 'translateY(-5px)',
+                shadow: '2xl',
+              }}
+              transition="all 0.3s ease"
+            >
+              Visit My GitHub
+            </Button>
+
+            <Button
+              as={Link}
+              href="https://www.linkedin.com/in/afif-shyamsul-1333bb279/"
+              isExternal
+              px={{ base: 6, md: 8 }}
+              py={{ base: 3, md: 4 }}
+              fontSize={{ base: 'sm', md: 'md' }}
+              borderRadius="xl"
+              variant="outline"
+              borderWidth="2px"
+              borderColor={accentColor}
+              color={accentColor}
+              leftIcon={<FaLinkedin />}
+              _hover={{
+                bg: useColorModeValue('blue.50', 'rgba(66, 153, 225, 0.1)'),
+                transform: 'translateY(-5px)',
+                shadow: 'md',
+              }}
+              fontWeight="semibold"
+              transition="all 0.3s ease"
+            >
+              Connect on LinkedIn
+            </Button>
+          </MotionFlex>
         </Box>
-
-        {/* Call-to-Action Links */}
-        <Flex
-          justify="center"
-          mt={16}
-          gap={{ base: 6, md: 10 }}
-          direction={{ base: 'column', md: 'row' }}
-        >
-          <Button
-            as={Link}
-            href="https://github.com/afifShyam"
-            isExternal
-            px={{ base: 6, md: 8 }}
-            py={{ base: 3, md: 4 }}
-            fontSize={{ base: 'sm', md: 'md' }}
-            borderRadius="xl"
-            bgGradient="linear(to-tr, teal.500, green.400)"
-            color="white"
-            fontWeight="semibold"
-            shadow="lg"
-            _hover={{
-              bgGradient: 'linear(to-br, green.400, teal.500)',
-              transform: 'scale(1.05)',
-            }}
-            transition="all 0.3s ease"
-          >
-            Visit My GitHub
-          </Button>
-
-          <Button
-            as={Link}
-            href="https://www.linkedin.com/in/afif-shyamsul-1333bb279/"
-            isExternal
-            px={{ base: 6, md: 8 }}
-            py={{ base: 3, md: 4 }}
-            fontSize={{ base: 'sm', md: 'md' }}
-            borderRadius="xl"
-            bgGradient="linear(to-r, teal.500, green.400)"
-            _hover={{
-              bgGradient: 'linear(to-l, green.400, teal.500)',
-              transform: 'scale(1.05)',
-            }}
-            color="white"
-            fontWeight="semibold"
-            shadow="lg"
-            transition="all 0.3s ease"
-          >
-            Connect on LinkedIn
-          </Button>
-        </Flex>
-      </Box>
-    </Flex>
-  </Container>
-);
+      </MotionFlex>
+    </Container>
+  );
+});
 
 export default About;

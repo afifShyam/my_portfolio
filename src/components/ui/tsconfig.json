@@ -1,0 +1,11 @@
+{
+  "extends": "../../../tsconfig.json",
+  "compilerOptions": {
+    "jsx": "react-jsx",
+    "esModuleInterop": true,
+    "skipLibCheck": true,
+    "types": ["react", "react-dom", "@chakra-ui/react", "framer-motion"]
+  },
+  "include": ["*.tsx", "*.ts"],
+  "references": [{ "path": "../../../tsconfig.json" }]
+}
