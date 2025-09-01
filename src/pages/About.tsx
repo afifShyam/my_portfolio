@@ -1,4 +1,4 @@
-import React, { memo } from 'react';
+import { memo } from 'react';
 import {
   Box,
   Container,
@@ -11,7 +11,7 @@ import {
   Button,
   Icon,
   useColorModeValue,
-  HStack,
+
   Divider,
 } from '@chakra-ui/react';
 import { motion } from 'framer-motion';
@@ -57,7 +57,7 @@ const SkillBadge = memo(function SkillBadge({ label, colorScheme }: SkillBadgePr
 
 const About = memo(function About() {
   // Dynamic color mode values
-  const bgColor = useColorModeValue('white', 'rgba(26, 32, 44, 0.8)');
+  // const bgColor = useColorModeValue('white', 'rgba(26, 32, 44, 0.8)');
   const cardBg = useColorModeValue('gray.50', 'rgba(26, 32, 44, 0.6)');
   const borderColor = useColorModeValue('gray.200', 'whiteAlpha.300');
   const headingColor = useColorModeValue('gray.800', 'white');
@@ -145,22 +145,22 @@ const About = memo(function About() {
             opacity="0.1" 
             zIndex="0" 
           />
-          {/* Professional Summary */}
-          <MotionBox 
-            zIndex="1" 
-            position="relative"
-            variants={itemVariants}
-          >
+           {/* Professional Summary */}
+          <MotionBox zIndex="1" position="relative" variants={itemVariants}>
             <Text fontSize={{ base: "lg", md: "xl" }} color={textColor} mb={12} lineHeight="relaxed">
-              🚀 I'm a{' '}
+              👋 I'm a{' '}
               <Text as="span" fontWeight="semibold" color={accentColor}>
-                Flutter and React Developer
+                Mobile Developer
               </Text>{' '}
               with{' '}
               <Text as="span" fontWeight="semibold" color={accentColor}>
-                1.5 years of experience in Flutter
+                2 years of experience
               </Text>{' '}
-              crafting intuitive mobile apps for{' '}
+              building{' '}
+              <Text as="span" fontWeight="semibold" color={headingColor}>
+                super apps
+              </Text>{' '}
+              including{' '}
               <Text as="span" fontWeight="semibold" color={headingColor}>
                 social media
               </Text>
@@ -170,14 +170,21 @@ const About = memo(function About() {
               </Text>
               , and{' '}
               <Text as="span" fontWeight="semibold" color={headingColor}>
-                food ordering
+                food ordering platforms
               </Text>
-              . I'm currently expanding my skillset in{' '}
+              . Recently, I’ve been{' '}
               <Text as="span" fontWeight="semibold" color={accentColor}>
-                React development
+                exploring blockchain technology
               </Text>{' '}
-              to create seamless and dynamic web experiences. I enjoy solving complex problems,
-              collaborating with teams, and building solutions that deliver exceptional user value.
+              with a focus on{' '}
+              <Text as="span" fontWeight="semibold" color={headingColor}>
+                DApps
+              </Text>{' '}
+              and{' '}
+              <Text as="span" fontWeight="semibold" color={headingColor}>
+                cryptocurrency wallets
+              </Text>
+              . I enjoy turning ideas into polished, scalable mobile applications.
             </Text>
           </MotionBox>
 
@@ -229,6 +236,26 @@ const About = memo(function About() {
               </Heading>
               <Divider my={3} />
               <Text color={headingColor} fontWeight="medium">
+                Mobile Developer - Blockchain
+              </Text>
+              <Text fontSize="sm" color={secondaryTextColor}>
+                Coinyex Co. Ltd.
+              </Text>
+              <VStack spacing={1} align="start" mt={2}>
+                <Text fontSize="sm" color={secondaryTextColor}>
+                  • Maintaining and enhancing TUX Wallet and DApps using Flutter and MVVM architecture
+                </Text>
+                <Text fontSize="sm" color={secondaryTextColor}>
+                  • Leading GitHub management for mobile development and handling deployments
+                </Text>
+                <Text fontSize="sm" color={secondaryTextColor}>
+                  • Implementing best practices, fixing bugs, and migrating to newer Flutter versions
+                </Text>
+              </VStack>
+              
+              <Divider my={3} />
+              
+              <Text color={headingColor} fontWeight="medium">
                 Mobile Developer
               </Text>
               <Text fontSize="sm" color={secondaryTextColor}>
@@ -236,7 +263,7 @@ const About = memo(function About() {
               </Text>
               <VStack spacing={1} align="start" mt={2}>
                 <Text fontSize="sm" color={secondaryTextColor}>
-                  • 1.5 years developing Flutter apps for social media, e-commerce, and food ordering
+                  • Developed Flutter apps for social media, e-commerce, and food ordering
                 </Text>
                 <Text fontSize="sm" color={secondaryTextColor}>
                   • Integrated WebSockets for real-time communication and RESTful APIs
@@ -300,10 +327,14 @@ const About = memo(function About() {
             <SimpleGrid columns={{ base: 2, md: 3 }} spacing={{ base: 4, md: 6 }}>
               <SkillBadge label="Flutter & Dart" colorScheme="blue" />
               <SkillBadge label="React & TypeScript" colorScheme="teal" />
-              <SkillBadge label="Firebase & REST APIs" colorScheme="orange" />
-              <SkillBadge label="WebSockets" colorScheme="purple" />
-              <SkillBadge label="Clean Architecture" colorScheme="green" />
-              <SkillBadge label="Team Development" colorScheme="pink" />
+              <SkillBadge label="BLoC State Management" colorScheme="purple" />
+              <SkillBadge label="Provider (Secondary)" colorScheme="orange" />
+              <SkillBadge label="MVVM Architecture" colorScheme="green" />
+              <SkillBadge label="CI/CD & Deployment" colorScheme="pink" />
+              <SkillBadge label="Firebase & REST APIs" colorScheme="yellow" />
+              <SkillBadge label="GitHub Management" colorScheme="cyan" />
+              <SkillBadge label="Mobile App Optimization" colorScheme="red" />
+              <SkillBadge label="Exploring Blockchain & DApps" colorScheme="indigo" />
             </SimpleGrid>
           </MotionBox>
 

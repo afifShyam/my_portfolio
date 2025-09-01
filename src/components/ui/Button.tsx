@@ -16,12 +16,10 @@ const Button = forwardRef<ButtonProps, 'button'>(({
   hoverScale = true,
   colorScheme = 'brand',
   size = 'md',
-  // Extract potential conflicting props
   transition: _,
   onAnimationStart: __,
   onAnimationEnd: ___,
   onAnimationIteration: ____,
-  pointerEvents: _______,
   onDragStart: ______,
   onDragEnd: ________,
   onDrag: _________,
@@ -48,12 +46,15 @@ const Button = forwardRef<ButtonProps, 'button'>(({
         boxShadow: 'sm',
         opacity: gradient ? 0.8 : undefined,
       }}
+      transition={{
+        type: 'spring',
+        stiffness: 260,
+        damping: 20,
+      }}
       borderRadius="lg"
       fontWeight="semibold"
-      // Framer Motion props only
       whileHover={hoverScale ? { scale: 1.03 } : undefined}
       whileTap={{ scale: 0.98 }}
-      transition={{ duration: 0.2 }}
       {...rest}
     >
       {children}

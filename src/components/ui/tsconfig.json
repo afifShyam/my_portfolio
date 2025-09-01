@@ -7,5 +7,5 @@
     "types": ["react", "react-dom", "@chakra-ui/react", "framer-motion"]
   },
   "include": ["*.tsx", "*.ts"],
-  "references": [{ "path": "../../../tsconfig.json" }]
+  "references": [{ "path": "/Users/shyam/Development/my_portfolio/tsconfig.json"}]
 }

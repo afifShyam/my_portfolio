@@ -16,8 +16,9 @@ const Hero: React.FC<HeroProps> = memo(({ scrollToPortfolio }) => {
     const typed = new Typed(typedRef.current, {
       strings: [
         "Hello, I'm Afif!",
-        "I build amazing web apps.",
-        "I create mobile experiences.",
+        "I build blockchain mobile apps.",
+        "I develop crypto wallets & DApps.",
+        "I create secure mobile experiences.",
         "Welcome to my portfolio!"
       ],
       typeSpeed: 70,
@@ -91,11 +92,11 @@ const Hero: React.FC<HeroProps> = memo(({ scrollToPortfolio }) => {
             mb={8}
             color="whiteAlpha.900"
           >
-            Flutter & React Developer 🚀
+            Flutter & Blockchain Developer 🚀
           </Text>
           
           <HStack spacing={3} mb={10}>
-            {['React', 'TypeScript', 'Flutter', 'Firebase', 'UI/UX'].map((skill) => (
+            {['Flutter', 'Blockchain', 'DApps', 'Crypto', 'MVVM'].map((skill) => (
               <Badge 
                 key={skill}
                 colorScheme="blue" 

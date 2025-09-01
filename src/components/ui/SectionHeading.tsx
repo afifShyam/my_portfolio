@@ -17,6 +17,13 @@ const SectionHeading = memo(({
   subtitle,
   align = 'center',
   withGradient = true,
+  transition: _,
+  onAnimationStart: __,
+  onAnimationEnd: ___,
+  onAnimationIteration: ____,
+  onDragStart: ______,
+  onDragEnd: ________,
+  onDrag: _________,
   ...rest 
 }: SectionHeadingProps) => {
   const textAlign = align;
@@ -32,7 +39,7 @@ const SectionHeading = memo(({
         bgClip={withGradient ? 'text' : undefined}
         initial={{ opacity: 0, y: -10 }}
         animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.5 }}
+        transition={{ duration: 0.5}}
         {...rest}
       >
         {title}
