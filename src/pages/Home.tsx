@@ -10,8 +10,10 @@ const Home: React.FC<{ scrollToPortfolio: () => void }> = ({ scrollToPortfolio }
   const typedRef = useRef<HTMLSpanElement | null>(null);
 
   useEffect(() => {
+    let typed: Typed | null = null;
+    
     if (typedRef.current) {
-      const typed = new Typed(typedRef.current, {
+      typed = new Typed(typedRef.current, {
         strings: [
           "Hello, I'm Afif.",
           "I'm a Flutter Developer.",
@@ -21,11 +23,14 @@ const Home: React.FC<{ scrollToPortfolio: () => void }> = ({ scrollToPortfolio }
         backSpeed: 50,
         loop: true,
       });
-
-      // Clean up Typed instance on component unmount
-      return () => typed.destroy();
     }
-    return undefined;
+
+    // Clean up Typed instance on component unmount
+    return () => {
+      if (typed) {
+        typed.destroy();
+      }
+    };
   }, []);
 
   return (

@@ -10,7 +10,8 @@ export default defineConfig(({ mode }) => {
   const isAnalyze = mode === 'analyze';
   
   return {
-  plugins: [
+    base: './',
+    plugins: [
     react(),
     // Resolve imports using tsconfig paths
     tsconfigPaths(),
@@ -34,34 +35,20 @@ export default defineConfig(({ mode }) => {
   ].filter(Boolean),
   build: {
     rollupOptions: {
-      // Enhanced code splitting strategy
+      // Disable code splitting to avoid dependency issues
       output: {
-        manualChunks: (id) => {
-          // Group Chakra UI packages together
-          if (id.includes('@chakra-ui')) {
-            return 'chakra';
-          }
-          // Group React and related packages
-          if (id.includes('react') || id.includes('react-dom')) {
-            return 'react-vendor';
-          }
-          // Group other major dependencies
-          if (id.includes('node_modules')) {
-            return 'vendor';
-          }
-          return null;
-        },
+        manualChunks: () => 'index',
       },
     },
     cssCodeSplit: true, // Splits CSS into separate files
-    sourcemap: process.env.NODE_ENV !== 'production',
+    sourcemap: false,
     chunkSizeWarningLimit: 1000,
     // Minify options
     minify: 'terser',
     terserOptions: {
       compress: {
-        drop_console: process.env.NODE_ENV === 'production',
-        drop_debugger: process.env.NODE_ENV === 'production',
+        drop_console: true,
+        drop_debugger: true,
       },
     },
   },
