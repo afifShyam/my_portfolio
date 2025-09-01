@@ -24,7 +24,6 @@ import { motion } from 'framer-motion';
 import { Helmet } from 'react-helmet-async';
 
 const MotionBox = motion(Box);
-const MotionFlex = motion(Flex);
 const MotionHeading = motion(Heading);
 
 interface FormErrors {
@@ -47,7 +46,6 @@ const Contact: React.FC = () => {
   const toast = useToast();
   
   // Dynamic colors based on color mode
-  const bgColor = useColorModeValue('white', 'gray.800');
   const borderColor = useColorModeValue('gray.200', 'gray.700');
   const inputBgColor = useColorModeValue('gray.50', 'gray.900');
   const textColor = useColorModeValue('gray.800', 'white');

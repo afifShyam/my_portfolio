@@ -52,11 +52,7 @@ const App: React.FC = () => {
     }
   };
   
-  // Define specific scroll functions for each section
-  const scrollToHome = () => scrollToSection(homeRef);
-  const scrollToPortfolio = () => scrollToSection(portfolioRef);
-  const scrollToAbout = () => scrollToSection(aboutRef);
-  const scrollToContact = () => scrollToSection(contactRef);
+  // Scroll functions are directly used in JSX below
 
   return (
     <Box bgGradient="linear(to-br, #0a192f, #15314b)" color="white">

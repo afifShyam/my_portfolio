@@ -1,4 +1,4 @@
-import { defineConfig, loadEnv } from 'vite';
+import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react-swc';
 import viteCompression from 'vite-plugin-compression';
 import { visualizer } from 'rollup-plugin-visualizer';
@@ -7,15 +7,11 @@ import cssnano from 'cssnano';
 import { resolve } from 'path';
 
 export default defineConfig(({ mode }) => {
-  const env = loadEnv(mode, process.cwd(), '');
   const isAnalyze = mode === 'analyze';
   
   return {
   plugins: [
-    react({ 
-      // Use Fast Refresh for better development experience
-      fastRefresh: true,
-    }),
+    react(),
     // Resolve imports using tsconfig paths
     tsconfigPaths(),
     // Compression plugin (Brotli/Gzip)
@@ -53,6 +49,7 @@ export default defineConfig(({ mode }) => {
           if (id.includes('node_modules')) {
             return 'vendor';
           }
+          return null;
         },
       },
     },

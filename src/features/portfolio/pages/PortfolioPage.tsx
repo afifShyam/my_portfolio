@@ -30,7 +30,6 @@ const PortfolioPage: React.FC = () => {
     'linear(to-br, #0a192f, #15314b)'
   );
   const textColor = useColorModeValue('gray.800', 'white');
-  const cardBg = useColorModeValue('white', '#112240');
   const skeletonStartColor = useColorModeValue('gray.100', '#112240');
   const skeletonEndColor = useColorModeValue('gray.300', '#1c2e4a');
 

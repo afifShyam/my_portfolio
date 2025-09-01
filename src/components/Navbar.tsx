@@ -7,7 +7,6 @@ import {
   Button,
   Drawer,
   DrawerBody,
-  DrawerFooter,
   DrawerHeader,
   DrawerOverlay,
   DrawerContent,
@@ -78,12 +77,13 @@ const Navbar = memo(function Navbar({
       bg={bgColor}
       backdropFilter="blur(10px)"
       boxShadow={isScrolled || scrolled ? 'sm' : 'none'}
-      transition="all 0.3s ease"
+      transitionProperty="all"
+      transitionDuration="0.3s"
+      transitionTimingFunction="ease"
       py={3}
       px={[4, 6, 8]}
       initial={{ opacity: 0, y: -20 }}
       animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.5 }}
     >
       <Flex justify="space-between" align="center" maxW="1200px" mx="auto">
         {/* Logo/Brand */}
@@ -280,7 +280,7 @@ const NavButton = memo(function NavButton({
           borderRadius="full"
           as={motion.div}
           layoutId="activeSection"
-          transition={{ type: "spring", stiffness: 300, damping: 30 }}
+          animate={{ transition: { duration: 0.3 } }}
         />
       )}
     </Button>

@@ -25,6 +25,7 @@ const Home: React.FC<{ scrollToPortfolio: () => void }> = ({ scrollToPortfolio }
       // Clean up Typed instance on component unmount
       return () => typed.destroy();
     }
+    return undefined;
   }, []);
 
   return (
