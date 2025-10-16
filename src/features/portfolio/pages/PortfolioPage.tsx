@@ -25,13 +25,15 @@ const PortfolioPage: React.FC = () => {
   const { projects, loading, error } = usePortfolio();
   
   // Dynamic colors based on color mode
-  const bgGradient = useColorModeValue(
-    'linear(to-br, blue.50, gray.100)', 
-    'linear(to-br, #0a192f, #15314b)'
-  );
-  const textColor = useColorModeValue('gray.800', 'white');
-  const skeletonStartColor = useColorModeValue('gray.100', '#112240');
-  const skeletonEndColor = useColorModeValue('gray.300', '#1c2e4a');
+  const sectionBg = useColorModeValue('neutral.50', 'neutral.800');
+  const textColor = useColorModeValue('neutral.900', 'whiteAlpha.900');
+  const subtitleColor = useColorModeValue('neutral.500', 'neutral.200');
+  const skeletonStartColor = useColorModeValue('gray.100', 'whiteAlpha.200');
+  const skeletonEndColor = useColorModeValue('gray.200', 'whiteAlpha.300');
+  const iconAccentColor = useColorModeValue('brand.600', 'brand.300');
+  const borderColor = useColorModeValue('gray.200', 'whiteAlpha.200');
+  const errorBg = useColorModeValue('red.50', 'rgba(244, 63, 94, 0.12)');
+  const errorColor = useColorModeValue('red.600', 'red.300');
 
   return (
     <>
@@ -40,20 +42,20 @@ const PortfolioPage: React.FC = () => {
         <meta name="description" content="Browse my portfolio of web and mobile development projects" />
       </Helmet>
       
-      <MotionBox 
-        minH="100vh" 
-        bgGradient={bgGradient} 
-        color={textColor} 
-        py={20} 
-        px={6}
+      <MotionBox
+        minH="100vh"
+        bg={sectionBg}
+        color={textColor}
+        py={{ base: 16, md: 20 }}
+        px={{ base: 4, md: 6 }}
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ duration: 0.5 }}
       >
         <Container maxW="container.xl">
           {/* Page Title */}
-          <Flex justify="center" align="center" mb={4}>
-            <Icon as={FiCode} mr={3} boxSize={6} color={useColorModeValue('blue.500', 'blue.300')} />
+          <Flex justify="center" align="center" mb={6}>
+            <Icon as={FiCode} mr={3} boxSize={6} color={iconAccentColor} />
             <MotionHeading 
               as="h2" 
               size="2xl" 
@@ -71,8 +73,8 @@ const PortfolioPage: React.FC = () => {
           <Text 
             textAlign="center" 
             fontSize="lg" 
-            mb={16} 
-            color={useColorModeValue('gray.600', 'gray.300')}
+            mb={12}
+            color={subtitleColor}
             maxW="2xl"
             mx="auto"
           >
@@ -84,9 +86,11 @@ const PortfolioPage: React.FC = () => {
             <MotionBox 
               textAlign="center" 
               p={8} 
-              bg={useColorModeValue('red.50', 'rgba(200, 30, 30, 0.1)')}
-              color={useColorModeValue('red.500', 'red.300')}
+              bg={errorBg}
+              color={errorColor}
               borderRadius="xl"
+              borderWidth="1px"
+              borderColor={borderColor}
               initial={{ opacity: 0, scale: 0.9 }}
               animate={{ opacity: 1, scale: 1 }}
               transition={{ duration: 0.3 }}
@@ -107,6 +111,8 @@ const PortfolioPage: React.FC = () => {
                   key={index}
                   height="350px"
                   borderRadius="xl"
+                  borderWidth="1px"
+                  borderColor={borderColor}
                   startColor={skeletonStartColor}
                   endColor={skeletonEndColor}
                 />
@@ -116,7 +122,7 @@ const PortfolioPage: React.FC = () => {
             // Projects Grid
             <MotionGrid
               templateColumns={{ base: '1fr', md: 'repeat(2, 1fr)', lg: 'repeat(3, 1fr)' }}
-              gap={12}
+              gap={10}
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               transition={{ duration: 0.5, delay: 0.3 }}

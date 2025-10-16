@@ -12,24 +12,16 @@ interface SectionProps extends BoxProps {
 
 const MotionBox = motion(Box);
 
-const Section = ({ 
-  children, 
-  title, 
+const Section = ({
+  children,
+  title,
   subtitle,
-  id, 
+  id,
   delay = 0.2,
-  // Extract conflicting props
-  transition: _,
-  onAnimationStart: __,
-  onAnimationEnd: ___,
-  onAnimationIteration: ____,
-  onDragStart: ______,
-  onDragEnd: ________,
-  onDrag: _________,
-  ...rest 
+  ...rest
 }: SectionProps) => {
-  const bgColor = useColorModeValue('white', 'gray.800');
-  const borderColor = useColorModeValue('gray.200', 'gray.700');
+  const bgColor = useColorModeValue('white', 'rgba(15, 23, 42, 0.9)');
+  const borderColor = useColorModeValue('gray.200', 'whiteAlpha.200');
   
   return (
     <MotionBox

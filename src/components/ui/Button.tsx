@@ -1,4 +1,4 @@
-import { ReactNode, Ref } from 'react';
+import { ReactNode } from 'react';
 import { Button as ChakraButton, ButtonProps as ChakraButtonProps, forwardRef, useColorModeValue } from '@chakra-ui/react';
 import { motion } from 'framer-motion';
 
@@ -10,21 +10,14 @@ interface ButtonProps extends ChakraButtonProps {
 
 const MotionButton = motion(ChakraButton);
 
-const Button = forwardRef<ButtonProps, 'button'>(({ 
-  children, 
+const Button = forwardRef<ButtonProps, 'button'>(({
+  children,
   gradient = false,
   hoverScale = true,
   colorScheme = 'brand',
   size = 'md',
-  transition: _,
-  onAnimationStart: __,
-  onAnimationEnd: ___,
-  onAnimationIteration: ____,
-  onDragStart: ______,
-  onDragEnd: ________,
-  onDrag: _________,
-  ...rest 
-}: ButtonProps, ref: Ref<HTMLButtonElement>) => {
+  ...rest
+}: ButtonProps, ref) => {
   const gradientFrom = useColorModeValue('brand.500', 'brand.400');
   const gradientTo = useColorModeValue('accent.500', 'accent.400');
   

@@ -9,18 +9,10 @@ interface PageTransitionProps extends BoxProps {
 
 const MotionBox = motion(Box);
 
-const PageTransition = ({ 
-  children, 
+const PageTransition = ({
+  children,
   delay = 0.2,
-  // Extract conflicting props
-  transition: _,
-  onAnimationStart: __,
-  onAnimationEnd: ___,
-  onAnimationIteration: ____,
-  onDragStart: ______,
-  onDragEnd: ________,
-  onDrag: _________,
-  ...rest 
+  ...rest
 }: PageTransitionProps) => {
   return (
     <MotionBox

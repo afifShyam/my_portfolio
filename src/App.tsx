@@ -1,5 +1,5 @@
 import { useRef, useState, useEffect, lazy, Suspense } from 'react';
-import { Box } from '@chakra-ui/react';
+import { Box, useColorModeValue } from '@chakra-ui/react';
 import { Helmet } from 'react-helmet-async';
 import Navbar from './components/Navbar';
 import ScrollToTop from './components/ScrollToTop';
@@ -55,7 +55,11 @@ const App: React.FC = () => {
   // Scroll functions are directly used in JSX below
 
   return (
-    <Box bgGradient="linear(to-br, #0a192f, #15314b)" color="white">
+    <Box
+      bg={useColorModeValue('neutral.50', 'neutral.800')}
+      color={useColorModeValue('neutral.900', 'whiteAlpha.900')}
+      transition="background 0.3s ease"
+    >
       <Helmet>
         <title>Afif's Portfolio | Flutter & React Developer</title>
         <meta name="description" content="Portfolio website showcasing my projects and skills as a Flutter and React developer" />
@@ -78,16 +82,16 @@ const App: React.FC = () => {
 
       {/* Sections */}
       <Suspense fallback={<LoadingFallback />}>
-        <Box ref={homeRef} as="section">
+        <Box ref={homeRef} as="section" id="home-section">
           <Home scrollToPortfolio={() => scrollToSection(portfolioRef)} />
         </Box>
-        <Box ref={portfolioRef} as="section">
+        <Box ref={portfolioRef} as="section" id="portfolio">
           <PortfolioPage />
         </Box>
-        <Box ref={aboutRef} as="section">
+        <Box ref={aboutRef} as="section" id="about">
           <About />
         </Box>
-        <Box ref={contactRef} as="section">
+        <Box ref={contactRef} as="section" id="contact">
           <Contact />
         </Box>
       </Suspense>

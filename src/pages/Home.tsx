@@ -1,13 +1,40 @@
 import { useRef, useEffect } from 'react';
 import Typed from 'typed.js';
-import { Box, Heading, Text, Button, VStack, Flex, Image } from '@chakra-ui/react';
+import {
+  Box,
+  Heading,
+  Text,
+  Button,
+  VStack,
+  Flex,
+  Image,
+  Container,
+  HStack,
+  Badge,
+  SimpleGrid,
+  useColorModeValue,
+  Divider,
+} from '@chakra-ui/react';
 
 // Import local logos
 import DartLogo from '../assets/dart-logo.png';
 import FlutterLogo from '../assets/flutter-logo.png';
 
+const HIGHLIGHT_STATS = [
+  { label: 'Years crafting products', value: '2+' },
+  { label: 'Production releases', value: '10+' },
+  { label: 'Primary stack', value: 'Flutter · React' },
+  { label: 'Focus', value: 'Mobile · Web · Blockchain' },
+];
+
 const Home: React.FC<{ scrollToPortfolio: () => void }> = ({ scrollToPortfolio }) => {
   const typedRef = useRef<HTMLSpanElement | null>(null);
+  const accentColor = useColorModeValue('brand.600', 'brand.300');
+  const mutedColor = useColorModeValue('neutral.500', 'neutral.200');
+  const surfaceColor = useColorModeValue('white', 'rgba(15, 23, 42, 0.9)');
+  const borderColor = useColorModeValue('gray.200', 'whiteAlpha.200');
+  const logoBg = useColorModeValue('gray.100', 'whiteAlpha.200');
+  const highlightValueColor = useColorModeValue('neutral.800', 'white');
 
   useEffect(() => {
     let typed: Typed | null = null;
@@ -15,9 +42,9 @@ const Home: React.FC<{ scrollToPortfolio: () => void }> = ({ scrollToPortfolio }
     if (typedRef.current) {
       typed = new Typed(typedRef.current, {
         strings: [
-          "Hello, I'm Afif.",
-          "I'm a Flutter Developer.",
-          'I build amazing Web and Mobile Apps.',
+          "I'm Afif — Flutter & React Developer.",
+          'Clean architecture enthusiast.',
+          'Blockchain curious and product minded.',
         ],
         typeSpeed: 70,
         backSpeed: 50,
@@ -34,110 +61,128 @@ const Home: React.FC<{ scrollToPortfolio: () => void }> = ({ scrollToPortfolio }
   }, []);
 
   return (
-    <Box
-      id="home"
-      minH="100vh"
-      bgGradient="linear(to-br, #0a192f, #15314b)"
-      backgroundSize="400% 400%"
-      display="flex"
-      alignItems="center"
-      justifyContent="center"
-      px={6}
-      pt={20}
-      textAlign="center"
-      color="white"
-    >
-      <Box
-        maxW="4xl"
-        p={10}
-        bg="rgba(255, 255, 255, 0.1)"
-        backdropFilter="blur(10px)"
-        borderRadius="2xl"
-        boxShadow="2xl"
-        border="1px solid"
-        borderColor="whiteAlpha.300"
-      >
-        {/* Title */}
-        <Heading as="h1" fontSize={['4xl', '6xl', '7xl']} fontWeight="extrabold" mb={6}>
-          Welcome to{' '}
-          <Text as="span" bgGradient="linear(to-r, blue.400, blue.600)" bgClip="text">
-            My{' '}
-            <Text as="span" color="blue.300">
-              Portfolio
-            </Text>
-          </Text>
-        </Heading>
-
-        {/* Subheading */}
-        <Heading as="h2" fontSize={['2xl', '3xl', '4xl']} fontWeight="medium" mb={6}>
-          <span ref={typedRef} style={{ display: 'inline-block' }}></span>
-        </Heading>
-
-        {/* Paragraph */}
-        <Text fontSize={['md', 'lg']} color="gray.300" mb={10}>
-          Crafting high-performance web and mobile apps that stand out. Let's transform ideas into
-          reality.
-        </Text>
-
-        {/* Call-to-Action */}
-        <Text fontSize="lg" fontWeight="semibold" mb={4} color="blue.400">
-          Dive into my work and explore the magic!
-        </Text>
-
-        {/* Button */}
-        <Button
-          onClick={scrollToPortfolio}
-          px={10}
-          py={4}
-          color="white"
-          bgGradient="linear(to-br, #2a6f97, #2c7da0)"
-          _hover={{
-            bgGradient: 'linear(to-br, green.400, teal.500)',
-            transform: 'scale(1.1)',
-            boxShadow: '0px 4px 15px rgba(66, 153, 225, 0.5)', // Glow effect
-          }}
-          _active={{
-            bgGradient: 'linear(to-br, green.400, teal.500)',
-            boxShadow: '0px 2px 10px rgba(66, 153, 225, 0.7)',
-          }}
-          borderRadius="xl"
-          fontSize="lg"
-          fontWeight="medium"
-          shadow="xl"
-          transition="all 0.4s ease"
+    <Box id="home" bg={useColorModeValue('neutral.50', 'neutral.800')} py={{ base: 24, md: 32 }}>
+      <Container maxW="container.xl">
+        <Flex
+          direction={{ base: 'column', md: 'row' }}
+          align="center"
+          justify="space-between"
+          gap={{ base: 12, md: 16 }}
         >
-          View Projects →
-        </Button>
+          <VStack align="flex-start" spacing={6} flex="1" maxW="xl">
+            <Badge
+              colorScheme="brand"
+              borderRadius="full"
+              px={3}
+              py={1}
+              textTransform="unset"
+              fontWeight="medium"
+            >
+              Flutter · React · Blockchain
+            </Badge>
 
-        {/* Logos Section */}
-        <Flex justifyContent="center" gap={12} mt={12}>
-          <VStack>
-            <Image
-              src={DartLogo}
-              alt="Dart Logo"
-              boxSize="80px"
-              objectFit="contain"
-              transition="transform 0.3s"
-            />
-            <Text fontSize="sm" color="gray.400">
-              Dart
+            <Heading as="h1" size="2xl" lineHeight="shorter">
+              Building minimal, resilient mobile & web apps.
+            </Heading>
+
+            <Text fontSize="lg" color={mutedColor} maxW="lg">
+              I translate product ideas into polished experiences with a focus on clean architecture,
+              high performance, and thoughtful design systems.
             </Text>
+
+            <Box
+              borderWidth="1px"
+              borderColor={borderColor}
+              bg={surfaceColor}
+              borderRadius="lg"
+              px={4}
+              py={3}
+            >
+              <Text fontWeight="medium" color={accentColor}>
+                <span ref={typedRef} style={{ display: 'inline-block' }}></span>
+              </Text>
+            </Box>
+
+            <HStack spacing={4} pt={2}>
+              <Button colorScheme="brand" size="lg" onClick={scrollToPortfolio}>
+                View projects
+              </Button>
+              <Button
+                as="a"
+                href="#contact"
+                variant="outline"
+                colorScheme="brand"
+                size="lg"
+              >
+                Get in touch
+              </Button>
+            </HStack>
           </VStack>
 
-          <VStack>
-            <Image
-              src={FlutterLogo}
-              alt="Flutter Logo"
-              boxSize="80px"
-              objectFit="contain"
-              transition="transform 0.3s"
-            />
-            <Text fontSize="sm" color="gray.400">
-              Flutter
+          <Box
+            flex="1"
+            w="full"
+            maxW={{ base: 'full', md: 'lg' }}
+            bg={surfaceColor}
+            borderRadius="lg"
+            borderWidth="1px"
+            borderColor={borderColor}
+            p={{ base: 6, md: 8 }}
+          >
+            <SimpleGrid columns={{ base: 1, sm: 2 }} spacing={6}>
+              {HIGHLIGHT_STATS.map((item) => (
+                <VStack key={item.label} align="flex-start" spacing={1}>
+                  <Text fontSize="3xl" fontWeight="semibold" color={highlightValueColor}>
+                    {item.value}
+                  </Text>
+                  <Text fontSize="sm" color={mutedColor}>
+                    {item.label}
+                  </Text>
+                </VStack>
+              ))}
+            </SimpleGrid>
+
+            <Divider my={8} borderColor={borderColor} />
+
+            <Text fontSize="sm" color={mutedColor} mb={4} fontWeight="medium">
+              Tools I rely on
             </Text>
-          </VStack>
+
+            <HStack spacing={6}>
+              <VStack spacing={3}>
+                <Box
+                  bg={logoBg}
+                  borderRadius="lg"
+                  p={4}
+                  display="flex"
+                  alignItems="center"
+                  justifyContent="center"
+                >
+                  <Image src={DartLogo} alt="Dart Logo" boxSize="48px" objectFit="contain" />
+                </Box>
+                <Text fontSize="sm" color={mutedColor}>
+                  Dart
+                </Text>
+              </VStack>
+              <VStack spacing={3}>
+                <Box
+                  bg={logoBg}
+                  borderRadius="lg"
+                  p={4}
+                  display="flex"
+                  alignItems="center"
+                  justifyContent="center"
+                >
+                  <Image src={FlutterLogo} alt="Flutter Logo" boxSize="48px" objectFit="contain" />
+                </Box>
+                <Text fontSize="sm" color={mutedColor}>
+                  Flutter
+                </Text>
+              </VStack>
+            </HStack>
+          </Box>
         </Flex>
-      </Box>
+      </Container>
     </Box>
   );
 };

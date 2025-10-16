@@ -7,12 +7,14 @@ interface LoadingFallbackProps extends BoxProps {
   count?: number;
 }
 
-const LoadingFallback = memo(({ 
+const LoadingFallback = memo(({
   type = 'spinner',
   count = 3,
-  ...rest 
+  ...rest
 }: LoadingFallbackProps) => {
   const bgColor = useColorModeValue('white', 'gray.800');
+  const skeletonStartColor = useColorModeValue('gray.100', 'gray.700');
+  const skeletonEndColor = useColorModeValue('gray.300', 'gray.600');
   
   if (type === 'spinner') {
     return <LoadingSpinner text="Loading..." {...rest} />;
@@ -26,8 +28,8 @@ const LoadingFallback = memo(({
             key={i}
             height="200px"
             borderRadius="xl"
-            startColor={useColorModeValue('gray.100', 'gray.700')}
-            endColor={useColorModeValue('gray.300', 'gray.600')}
+            startColor={skeletonStartColor}
+            endColor={skeletonEndColor}
             bg={bgColor}
             fadeDuration={1}
           />

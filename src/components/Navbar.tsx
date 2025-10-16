@@ -47,13 +47,18 @@ const Navbar = memo(function Navbar({
   const { colorMode, toggleColorMode } = useColorMode();
   
   // Dynamic color values based on color mode and scroll state
+  const isNavElevated = scrolled || isScrolled;
   const bgColor = useColorModeValue(
-    scrolled ? 'white' : 'rgba(255, 255, 255, 0.8)', 
-    scrolled ? 'gray.900' : 'rgba(26, 32, 44, 0.8)'
+    isNavElevated ? 'white' : 'white',
+    isNavElevated ? 'gray.900' : '#0b1a2b'
   );
-  const textColor = useColorModeValue('gray.800', 'white');
-  const activeColor = useColorModeValue('blue.500', 'blue.300');
-  const hoverBg = useColorModeValue('gray.100', 'gray.700');
+  const textColor = useColorModeValue('neutral.600', 'whiteAlpha.900');
+  const activeColor = useColorModeValue('brand.600', 'brand.300');
+  const hoverBg = useColorModeValue('gray.100', 'whiteAlpha.100');
+  const borderColor = useColorModeValue('gray.200', 'whiteAlpha.200');
+  const logoGradient = useColorModeValue('linear(to-r, brand.500, accent.500)', 'linear(to-r, brand.400, accent.400)');
+  const logoInitialColor = useColorModeValue('white', 'white');
+  const logoSubtitleColor = useColorModeValue('neutral.500', 'neutral.300');
   
   // Handle scroll events to change navbar appearance
   useEffect(() => {
@@ -76,6 +81,8 @@ const Navbar = memo(function Navbar({
       zIndex={10}
       bg={bgColor}
       backdropFilter="blur(10px)"
+      borderBottomWidth="1px"
+      borderBottomColor={borderColor}
       boxShadow={isScrolled || scrolled ? 'sm' : 'none'}
       transitionProperty="all"
       transitionDuration="0.3s"
@@ -97,13 +104,31 @@ const Navbar = memo(function Navbar({
           whileHover={{ scale: 1.05 }}
           whileTap={{ scale: 0.95 }}
         >
-          <Text 
-            bgGradient="linear(to-r, blue.400, teal.400)" 
-            bgClip="text"
-            fontWeight="extrabold"
-          >
-            Afif's Portfolio
-          </Text>
+          <HStack spacing={3} align="center">
+            <Box
+              w="40px"
+              h="40px"
+              borderRadius="lg"
+              bgGradient={logoGradient}
+              display="flex"
+              alignItems="center"
+              justifyContent="center"
+              fontWeight="bold"
+              fontSize="lg"
+              color={logoInitialColor}
+              letterSpacing="widest"
+            >
+              A
+            </Box>
+            <Box textAlign="left">
+              <Text fontWeight="semibold" fontSize="md" color={textColor}>
+                Afif
+              </Text>
+              <Text fontSize="xs" color={logoSubtitleColor} letterSpacing="widest">
+                PORTFOLIO
+              </Text>
+            </Box>
+          </HStack>
         </MotionFlex>
 
         {/* Desktop Navigation */}
@@ -262,25 +287,26 @@ const NavButton = memo(function NavButton({
       variant="ghost"
       color={isActive ? activeColor : textColor}
       onClick={onClick}
-      _hover={{ bg: hoverBg }}
+      _hover={{ bg: hoverBg, color: activeColor }}
       position="relative"
-      fontWeight={isActive ? "semibold" : "normal"}
+      fontWeight={isActive ? 'semibold' : 'medium'}
       px={3}
       py={2}
+      borderRadius="md"
     >
       {label}
       {isActive && (
         <Box
           position="absolute"
-          bottom="0"
-          left="0"
-          right="0"
+          bottom="6px"
+          left="16px"
+          right="16px"
           height="2px"
           bg={activeColor}
           borderRadius="full"
           as={motion.div}
           layoutId="activeSection"
-          animate={{ transition: { duration: 0.3 } }}
+          animate={{ transition: { duration: 0.24 } }}
         />
       )}
     </Button>
@@ -301,13 +327,13 @@ const MobileNavButton = memo(function MobileNavButton({
       variant="ghost"
       color={isActive ? activeColor : textColor}
       onClick={onClick}
-      _hover={{ bg: hoverBg }}
+      _hover={{ bg: hoverBg, color: activeColor }}
       justifyContent="flex-start"
-      fontWeight={isActive ? "semibold" : "normal"}
-      borderLeftWidth={isActive ? "4px" : "0"}
+      fontWeight={isActive ? 'semibold' : 'medium'}
+      borderLeftWidth={isActive ? '3px' : '0'}
       borderLeftColor={activeColor}
       borderRadius="0"
-      pl={isActive ? 3 : 5}
+      pl={isActive ? 4 : 5}
       w="full"
     >
       {label}

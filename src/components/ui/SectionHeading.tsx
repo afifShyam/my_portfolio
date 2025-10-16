@@ -12,19 +12,12 @@ interface SectionHeadingProps extends HeadingProps {
 const MotionHeading = motion(Heading);
 const MotionText = motion(Text);
 
-const SectionHeading = memo(({ 
-  title, 
+const SectionHeading = memo(({
+  title,
   subtitle,
   align = 'center',
   withGradient = true,
-  transition: _,
-  onAnimationStart: __,
-  onAnimationEnd: ___,
-  onAnimationIteration: ____,
-  onDragStart: ______,
-  onDragEnd: ________,
-  onDrag: _________,
-  ...rest 
+  ...rest
 }: SectionHeadingProps) => {
   const textAlign = align;
   const subtitleColor = useColorModeValue('gray.600', 'gray.400');

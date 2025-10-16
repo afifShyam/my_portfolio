@@ -46,11 +46,11 @@ const Contact: React.FC = () => {
   const toast = useToast();
   
   // Dynamic colors based on color mode
-  const borderColor = useColorModeValue('gray.200', 'gray.700');
-  const inputBgColor = useColorModeValue('gray.50', 'gray.900');
-  const textColor = useColorModeValue('gray.800', 'white');
-  const labelColor = useColorModeValue('gray.600', 'gray.300');
-  const accentColor = useColorModeValue('teal.500', 'teal.300');
+  const borderColor = useColorModeValue('gray.200', 'whiteAlpha.200');
+  const inputBgColor = useColorModeValue('white', 'rgba(15, 23, 42, 0.6)');
+  const textColor = useColorModeValue('neutral.900', 'whiteAlpha.900');
+  const labelColor = useColorModeValue('neutral.500', 'neutral.200');
+  const accentColor = useColorModeValue('brand.600', 'brand.300');
 
   const validateForm = useCallback((): boolean => {
     const newErrors: FormErrors = {};
@@ -119,7 +119,8 @@ const Contact: React.FC = () => {
         email: '',
         message: '',
       });
-    } catch (error) {
+    } catch (err) {
+      console.error('Failed to send contact form message', err);
       setSuccess('Failed to send your message. Please try again later.');
       toast({
         title: 'Error',
@@ -141,7 +142,7 @@ const Contact: React.FC = () => {
         <meta name="description" content="Get in touch with me for collaborations, freelance projects, or job opportunities." />
       </Helmet>
       
-      <Container maxW="container.xl" py={28}>
+      <Container maxW="container.xl" py={24}>
         {/* Title */}
         <MotionHeading
           as="h2"
@@ -159,16 +160,15 @@ const Contact: React.FC = () => {
 
         {/* Form Card */}
         <MotionBox
-          maxW="6xl"
+          maxW="5xl"
           mx="auto"
-          bg={useColorModeValue('white', 'rgba(26, 32, 44, 0.8)')}
-          backdropFilter="blur(10px)"
+          bg={useColorModeValue('white', 'rgba(15, 23, 42, 0.92)')}
           border="1px solid"
           borderColor={borderColor}
           p={{ base: 6, md: 10 }}
-          borderRadius="3xl"
-          shadow="2xl"
-          initial={{ opacity: 0, y: 20 }}
+          borderRadius="2xl"
+          shadow="lg"
+          initial={{ opacity: 0, y: 16 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5, delay: 0.2 }}
         >
@@ -301,25 +301,16 @@ const Contact: React.FC = () => {
                 <Button
                   type="submit"
                   isLoading={loading}
-                  bgGradient="linear(to-r, teal.400, green.500)"
-                  _hover={{
-                    bgGradient: 'linear(to-r, green.500, teal.500)',
-                    transform: 'translateY(-2px)',
-                    shadow: 'xl',
-                  }}
-                  _active={{
-                    transform: 'translateY(0)',
-                    bgGradient: 'linear(to-r, teal.500, green.600)',
-                  }}
+                  colorScheme="brand"
+                  _hover={{ transform: 'translateY(-2px)' }}
+                  _active={{ transform: 'translateY(-1px)' }}
                   _disabled={{ opacity: 0.6, cursor: 'not-allowed' }}
                   isDisabled={loading}
-                  color="white"
                   fontWeight="semibold"
-                  shadow="lg"
+                  shadow="md"
                   size="lg"
-                  borderRadius="xl"
+                  borderRadius="md"
                   py={4}
-                  transition="all 0.3s ease"
                   rightIcon={<FiSend />}
                   w={{ base: 'full', md: 'auto' }}
                   alignSelf="flex-end"
