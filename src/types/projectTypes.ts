@@ -6,6 +6,7 @@ export interface Project {
   demoUrl?: string;
   repoUrl?: string;
   image?: string;
+  images?: string[];
   video?: string;
   githubLink?: string;
   playStoreLink?: string;

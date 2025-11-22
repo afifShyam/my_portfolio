@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import type { SyntheticEvent } from 'react';
 import {
   Box,
@@ -8,6 +9,7 @@ import {
   Flex,
   Button,
   Icon,
+  IconButton,
   Link,
   Badge,
   HStack,
@@ -15,11 +17,12 @@ import {
   VStack,
   Divider,
 } from '@chakra-ui/react';
-import { FaGithub, FaGooglePlay, FaVideo, FaApple, FaExternalLinkAlt } from 'react-icons/fa';
+import { FaGithub, FaGooglePlay, FaVideo, FaApple, FaExternalLinkAlt, FaChevronLeft, FaChevronRight } from 'react-icons/fa';
 import { Project } from '../types/projectTypes';
 
 const ProjectCard: React.FC<{ project: Project }> = ({ project }) => {
-  const hasImage = !!project.image;
+  const imageUrls = project.images ?? (project.image ? [project.image] : []);
+  const [currentImage, setCurrentImage] = useState(0);
   const hasVideo = !!project.video;
   const hasGithub = !!project.githubLink;
   const hasPlayStore = !!project.playStoreLink;
@@ -34,6 +37,17 @@ const ProjectCard: React.FC<{ project: Project }> = ({ project }) => {
   const tagColor = useColorModeValue('neutral.600', 'neutral.200');
   const tagBorder = useColorModeValue('gray.200', 'whiteAlpha.200');
   const dividerColor = useColorModeValue('gray.100', 'whiteAlpha.200');
+  const carouselBg = useColorModeValue('whiteAlpha.900', 'blackAlpha.600');
+  const carouselShadow = useColorModeValue('md', 'dark-lg');
+  const hasCarousel = imageUrls.length > 1;
+
+  const goToPrev = () => {
+    setCurrentImage((prev) => (prev - 1 + imageUrls.length) % imageUrls.length);
+  };
+
+  const goToNext = () => {
+    setCurrentImage((prev) => (prev + 1) % imageUrls.length);
+  };
 
   return (
     <Box
@@ -45,8 +59,11 @@ const ProjectCard: React.FC<{ project: Project }> = ({ project }) => {
       transition="transform 0.2s ease, box-shadow 0.2s ease"
       boxShadow="sm"
       _hover={{ transform: 'translateY(-4px)', boxShadow: 'md' }}
+      h="100%"
+      display="flex"
+      flexDirection="column"
     >
-      <VStack align="stretch" spacing={5}>
+      <VStack align="stretch" spacing={5} h="100%">
         <Flex justify="space-between" align="flex-start">
           <Badge
             bg={badgeBg}
@@ -67,14 +84,20 @@ const ProjectCard: React.FC<{ project: Project }> = ({ project }) => {
         </Flex>
 
         {/* Image or Placeholder */}
-        {hasImage ? (
-          <Box position="relative" overflow="hidden" borderRadius="lg">
+        {imageUrls.length ? (
+          <Box
+            position="relative"
+            overflow="hidden"
+            borderRadius="lg"
+            minH={{ base: '9.5rem', md: '10.5rem' }}
+            bg={useColorModeValue('gray.50', 'whiteAlpha.50')}
+          >
             <Image
-              src={project.image}
+              src={imageUrls[currentImage]}
               alt={`${project.name} preview`}
               objectFit="cover"
               w="full"
-              h="12rem"
+              h="100%"
               transition="transform 0.4s ease"
               onError={(event: SyntheticEvent<HTMLImageElement>) => {
                 const target = event.currentTarget;
@@ -82,11 +105,66 @@ const ProjectCard: React.FC<{ project: Project }> = ({ project }) => {
                 target.src = '/assets/placeholder.png';
               }}
             />
+
+            {hasCarousel && (
+              <>
+                <IconButton
+                  aria-label="Previous image"
+                  icon={<FaChevronLeft />}
+                  size="sm"
+                  variant="ghost"
+                  position="absolute"
+                  top="50%"
+                  left={2}
+                  transform="translateY(-50%)"
+                  onClick={goToPrev}
+                  bg={carouselBg}
+                  boxShadow={carouselShadow}
+                  _hover={{ bg: carouselBg }}
+                />
+                <IconButton
+                  aria-label="Next image"
+                  icon={<FaChevronRight />}
+                  size="sm"
+                  variant="ghost"
+                  position="absolute"
+                  top="50%"
+                  right={2}
+                  transform="translateY(-50%)"
+                  onClick={goToNext}
+                  bg={carouselBg}
+                  boxShadow={carouselShadow}
+                  _hover={{ bg: carouselBg }}
+                />
+                <HStack
+                  spacing={1}
+                  position="absolute"
+                  bottom={2}
+                  left="50%"
+                  transform="translateX(-50%)"
+                  bg={carouselBg}
+                  borderRadius="full"
+                  px={3}
+                  py={1}
+                  boxShadow={carouselShadow}
+                >
+                  {imageUrls.map((_, idx) => (
+                    <Box
+                      key={idx}
+                      w={idx === currentImage ? 2 : 1.5}
+                      h={idx === currentImage ? 2 : 1.5}
+                      borderRadius="full"
+                      bg={idx === currentImage ? badgeColor : tagBorder}
+                    />
+                  ))}
+                </HStack>
+              </>
+            )}
           </Box>
         ) : (
           <Box
             borderRadius="lg"
-            minH="12rem"
+            minH={{ base: '9.5rem', md: '10.5rem' }}
             borderWidth="1px"
             borderColor={tagBorder}
             display="flex"
@@ -112,17 +190,17 @@ const ProjectCard: React.FC<{ project: Project }> = ({ project }) => {
         <Divider borderColor={dividerColor} />
 
         {/* Tech Stack */}
-        {project.techStack && project.techStack.length > 0 ? (
-          <Box>
-            <Text
-              color={descriptionColor}
-              fontSize="xs"
-              mb={2}
-              fontWeight="medium"
-              textTransform="uppercase"
-            >
-              Tech Stack:
-            </Text>
+        <Box>
+          <Text
+            color={descriptionColor}
+            fontSize="xs"
+            mb={2}
+            fontWeight="medium"
+            textTransform="uppercase"
+          >
+            Tech Stack:
+          </Text>
+          {project.techStack && project.techStack.length > 0 ? (
             <Flex flexWrap="wrap" gap={2}>
               {project.techStack.map((tech) => (
                 <Tag
@@ -140,12 +218,14 @@ const ProjectCard: React.FC<{ project: Project }> = ({ project }) => {
                 </Tag>
               ))}
             </Flex>
-          </Box>
-        ) : (
-          <Text color="gray.500" fontSize="sm">
-            No tech stack listed
-          </Text>
-        )}
+          ) : (
+            <Text color="gray.500" fontSize="sm">
+              No tech stack listed
+            </Text>
+          )}
+        </Box>
+
+        <Box flex="1" />
 
         {/* Links */}
         <HStack spacing={3} justifyContent="flex-start" flexWrap="wrap">
