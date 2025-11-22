@@ -20,11 +20,12 @@ import {
   Icon,
 } from '@chakra-ui/react';
 import { FiSend, FiMail, FiUser, FiMessageSquare } from 'react-icons/fi';
-import { motion } from 'framer-motion';
+import { type Transition } from 'framer-motion';
 import { Helmet } from 'react-helmet-async';
+import { motionChakra } from '../utils/motion';
 
-const MotionBox = motion(Box);
-const MotionHeading = motion(Heading);
+const MotionBox = motionChakra(Box);
+const MotionHeading = motionChakra(Heading);
 
 interface FormErrors {
   name?: string;
@@ -51,6 +52,7 @@ const Contact: React.FC = () => {
   const textColor = useColorModeValue('neutral.900', 'whiteAlpha.900');
   const labelColor = useColorModeValue('neutral.500', 'neutral.200');
   const accentColor = useColorModeValue('brand.600', 'brand.300');
+  const buildTransition = (duration = 0.5, delay = 0): Transition => ({ duration, delay });
 
   const validateForm = useCallback((): boolean => {
     const newErrors: FormErrors = {};
@@ -152,8 +154,7 @@ const Contact: React.FC = () => {
           mb={16}
           color={textColor}
           initial={{ opacity: 0, y: -20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5 }}
+          animate={{ opacity: 1, y: 0, transition: buildTransition() }}
         >
           Let's Connect
         </MotionHeading>
@@ -169,8 +170,7 @@ const Contact: React.FC = () => {
           borderRadius="2xl"
           shadow="lg"
           initial={{ opacity: 0, y: 16 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5, delay: 0.2 }}
+          animate={{ opacity: 1, y: 0, transition: buildTransition(0.5, 0.2) }}
         >
           {/* Description */}
           <Text 
@@ -294,8 +294,7 @@ const Contact: React.FC = () => {
 
               <MotionBox
                 initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                transition={{ delay: 0.3 }}
+                animate={{ opacity: 1, transition: buildTransition(0.5, 0.3) }}
                 w="full"
               >
                 <Button

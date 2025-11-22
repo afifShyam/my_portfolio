@@ -1,6 +1,6 @@
 import { ReactNode } from 'react';
 import { Button as ChakraButton, ButtonProps as ChakraButtonProps, forwardRef, useColorModeValue } from '@chakra-ui/react';
-import { motion } from 'framer-motion';
+import { motionChakra } from '../../utils/motion';
 
 interface ButtonProps extends ChakraButtonProps {
   children: ReactNode;
@@ -8,7 +8,7 @@ interface ButtonProps extends ChakraButtonProps {
   hoverScale?: boolean;
 }
 
-const MotionButton = motion(ChakraButton);
+const MotionButton = motionChakra(ChakraButton);
 
 const Button = forwardRef<ButtonProps, 'button'>(({
   children,
@@ -38,11 +38,6 @@ const Button = forwardRef<ButtonProps, 'button'>(({
         transform: 'translateY(0)',
         boxShadow: 'sm',
         opacity: gradient ? 0.8 : undefined,
-      }}
-      transition={{
-        type: 'spring',
-        stiffness: 260,
-        damping: 20,
       }}
       borderRadius="lg"
       fontWeight="semibold"

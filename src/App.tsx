@@ -43,7 +43,7 @@ const App: React.FC = () => {
   }, []);
 
   // Scroll to section functions
-  const scrollToSection = (ref: React.RefObject<HTMLDivElement>) => {
+  const scrollToSection = (ref: React.RefObject<HTMLDivElement | null>) => {
     if (ref.current) {
       window.scrollTo({
         top: ref.current.offsetTop - navbarHeight,
@@ -61,11 +61,11 @@ const App: React.FC = () => {
       transition="background 0.3s ease"
     >
       <Helmet>
-        <title>Afif's Portfolio | Flutter & React Developer</title>
-        <meta name="description" content="Portfolio website showcasing my projects and skills as a Flutter and React developer" />
-        <meta name="keywords" content="portfolio, developer, react, flutter, web development, mobile development" />
-        <meta property="og:title" content="Afif's Portfolio | Flutter & React Developer" />
-        <meta property="og:description" content="Check out my projects and skills as a Flutter and React developer" />
+        <title>Afif Shyamsul | Flutter Mobile Developer / Frontend Lead</title>
+        <meta name="description" content="Wallet, commerce, and productivity apps built with Flutter, Riverpod, Firebase, and clean architecture." />
+        <meta name="keywords" content="portfolio, flutter developer, mobile developer, riverpod, bloc, firebase, frontend lead" />
+        <meta property="og:title" content="Afif Shyamsul | Flutter Mobile Developer / Frontend Lead" />
+        <meta property="og:description" content="Wallet, commerce, and productivity apps built with Flutter, Riverpod, Firebase, and clean architecture." />
         <meta property="og:type" content="website" />
         <link rel="canonical" href="https://your-portfolio-url.com" />
       </Helmet>

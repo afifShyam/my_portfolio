@@ -20,16 +20,17 @@ import {
   Grid,
   GridItem,
 } from '@chakra-ui/react';
-import { motion } from 'framer-motion';
+import { motion, type Variants, type Transition } from 'framer-motion';
 import { FaGithub, FaLinkedin, FaGraduationCap, FaBriefcase, FaTrophy } from 'react-icons/fa';
 import { FiCheckCircle, FiBriefcase, FiMapPin, FiUsers, FiClock } from 'react-icons/fi';
 import type { IconType } from 'react-icons';
+import { motionChakra } from '../utils/motion';
 
 // Motion components
-const MotionBox = motion(Box);
-const MotionFlex = motion(Flex);
-const MotionVStack = motion(VStack);
-const MotionHeading = motion(Heading);
+const MotionBox = motionChakra(Box);
+const MotionFlex = motionChakra(Flex);
+const MotionVStack = motionChakra(VStack);
+const MotionHeading = motionChakra(Heading);
 
 // Skill badge component
 interface SkillBadgeProps {
@@ -106,25 +107,27 @@ interface ExperienceItem {
 
 const EXPERIENCE: ExperienceItem[] = [
   {
-    role: 'Mobile Developer · Blockchain',
+    role: 'Flutter Developer · Frontend Lead',
     company: 'Coinyex Co. Ltd.',
-    period: '2024 — Present',
-    focus: 'Owns the mobile wallet and DApp ecosystem for a crypto product suite.',
-    stack: ['Flutter', 'MVVM', 'TypeScript', 'GitHub Actions'],
+    period: 'Aug 2025 — Present',
+    focus: 'Owns the TuxC Wallet frontend across send, receive, and swap experiences.',
+    stack: ['Flutter', 'Riverpod', 'REST', 'Firebase', 'CI/CD'],
     highlights: [
-      'Shipped secure wallet flows, contract interactions, and release automation.',
-      'Coordinated app store submissions and reviews for cross-platform releases.',
+      'Led migration from Provider to Riverpod for safer state handling and faster renders.',
+      'Hardened API handling, error logging, and release notes for wallet transactions.',
+      'Managed store submissions, certificates, versioning, and release pipelines.',
     ],
   },
   {
     role: 'Mobile Developer',
     company: 'RF Infinite Sdn. Bhd.',
-    period: '2022 — 2024',
-    focus: 'Delivered super-app experiences for commerce, social, and food ordering.',
-    stack: ['Flutter', 'REST', 'WebSockets', 'Clean Architecture'],
+    period: 'Sep 2023 — Jul 2025',
+    focus: 'Delivered super-app experiences (commerce, social, food ordering) from internship to full-time.',
+    stack: ['Flutter', 'REST', 'WebSockets', 'Clean Architecture', 'Performance'],
     highlights: [
-      'Rolled out high-traffic modules with real-time updates and analytics.',
-      'Drove a 20% performance uplift through profiling and architectural cleanup.',
+      'Translated Figma to production UI/UX; improved engagement by 20% via perf tuning.',
+      'Built shopping and reservation modules with clean architecture and REST APIs.',
+      'Reduced reported issues by 35% through code reviews and shared standards.',
     ],
   },
 ];
@@ -138,9 +141,10 @@ const About = memo(function About() {
   const accentColor = useColorModeValue('brand.600', 'brand.300');
   const textColor = useColorModeValue('neutral.600', 'neutral.200');
   const secondaryTextColor = useColorModeValue('neutral.500', 'neutral.300');
+  const hoverSpring: Transition = { type: 'spring', stiffness: 300 };
   
   // Animation variants
-  const containerVariants = {
+  const containerVariants: Variants = {
     hidden: { opacity: 0 },
     visible: {
       opacity: 1,
@@ -150,7 +154,7 @@ const About = memo(function About() {
     }
   };
   
-  const itemVariants = {
+  const itemVariants: Variants = {
     hidden: { y: 20, opacity: 0 },
     visible: {
       y: 0,
@@ -209,31 +213,31 @@ const About = memo(function About() {
               </Badge>
 
               <Heading as="h3" size="lg" color={headingColor} fontWeight="semibold">
-                Hi, I'm Afif — I design resilient mobile experiences.
+                Flutter Mobile Developer / Frontend Lead
               </Heading>
 
               <Text fontSize={{ base: 'md', md: 'lg' }} lineHeight="tall">
-                I help teams translate ambitious product ideas into polished Flutter and React apps. My focus is on
-                clean architecture, sustainable delivery, and creating interfaces that feel effortless to use.
+                I build and ship wallet, commerce, and productivity apps with Flutter. I’m hands-on with Riverpod, BLoC,
+                Firebase, REST APIs, and release pipelines—keeping architecture clean, performance tight, and delivery predictable.
               </Text>
 
               <List spacing={2} fontSize="md">
                 <ListItem>
-                  <ListIcon as={FiCheckCircle} color={accentColor} /> 2+ years shipping production-ready mobile products.
+                  <ListIcon as={FiCheckCircle} color={accentColor} /> 2+ years delivering production releases across fintech, e-commerce, and productivity.
                 </ListItem>
                 <ListItem>
-                  <ListIcon as={FiCheckCircle} color={accentColor} /> Comfortable leading codebase upgrades, API integrations, and performance work.
+                  <ListIcon as={FiCheckCircle} color={accentColor} /> Led migrations (Provider → Riverpod), release automation, and API resilience for wallets.
                 </ListItem>
                 <ListItem>
-                  <ListIcon as={FiCheckCircle} color={accentColor} /> Currently exploring blockchain wallets and DApps with Flutter and TypeScript.
+                  <ListIcon as={FiCheckCircle} color={accentColor} /> Collaborate tightly with backend and product to keep launches secure and smooth.
                 </ListItem>
               </List>
 
               <SimpleGrid columns={{ base: 1, sm: 2, md: 4 }} spacing={4} w="full">
-                <QuickFact icon={FiBriefcase} label="Role" value="Flutter / React Dev" />
-                <QuickFact icon={FiMapPin} label="Based in" value="Malaysia" />
-                <QuickFact icon={FiUsers} label="Collaboration" value="Product squads" />
-                <QuickFact icon={FiCheckCircle} label="Approach" value="DX-first & maintainable" />
+                <QuickFact icon={FiBriefcase} label="Role" value="Flutter Mobile Dev / Frontend Lead" />
+                <QuickFact icon={FiMapPin} label="Based in" value="Cyberjaya, Selangor" />
+                <QuickFact icon={FiUsers} label="Collaboration" value="Product & backend squads" />
+                <QuickFact icon={FiCheckCircle} label="Focus" value="Wallets, commerce, health" />
               </SimpleGrid>
             </VStack>
           </MotionBox>
@@ -242,8 +246,7 @@ const About = memo(function About() {
             {/* Experience */}
             <MotionVStack
               variants={itemVariants}
-              whileHover={{ y: -10 }}
-              transition={{ type: "spring", stiffness: 300 }}
+              whileHover={{ y: -10, transition: hoverSpring }}
               p={5}
               borderRadius="xl"
               bg={useColorModeValue('white', 'rgba(15, 23, 42, 0.9)')}
@@ -331,8 +334,7 @@ const About = memo(function About() {
             {/* Education */}
             <MotionVStack
               variants={itemVariants}
-              whileHover={{ y: -10 }}
-              transition={{ type: "spring", stiffness: 300 }}
+              whileHover={{ y: -10, transition: hoverSpring }}
               p={5}
               borderRadius="xl"
               bg={useColorModeValue('white', 'rgba(15, 23, 42, 0.9)')}
@@ -349,21 +351,27 @@ const About = memo(function About() {
               </Heading>
               <Divider my={3} />
               <Text color={headingColor} fontWeight="medium">
-                Bachelor of Computer Science
+                Bachelor of Computer Science (Hons.)
               </Text>
               <Text fontSize="sm" color={secondaryTextColor}>
-                UiTM Kampus Terengganu
+                UiTM Terengganu — CGPA 3.44 (Dean’s List)
               </Text>
               <Text fontSize="sm" color={secondaryTextColor} mt={2}>
-                Focus: Software Development and Machine Learning
+                Focus: Software Development & Machine Learning (FYP: Flood Prediction with SVM)
+              </Text>
+              <Divider my={3} />
+              <Text color={headingColor} fontWeight="medium">
+                Diploma in Computer Science
+              </Text>
+              <Text fontSize="sm" color={secondaryTextColor}>
+                UiTM Terengganu — CGPA 3.08
               </Text>
             </MotionVStack>
 
             {/* Achievements */}
             <MotionVStack
               variants={itemVariants}
-              whileHover={{ y: -10 }}
-              transition={{ type: "spring", stiffness: 300 }}
+              whileHover={{ y: -10, transition: hoverSpring }}
               p={5}
               borderRadius="xl"
               bg={useColorModeValue('white', 'rgba(15, 23, 42, 0.9)')}
@@ -379,18 +387,21 @@ const About = memo(function About() {
                 Achievements
               </Heading>
               <Divider my={3} />
-              <Text color={headingColor} fontWeight="medium">
-                Flood Prediction App
-              </Text>
-              <Text fontSize="sm" color={secondaryTextColor}>
-                Final Year Project
-              </Text>
-              <VStack spacing={1} align="start" mt={2}>
-                <Text fontSize="sm" color={secondaryTextColor}>
-                  • Achieved 90% accuracy using SVM
+              <VStack spacing={2} align="start" mt={2}>
+                <Text color={headingColor} fontWeight="medium">
+                  Flood Prediction App (FYP)
                 </Text>
                 <Text fontSize="sm" color={secondaryTextColor}>
-                  • Delivered real-time weather updates and forecasts for disaster prevention
+                  • Achieved 90% accuracy using SVM with real-time weather updates and two-day forecasts.
+                </Text>
+                <Text color={headingColor} fontWeight="medium" pt={2}>
+                  Leadership & Community
+                </Text>
+                <Text fontSize="sm" color={secondaryTextColor}>
+                  • Organized webinar “Artificial Intelligence, How It Works?” (100+ participants).
+                </Text>
+                <Text fontSize="sm" color={secondaryTextColor}>
+                  • Vice President, Bahasa Arab Club (2022) — 95% attendee satisfaction.
                 </Text>
               </VStack>
             </MotionVStack>
@@ -413,15 +424,15 @@ const About = memo(function About() {
             </Heading>
             <SimpleGrid columns={{ base: 2, md: 3 }} spacing={{ base: 4, md: 6 }}>
               <SkillBadge label="Flutter & Dart" colorScheme="blue" />
-              <SkillBadge label="React & TypeScript" colorScheme="teal" />
-              <SkillBadge label="BLoC State Management" colorScheme="purple" />
-              <SkillBadge label="Provider (Secondary)" colorScheme="orange" />
-              <SkillBadge label="MVVM Architecture" colorScheme="green" />
-              <SkillBadge label="CI/CD & Deployment" colorScheme="pink" />
-              <SkillBadge label="Firebase & REST APIs" colorScheme="yellow" />
-              <SkillBadge label="GitHub Management" colorScheme="cyan" />
-              <SkillBadge label="Mobile App Optimization" colorScheme="red" />
-              <SkillBadge label="Exploring Blockchain & DApps" colorScheme="indigo" />
+              <SkillBadge label="Riverpod & BLoC" colorScheme="purple" />
+              <SkillBadge label="Firebase (Auth/Firestore)" colorScheme="yellow" />
+              <SkillBadge label="REST APIs & WebSockets" colorScheme="cyan" />
+              <SkillBadge label="Kotlin · Jetpack Compose" colorScheme="orange" />
+              <SkillBadge label="Clean Architecture / MVVM" colorScheme="green" />
+              <SkillBadge label="CI/CD & Release Pipelines" colorScheme="pink" />
+              <SkillBadge label="Figma to Production UI" colorScheme="teal" />
+              <SkillBadge label="Performance Optimization" colorScheme="red" />
+              <SkillBadge label="Git, VSCode, Android Studio, Xcode" colorScheme="gray" />
             </SimpleGrid>
           </MotionBox>
 

@@ -23,8 +23,8 @@ import FlutterLogo from '../assets/flutter-logo.png';
 const HIGHLIGHT_STATS = [
   { label: 'Years crafting products', value: '2+' },
   { label: 'Production releases', value: '10+' },
-  { label: 'Primary stack', value: 'Flutter · React' },
-  { label: 'Focus', value: 'Mobile · Web · Blockchain' },
+  { label: 'Wallet & commerce launches', value: '6' },
+  { label: 'Primary stack', value: 'Flutter · Riverpod · Firebase' },
 ];
 
 const Home: React.FC<{ scrollToPortfolio: () => void }> = ({ scrollToPortfolio }) => {
@@ -42,9 +42,9 @@ const Home: React.FC<{ scrollToPortfolio: () => void }> = ({ scrollToPortfolio }
     if (typedRef.current) {
       typed = new Typed(typedRef.current, {
         strings: [
-          "I'm Afif — Flutter & React Developer.",
-          'Clean architecture enthusiast.',
-          'Blockchain curious and product minded.',
+          "I'm Afif — Flutter Mobile Dev / Frontend Lead.",
+          'Wallet, commerce, and productivity experiences.',
+          'Riverpod, BLoC, Firebase, and clean architecture.',
         ],
         typeSpeed: 70,
         backSpeed: 50,
@@ -78,16 +78,16 @@ const Home: React.FC<{ scrollToPortfolio: () => void }> = ({ scrollToPortfolio }
               textTransform="unset"
               fontWeight="medium"
             >
-              Flutter · React · Blockchain
+              Flutter Mobile Developer / Frontend Lead
             </Badge>
 
             <Heading as="h1" size="2xl" lineHeight="shorter">
-              Building minimal, resilient mobile & web apps.
+              Shipping resilient wallet, commerce, and health apps.
             </Heading>
 
             <Text fontSize="lg" color={mutedColor} maxW="lg">
-              I translate product ideas into polished experiences with a focus on clean architecture,
-              high performance, and thoughtful design systems.
+              I translate product ideas into polished Flutter experiences with clean architecture,
+              production-ready state management, and trustworthy delivery.
             </Text>
 
             <Box

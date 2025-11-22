@@ -1,6 +1,7 @@
 import { ReactNode } from 'react';
 import { Box, BoxProps, Heading, useColorModeValue } from '@chakra-ui/react';
-import { motion } from 'framer-motion';
+import { type Transition } from 'framer-motion';
+import { motionChakra } from '../../utils/motion';
 
 interface SectionProps extends BoxProps {
   children: ReactNode;
@@ -10,7 +11,7 @@ interface SectionProps extends BoxProps {
   delay?: number;
 }
 
-const MotionBox = motion(Box);
+const MotionBox = motionChakra(Box);
 
 const Section = ({
   children,
@@ -22,14 +23,14 @@ const Section = ({
 }: SectionProps) => {
   const bgColor = useColorModeValue('white', 'rgba(15, 23, 42, 0.9)');
   const borderColor = useColorModeValue('gray.200', 'whiteAlpha.200');
+  const transition: Transition = { duration: 0.5, delay };
   
   return (
     <MotionBox
       as="section"
       id={id}
       initial={{ opacity: 0, y: 20 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.5, delay }}
+      animate={{ opacity: 1, y: 0, transition }}
       mb={16}
       px={{ base: 4, md: 8 }}
       py={8}
