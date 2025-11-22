@@ -20,7 +20,8 @@ jobs:
           node-version: '20'
           cache: 'npm'
 
-      - run: npm install
+      - name: Install dependencies (tolerate peer mismatches)
+        run: npm install --legacy-peer-deps
 
       - run: ls -la
 
