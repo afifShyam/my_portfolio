@@ -31,7 +31,12 @@ const ProjectCard: React.FC<{ project: Project }> = ({ project }) => {
       <VStack align="stretch" spacing={5}>
         {/* Image or Placeholder */}
         {hasImage ? (
-          <Box borderRadius="lg" overflow="hidden">
+          <Box
+            borderRadius="lg"
+            overflow="hidden"
+            minH={{ base: '10rem', md: '11rem' }}
+            aspectRatio={{ base: 3 / 4, md: 4 / 5 }}
+          >
             <Image
               src={normalizedImage?.src}
               srcSet={normalizedImage?.srcSet}

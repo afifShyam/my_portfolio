@@ -96,7 +96,8 @@ const ProjectCard: React.FC<{ project: Project }> = ({ project }) => {
             position="relative"
             overflow="hidden"
             borderRadius="lg"
-            minH={{ base: '9.5rem', md: '10.5rem' }}
+            minH={{ base: '8rem', md: '9rem' }}
+            aspectRatio={{ base: 3 / 4, md: 4 / 5 }}
             bg={useColorModeValue('gray.50', 'whiteAlpha.50')}
           >
             <Image
