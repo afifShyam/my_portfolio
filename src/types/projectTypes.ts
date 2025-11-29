@@ -1,3 +1,12 @@
+export interface ProjectImage {
+  src: string;
+  srcSet?: string;
+  sizes?: string;
+  alt?: string;
+}
+
+export type ProjectImageSource = string | ProjectImage;
+
 export interface Project {
   id: number;
   name: string;
@@ -5,8 +14,8 @@ export interface Project {
   category: string;
   demoUrl?: string;
   repoUrl?: string;
-  image?: string;
-  images?: string[];
+  image?: ProjectImageSource;
+  images?: ProjectImageSource[];
   video?: string;
   githubLink?: string;
   playStoreLink?: string;

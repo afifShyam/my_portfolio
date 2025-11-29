@@ -3,7 +3,6 @@ import { Project } from '../../../types/projectTypes';
 import ihsanmadaniImage from '../../../assets/ihsanmadani_preview.png';
 import pcariImage from '../../../assets/pcari_preview.png';
 import todoImage from '../../../assets/todo_kotlin_preview.png';
-import tuxcPreview1 from '../../../assets/tuxc_preview_1.png';
 import tuxcPreview2 from '../../../assets/tuxc_preview_2.png';
 import tuxcPreview3 from '../../../assets/tuxc_preview_3.png';
 
@@ -15,7 +14,16 @@ export const mockProjects: Project[] = [
     description:
       'Crypto wallet experience with send, receive, and swap flows. Migrated to Riverpod, tightened API handling, and improved render speed for transaction journeys.',
     category: 'Fintech',
-    images: [tuxcPreview1, tuxcPreview2, tuxcPreview3],
+    images: [
+      {
+        src: '/tuxc-wallet-800.png',
+        srcSet: '/tuxc-wallet-400.png 400w, /tuxc-wallet-800.png 800w, /tuxc-wallet-1200.png 1200w',
+        sizes: '(max-width: 600px) 90vw, 600px',
+        alt: 'TuxC Wallet UI',
+      },
+      tuxcPreview2,
+      tuxcPreview3,
+    ],
     playStoreLink: 'https://play.google.com/store/apps/details?id=io.tux.wallet&hl=en',
     appStoreLink: 'https://apps.apple.com/ly/app/tux-wallet/id1495945761',
     techStack: ['Flutter', 'Riverpod', 'REST API', 'Firebase', 'CI/CD'],

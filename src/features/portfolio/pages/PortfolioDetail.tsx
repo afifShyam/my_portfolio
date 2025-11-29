@@ -4,7 +4,12 @@ import { FaGithub, FaGooglePlay, FaVideo, FaApple } from 'react-icons/fa';
 import { Project } from '../../../types/projectTypes';
 
 const ProjectCard: React.FC<{ project: Project }> = ({ project }) => {
-  const hasImage = !!project.image;
+  const primaryImage = project.image ?? project.images?.[0];
+  const normalizedImage =
+    typeof primaryImage === 'string'
+      ? { src: primaryImage }
+      : primaryImage;
+  const hasImage = !!normalizedImage?.src;
   const hasVideo = !!project.video;
   const hasGithub = !!project.githubLink;
   const hasPlayStore = !!project.playStoreLink;
@@ -28,14 +33,19 @@ const ProjectCard: React.FC<{ project: Project }> = ({ project }) => {
         {hasImage ? (
           <Box borderRadius="lg" overflow="hidden">
             <Image
-              src={project.image}
-              alt={`${project.name} preview`}
+              src={normalizedImage?.src}
+              srcSet={normalizedImage?.srcSet}
+              sizes={normalizedImage?.sizes}
+              alt={normalizedImage?.alt ?? `${project.name} preview`}
+              loading="lazy"
+              decoding="async"
               objectFit="cover"
               w="full"
               h="12rem"
               onError={(event: SyntheticEvent<HTMLImageElement>) => {
                 const target = event.currentTarget;
                 target.onerror = null;
+                target.srcset = '';
                 target.src = '/assets/placeholder.png';
               }}
             />

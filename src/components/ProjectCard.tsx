@@ -21,7 +21,13 @@ import { FaGithub, FaGooglePlay, FaVideo, FaApple, FaExternalLinkAlt, FaChevronL
 import { Project } from '../types/projectTypes';
 
 const ProjectCard: React.FC<{ project: Project }> = ({ project }) => {
-  const imageUrls = project.images ?? (project.image ? [project.image] : []);
+  const imageSources =
+    project.images ?? (project.image ? [project.image] : []);
+  const images = imageSources
+    .map((source) =>
+      typeof source === 'string' ? { src: source } : source
+    )
+    .filter((img) => Boolean(img?.src));
   const [currentImage, setCurrentImage] = useState(0);
   const hasVideo = !!project.video;
   const hasGithub = !!project.githubLink;
@@ -39,14 +45,15 @@ const ProjectCard: React.FC<{ project: Project }> = ({ project }) => {
   const dividerColor = useColorModeValue('gray.100', 'whiteAlpha.200');
   const carouselBg = useColorModeValue('whiteAlpha.900', 'blackAlpha.600');
   const carouselShadow = useColorModeValue('md', 'dark-lg');
-  const hasCarousel = imageUrls.length > 1;
+  const hasCarousel = images.length > 1;
+  const activeImage = images[currentImage];
 
   const goToPrev = () => {
-    setCurrentImage((prev) => (prev - 1 + imageUrls.length) % imageUrls.length);
+    setCurrentImage((prev) => (prev - 1 + images.length) % images.length);
   };
 
   const goToNext = () => {
-    setCurrentImage((prev) => (prev + 1) % imageUrls.length);
+    setCurrentImage((prev) => (prev + 1) % images.length);
   };
 
   return (
@@ -84,7 +91,7 @@ const ProjectCard: React.FC<{ project: Project }> = ({ project }) => {
         </Flex>
 
         {/* Image or Placeholder */}
-        {imageUrls.length ? (
+        {images.length ? (
           <Box
             position="relative"
             overflow="hidden"
@@ -93,8 +100,12 @@ const ProjectCard: React.FC<{ project: Project }> = ({ project }) => {
             bg={useColorModeValue('gray.50', 'whiteAlpha.50')}
           >
             <Image
-              src={imageUrls[currentImage]}
-              alt={`${project.name} preview`}
+              src={activeImage?.src}
+              srcSet={activeImage?.srcSet}
+              sizes={activeImage?.sizes}
+              alt={activeImage?.alt ?? `${project.name} preview`}
+              loading="lazy"
+              decoding="async"
               objectFit="cover"
               w="full"
               h="100%"
@@ -102,6 +113,7 @@ const ProjectCard: React.FC<{ project: Project }> = ({ project }) => {
               onError={(event: SyntheticEvent<HTMLImageElement>) => {
                 const target = event.currentTarget;
                 target.onerror = null;
+                target.srcset = '';
                 target.src = '/assets/placeholder.png';
               }}
             />
@@ -148,7 +160,7 @@ const ProjectCard: React.FC<{ project: Project }> = ({ project }) => {
                   py={1}
                   boxShadow={carouselShadow}
                 >
-                  {imageUrls.map((_, idx) => (
+                  {images.map((_, idx) => (
                     <Box
                       key={idx}
                       w={idx === currentImage ? 2 : 1.5}
