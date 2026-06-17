@@ -20,7 +20,7 @@ import {
   Grid,
   GridItem,
 } from '@chakra-ui/react';
-import { motion, type Variants, type Transition } from 'framer-motion';
+import { type Variants } from 'framer-motion';
 import { FaGithub, FaLinkedin, FaGraduationCap, FaBriefcase, FaTrophy } from 'react-icons/fa';
 import { FiCheckCircle, FiBriefcase, FiMapPin, FiUsers, FiClock } from 'react-icons/fi';
 import type { IconType } from 'react-icons';
@@ -49,15 +49,12 @@ const SkillBadge = memo(function SkillBadge({ label, colorScheme }: SkillBadgePr
       px={4}
       bg={bgColor}
       color={textColor}
-      borderRadius="full"
+      borderRadius="md"
       fontSize="sm"
       fontWeight="medium"
       textAlign="center"
       border="1px solid"
       borderColor={borderColor}
-      as={motion.div}
-      whileHover={{ scale: 1.05 }}
-      whileTap={{ scale: 0.95 }}
     >
       {label}
     </Box>
@@ -132,16 +129,27 @@ const EXPERIENCE: ExperienceItem[] = [
   },
 ];
 
+const RESUME_METRICS = [
+  { value: '2+', label: 'Years Flutter delivery' },
+  { value: '10+', label: 'Production releases' },
+  { value: '35%', label: 'Reported issue reduction' },
+  { value: '90%', label: 'SVM FYP accuracy' },
+];
+
 const About = memo(function About() {
   // Dynamic color mode values
-  // const bgColor = useColorModeValue('white', 'rgba(26, 32, 44, 0.8)');
-  const cardBg = useColorModeValue('white', 'rgba(15, 23, 42, 0.9)');
-  const borderColor = useColorModeValue('gray.200', 'whiteAlpha.200');
+  const cardBg = useColorModeValue('rgba(255, 255, 255, 0.84)', 'rgba(20, 41, 39, 0.86)');
+  const sectionBg = useColorModeValue(
+    'linear-gradient(180deg, #f7fbfa 0%, #eefbf8 100%)',
+    'linear-gradient(180deg, #071817 0%, #102622 100%)'
+  );
+  const borderColor = useColorModeValue('rgba(159, 184, 181, 0.45)', 'whiteAlpha.200');
   const headingColor = useColorModeValue('neutral.900', 'white');
   const accentColor = useColorModeValue('brand.600', 'brand.300');
+  const accentSoft = useColorModeValue('accent.500', 'accent.300');
   const textColor = useColorModeValue('neutral.600', 'neutral.200');
   const secondaryTextColor = useColorModeValue('neutral.500', 'neutral.300');
-  const hoverSpring: Transition = { type: 'spring', stiffness: 300 };
+  const insetBg = useColorModeValue('rgba(238, 251, 248, 0.86)', 'whiteAlpha.100');
   
   // Animation variants
   const containerVariants: Variants = {
@@ -168,10 +176,11 @@ const About = memo(function About() {
   };
   
   return (
+    <Box bg={sectionBg}>
     <Container
       maxW="container.xl"
       px={5}
-      py={24}
+      py={{ base: 16, md: 24 }}
       as={MotionBox}
       variants={containerVariants}
       initial="hidden"
@@ -187,10 +196,10 @@ const About = memo(function About() {
         color={headingColor}
         lineHeight="tight"
         variants={itemVariants}
-        bgGradient={useColorModeValue('linear(to-r, blue.600, teal.600)', 'linear(to-r, blue.400, teal.400)')}
+        bgGradient={useColorModeValue('linear(to-r, brand.700, accent.600)', 'linear(to-r, brand.200, accent.300)')}
         bgClip="text"
       >
-        About Me
+        Resume Snapshot
       </MotionHeading>
 
       {/* Main Card */}
@@ -200,20 +209,21 @@ const About = memo(function About() {
           bg={cardBg}
           border="1px solid"
           borderColor={borderColor}
-          p={{ base: 6, md: 12 }}
-          borderRadius="2xl"
-          shadow="lg"
+          p={{ base: 5, md: 8 }}
+          borderRadius="lg"
+          shadow={useColorModeValue('0 24px 60px rgba(20, 104, 95, 0.12)', '0 24px 60px rgba(0, 0, 0, 0.28)')}
           textAlign="center"
+          backdropFilter="blur(18px)"
         >
            {/* Professional Summary */}
           <MotionBox variants={itemVariants}>
             <VStack align="flex-start" spacing={6} textAlign="left" color={textColor}>
-              <Badge colorScheme="brand" borderRadius="full" px={3} py={1} textTransform="capitalize">
-                Mobile & Web Engineer
+              <Badge colorScheme="brand" borderRadius="md" px={3} py={1} textTransform="capitalize">
+                Coinyex · RF Infinite · UiTM Computer Science
               </Badge>
 
               <Heading as="h3" size="lg" color={headingColor} fontWeight="semibold">
-                Flutter Mobile Developer / Frontend Lead
+                Flutter Mobile Developer / Frontend Lead with fintech and commerce release experience.
               </Heading>
 
               <Text fontSize={{ base: 'md', md: 'lg' }} lineHeight="tall">
@@ -234,6 +244,24 @@ const About = memo(function About() {
               </List>
 
               <SimpleGrid columns={{ base: 1, sm: 2, md: 4 }} spacing={4} w="full">
+                {RESUME_METRICS.map((metric) => (
+                  <Box
+                    key={metric.label}
+                    bg={insetBg}
+                    border="1px solid"
+                    borderColor={borderColor}
+                    borderRadius="md"
+                    p={4}
+                  >
+                    <Text fontSize="3xl" fontWeight="bold" color={metric.value === '90%' ? accentSoft : accentColor}>
+                      {metric.value}
+                    </Text>
+                    <Text fontSize="sm" color={secondaryTextColor}>{metric.label}</Text>
+                  </Box>
+                ))}
+              </SimpleGrid>
+
+              <SimpleGrid columns={{ base: 1, sm: 2, md: 4 }} spacing={4} w="full">
                 <QuickFact icon={FiBriefcase} label="Role" value="Flutter Mobile Dev / Frontend Lead" />
                 <QuickFact icon={FiMapPin} label="Based in" value="Cyberjaya, Selangor" />
                 <QuickFact icon={FiUsers} label="Collaboration" value="Product & backend squads" />
@@ -242,14 +270,13 @@ const About = memo(function About() {
             </VStack>
           </MotionBox>
 
-          <VStack spacing={{ base: 12, md: 14 }} mt={8} align="stretch">
+          <VStack spacing={{ base: 8, md: 10 }} mt={8} align="stretch">
             {/* Experience */}
             <MotionVStack
               variants={itemVariants}
-              whileHover={{ y: -10, transition: hoverSpring }}
               p={5}
-              borderRadius="xl"
-              bg={useColorModeValue('white', 'rgba(15, 23, 42, 0.9)')}
+              borderRadius="lg"
+              bg={insetBg}
               boxShadow="sm"
               border="1px solid"
               borderColor={borderColor}
@@ -261,7 +288,7 @@ const About = memo(function About() {
               <HStack spacing={3} align="center">
                 <Icon as={FaBriefcase} boxSize={9} color={accentColor} />
                 <Heading as="h3" size="md" color={accentColor}>
-                  Experience
+                  Professional Experience
                 </Heading>
               </HStack>
               <Divider />
@@ -334,10 +361,9 @@ const About = memo(function About() {
             {/* Education */}
             <MotionVStack
               variants={itemVariants}
-              whileHover={{ y: -10, transition: hoverSpring }}
               p={5}
-              borderRadius="xl"
-              bg={useColorModeValue('white', 'rgba(15, 23, 42, 0.9)')}
+              borderRadius="lg"
+              bg={insetBg}
               boxShadow="sm"
               border="1px solid"
               borderColor={borderColor}
@@ -371,10 +397,9 @@ const About = memo(function About() {
             {/* Achievements */}
             <MotionVStack
               variants={itemVariants}
-              whileHover={{ y: -10, transition: hoverSpring }}
               p={5}
-              borderRadius="xl"
-              bg={useColorModeValue('white', 'rgba(15, 23, 42, 0.9)')}
+              borderRadius="lg"
+              bg={insetBg}
               boxShadow="sm"
               border="1px solid"
               borderColor={borderColor}
@@ -412,15 +437,15 @@ const About = memo(function About() {
             mt={16} 
             variants={itemVariants}
             p={6}
-            borderRadius="xl"
-            bg={useColorModeValue('white', 'rgba(15, 23, 42, 0.9)')}
+            borderRadius="lg"
+            bg={insetBg}
             boxShadow="sm"
             border="1px solid"
             borderColor={borderColor}
             textAlign="left"
           >
             <Heading as="h3" size="lg" color={accentColor} mb={6} textAlign="left">
-              Technologies I Work With
+              Resume Skills
             </Heading>
             <SimpleGrid columns={{ base: 2, md: 3 }} spacing={{ base: 4, md: 6 }}>
               <SkillBadge label="Flutter & Dart" colorScheme="blue" />
@@ -454,10 +479,7 @@ const About = memo(function About() {
               py={{ base: 3, md: 4 }}
               fontSize={{ base: 'sm', md: 'md' }}
               borderRadius="xl"
-              bgGradient={useColorModeValue(
-                'linear(to-tr, blue.600, teal.600)', 
-                'linear(to-tr, blue.400, teal.400)'
-              )}
+              bgGradient={useColorModeValue('linear(to-tr, brand.600, accent.500)', 'linear(to-tr, brand.400, accent.400)')}
               color="white"
               fontWeight="semibold"
               shadow="lg"
@@ -485,7 +507,7 @@ const About = memo(function About() {
               color={accentColor}
               leftIcon={<FaLinkedin />}
               _hover={{
-                bg: useColorModeValue('blue.50', 'rgba(66, 153, 225, 0.1)'),
+                bg: useColorModeValue('brand.50', 'whiteAlpha.100'),
                 transform: 'translateY(-5px)',
                 shadow: 'md',
               }}
@@ -498,6 +520,7 @@ const About = memo(function About() {
         </Box>
       </MotionFlex>
     </Container>
+    </Box>
   );
 });
 

@@ -36,10 +36,24 @@ const App: React.FC = () => {
 
   // Get navbar height on mount
   useEffect(() => {
-    const navbar = document.querySelector('nav');
-    if (navbar) {
-      setNavbarHeight(navbar.offsetHeight);
-    }
+    let frameId: number | null = null;
+
+    const updateNavbarHeight = () => {
+      const navbar = document.querySelector('nav');
+      if (navbar) {
+        setNavbarHeight(navbar.offsetHeight);
+      }
+    };
+
+    frameId = window.requestAnimationFrame(updateNavbarHeight);
+    window.addEventListener('resize', updateNavbarHeight);
+
+    return () => {
+      if (frameId !== null) {
+        window.cancelAnimationFrame(frameId);
+      }
+      window.removeEventListener('resize', updateNavbarHeight);
+    };
   }, []);
 
   // Scroll to section functions

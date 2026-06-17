@@ -22,8 +22,8 @@ import { HamburgerIcon, MoonIcon, SunIcon } from '@chakra-ui/icons';
 import { motion } from 'framer-motion';
 
 // Motion components
-const MotionBox = motion(Box);
-const MotionFlex = motion(Flex);
+const MotionBox = motion.create(Box);
+const MotionFlex = motion.create(Flex);
 
 interface NavbarProps {
   scrollToHome: () => void;
@@ -49,13 +49,13 @@ const Navbar = memo(function Navbar({
   // Dynamic color values based on color mode and scroll state
   const isNavElevated = scrolled || isScrolled;
   const bgColor = useColorModeValue(
-    isNavElevated ? 'white' : 'white',
-    isNavElevated ? 'gray.900' : '#0b1a2b'
+    isNavElevated ? 'rgba(255, 255, 255, 0.88)' : 'rgba(247, 251, 250, 0.78)',
+    isNavElevated ? 'rgba(7, 24, 23, 0.88)' : 'rgba(7, 24, 23, 0.72)'
   );
   const textColor = useColorModeValue('neutral.600', 'whiteAlpha.900');
   const activeColor = useColorModeValue('brand.600', 'brand.300');
-  const hoverBg = useColorModeValue('gray.100', 'whiteAlpha.100');
-  const borderColor = useColorModeValue('gray.200', 'whiteAlpha.200');
+  const hoverBg = useColorModeValue('brand.50', 'whiteAlpha.100');
+  const borderColor = useColorModeValue('rgba(159, 184, 181, 0.36)', 'whiteAlpha.200');
   const logoGradient = useColorModeValue('linear(to-r, brand.500, accent.500)', 'linear(to-r, brand.400, accent.400)');
   const logoInitialColor = useColorModeValue('white', 'white');
   const logoSubtitleColor = useColorModeValue('neutral.500', 'neutral.300');

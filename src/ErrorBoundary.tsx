@@ -8,6 +8,9 @@ interface ErrorBoundaryProps {
 
 // Custom fallback component with better UI
 const ErrorFallback = ({ error, resetErrorBoundary }: FallbackProps) => {
+  const message = error instanceof Error ? error.message : String(error);
+  const stack = error instanceof Error ? error.stack : undefined;
+
   return (
     <Box 
       p={6} 
@@ -22,15 +25,17 @@ const ErrorFallback = ({ error, resetErrorBoundary }: FallbackProps) => {
         <Heading size="lg">Something went wrong</Heading>
         
         <Text>
-          <strong>Error:</strong> {error.message}
+          <strong>Error:</strong> {message}
         </Text>
         
-        <Box w="100%" overflowX="auto">
-          <Text mb={2}><strong>Stack Trace:</strong></Text>
-          <Code p={3} borderRadius="md" variant="subtle" w="100%" display="block" whiteSpace="pre-wrap">
-            {error.stack}
-          </Code>
-        </Box>
+        {stack && (
+          <Box w="100%" overflowX="auto">
+            <Text mb={2}><strong>Stack Trace:</strong></Text>
+            <Code p={3} borderRadius="md" variant="subtle" w="100%" display="block" whiteSpace="pre-wrap">
+              {stack}
+            </Code>
+          </Box>
+        )}
         
         <Button 
           colorScheme="red" 
@@ -46,7 +51,7 @@ const ErrorFallback = ({ error, resetErrorBoundary }: FallbackProps) => {
 
 // Modern functional component using react-error-boundary
 const ErrorBoundary = ({ children }: ErrorBoundaryProps) => {
-  const handleError = (error: Error) => {
+  const handleError = (error: unknown) => {
     // Log error details or send to a monitoring service
     console.error('Error caught by Error Boundary:', error);
   };

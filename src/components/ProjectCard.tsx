@@ -34,17 +34,18 @@ const ProjectCard: React.FC<{ project: Project }> = ({ project }) => {
   const hasPlayStore = !!project.playStoreLink;
   const hasAppStore = !!project.appStoreLink;
   const hasDemoUrl = !!project.demoUrl;
-  const containerBg = useColorModeValue('white', 'rgba(15, 23, 42, 0.9)');
-  const borderColor = useColorModeValue('gray.200', 'whiteAlpha.200');
+  const containerBg = useColorModeValue('rgba(255, 255, 255, 0.88)', 'rgba(20, 41, 39, 0.86)');
+  const borderColor = useColorModeValue('rgba(159, 184, 181, 0.45)', 'whiteAlpha.200');
   const textColor = useColorModeValue('neutral.900', 'white');
   const descriptionColor = useColorModeValue('neutral.500', 'neutral.200');
   const badgeBg = useColorModeValue('brand.50', 'whiteAlpha.200');
   const badgeColor = useColorModeValue('brand.600', 'brand.200');
   const tagColor = useColorModeValue('neutral.600', 'neutral.200');
-  const tagBorder = useColorModeValue('gray.200', 'whiteAlpha.200');
-  const dividerColor = useColorModeValue('gray.100', 'whiteAlpha.200');
+  const tagBorder = useColorModeValue('rgba(159, 184, 181, 0.45)', 'whiteAlpha.200');
+  const dividerColor = useColorModeValue('rgba(159, 184, 181, 0.32)', 'whiteAlpha.200');
   const carouselBg = useColorModeValue('whiteAlpha.900', 'blackAlpha.600');
   const carouselShadow = useColorModeValue('md', 'dark-lg');
+  const previewBg = useColorModeValue('brand.50', 'whiteAlpha.50');
   const hasCarousel = images.length > 1;
   const activeImage = images[currentImage];
 
@@ -64,8 +65,12 @@ const ProjectCard: React.FC<{ project: Project }> = ({ project }) => {
       borderColor={borderColor}
       p={6}
       transition="transform 0.2s ease, box-shadow 0.2s ease"
-      boxShadow="sm"
-      _hover={{ transform: 'translateY(-4px)', boxShadow: 'md' }}
+      boxShadow={useColorModeValue('0 14px 32px rgba(20, 104, 95, 0.08)', 'none')}
+      _hover={{
+        transform: 'translateY(-4px)',
+        boxShadow: useColorModeValue('0 22px 46px rgba(20, 104, 95, 0.16)', '0 18px 38px rgba(0, 0, 0, 0.24)'),
+        borderColor: badgeColor,
+      }}
       h="100%"
       display="flex"
       flexDirection="column"
@@ -77,7 +82,7 @@ const ProjectCard: React.FC<{ project: Project }> = ({ project }) => {
             color={badgeColor}
             px={3}
             py={1}
-            borderRadius="full"
+            borderRadius="md"
             fontWeight="medium"
           >
             {project.category}
@@ -98,7 +103,7 @@ const ProjectCard: React.FC<{ project: Project }> = ({ project }) => {
             borderRadius="lg"
             minH={{ base: '8rem', md: '9rem' }}
             aspectRatio={{ base: 3 / 4, md: 4 / 5 }}
-            bg={useColorModeValue('gray.50', 'whiteAlpha.50')}
+            bg={previewBg}
           >
             <Image
               src={activeImage?.src}

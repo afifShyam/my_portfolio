@@ -18,8 +18,10 @@ import {
   useColorModeValue,
   VStack,
   Icon,
+  SimpleGrid,
+  Link,
 } from '@chakra-ui/react';
-import { FiSend, FiMail, FiUser, FiMessageSquare } from 'react-icons/fi';
+import { FiSend, FiMail, FiUser, FiMessageSquare, FiLinkedin, FiGithub } from 'react-icons/fi';
 import { type Transition } from 'framer-motion';
 import { Helmet } from 'react-helmet-async';
 import { motionChakra } from '../utils/motion';
@@ -47,11 +49,14 @@ const Contact: React.FC = () => {
   const toast = useToast();
   
   // Dynamic colors based on color mode
-  const borderColor = useColorModeValue('gray.200', 'whiteAlpha.200');
-  const inputBgColor = useColorModeValue('white', 'rgba(15, 23, 42, 0.6)');
+  const borderColor = useColorModeValue('rgba(159, 184, 181, 0.45)', 'whiteAlpha.200');
+  const inputBgColor = useColorModeValue('rgba(255, 255, 255, 0.9)', 'rgba(20, 41, 39, 0.66)');
   const textColor = useColorModeValue('neutral.900', 'whiteAlpha.900');
   const labelColor = useColorModeValue('neutral.500', 'neutral.200');
   const accentColor = useColorModeValue('brand.600', 'brand.300');
+  const cardBg = useColorModeValue('rgba(255, 255, 255, 0.84)', 'rgba(20, 41, 39, 0.86)');
+  const mutedPanelBg = useColorModeValue('brand.50', 'whiteAlpha.100');
+  const sectionBg = useColorModeValue('linear-gradient(180deg, #fff8fa 0%, #f7fbfa 100%)', 'linear-gradient(180deg, #241526 0%, #071817 100%)');
   const buildTransition = (duration = 0.5, delay = 0): Transition => ({ duration, delay });
 
   const validateForm = useCallback((): boolean => {
@@ -144,47 +149,40 @@ const Contact: React.FC = () => {
         <meta name="description" content="Get in touch with me for collaborations, freelance projects, or job opportunities." />
       </Helmet>
       
-      <Container maxW="container.xl" py={24}>
+      <Box bg={sectionBg}>
+      <Container maxW="container.xl" py={{ base: 16, md: 24 }}>
         {/* Title */}
         <MotionHeading
           as="h2"
           size="2xl"
           fontWeight="extrabold"
           textAlign="center"
-          mb={16}
+          mb={4}
           color={textColor}
+          letterSpacing="normal"
           initial={{ opacity: 0, y: -20 }}
           animate={{ opacity: 1, y: 0, transition: buildTransition() }}
         >
-          Let's Connect
+          Let’s Build Something Reliable
         </MotionHeading>
+        <Text color={labelColor} textAlign="center" maxW="2xl" mx="auto" mb={12} fontSize="lg">
+          Share the product context, timeline, and where you need help. I’ll respond with a practical next step.
+        </Text>
 
         {/* Form Card */}
         <MotionBox
           maxW="5xl"
           mx="auto"
-          bg={useColorModeValue('white', 'rgba(15, 23, 42, 0.92)')}
+          bg={cardBg}
           border="1px solid"
           borderColor={borderColor}
-          p={{ base: 6, md: 10 }}
-          borderRadius="2xl"
-          shadow="lg"
+          p={{ base: 5, md: 8 }}
+          borderRadius="lg"
+          shadow={useColorModeValue('0 24px 60px rgba(215, 44, 97, 0.1)', '0 24px 60px rgba(0, 0, 0, 0.28)')}
+          backdropFilter="blur(18px)"
           initial={{ opacity: 0, y: 16 }}
           animate={{ opacity: 1, y: 0, transition: buildTransition(0.5, 0.2) }}
         >
-          {/* Description */}
-          <Text 
-            fontSize="lg" 
-            color={labelColor} 
-            textAlign="center" 
-            mb={10}
-            maxW="3xl"
-            mx="auto"
-          >
-            I'm open to collaborations, freelance projects, and exciting job opportunities. Feel free
-            to reach out via the form below or connect with me on social media!
-          </Text>
-
           {/* Success/Failure Message */}
           {success && (
             <Alert
@@ -200,8 +198,53 @@ const Contact: React.FC = () => {
           )}
 
           {/* Contact Form */}
-          <form onSubmit={handleSubmit}>
-            <VStack spacing={8}>
+          <SimpleGrid columns={{ base: 1, lg: 3 }} spacing={{ base: 8, lg: 10 }}>
+            <Box bg={mutedPanelBg} borderRadius="md" p={5} borderWidth="1px" borderColor={borderColor}>
+              <VStack align="stretch" spacing={5}>
+                <Box>
+                  <Text fontSize="sm" color={labelColor} textTransform="uppercase" fontWeight="semibold" mb={2}>
+                    Direct links
+                  </Text>
+                  <Text color={textColor} fontWeight="semibold">Prefer a quick conversation?</Text>
+                </Box>
+                <Button
+                  as={Link}
+                  href="mailto:afif.shyamsul@gmail.com"
+                  leftIcon={<FiMail />}
+                  variant="outline"
+                  colorScheme="brand"
+                  justifyContent="flex-start"
+                >
+                  Email me
+                </Button>
+                <Button
+                  as={Link}
+                  href="https://www.linkedin.com/in/afif-shyamsul-1333bb279/"
+                  isExternal
+                  leftIcon={<FiLinkedin />}
+                  variant="outline"
+                  colorScheme="brand"
+                  justifyContent="flex-start"
+                >
+                  LinkedIn
+                </Button>
+                <Button
+                  as={Link}
+                  href="https://github.com/afifShyam"
+                  isExternal
+                  leftIcon={<FiGithub />}
+                  variant="outline"
+                  colorScheme="brand"
+                  justifyContent="flex-start"
+                >
+                  GitHub
+                </Button>
+              </VStack>
+            </Box>
+
+            <Box gridColumn={{ base: 'auto', lg: 'span 2' }}>
+            <form onSubmit={handleSubmit}>
+              <VStack spacing={6}>
               <Flex 
                 direction={{ base: 'column', md: 'row' }} 
                 gap={6} 
@@ -318,9 +361,12 @@ const Contact: React.FC = () => {
                 </Button>
               </MotionBox>
             </VStack>
-          </form>
+            </form>
+            </Box>
+          </SimpleGrid>
         </MotionBox>
       </Container>
+      </Box>
     </>
   );
 };

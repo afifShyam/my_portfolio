@@ -1,9 +1,7 @@
 import { defineConfig } from 'vite';
-import react from '@vitejs/plugin-react-swc';
+import react from '@vitejs/plugin-react';
 import viteCompression from 'vite-plugin-compression';
 import { visualizer } from 'rollup-plugin-visualizer';
-import tsconfigPaths from 'vite-tsconfig-paths';
-import cssnano from 'cssnano';
 import { resolve } from 'path';
 
 export default defineConfig(({ mode }) => {
@@ -13,8 +11,6 @@ export default defineConfig(({ mode }) => {
     base: './',
     plugins: [
     react(),
-    // Resolve imports using tsconfig paths
-    tsconfigPaths(),
     // Compression plugin (Brotli/Gzip)
     viteCompression({
       algorithm: 'brotliCompress',
@@ -52,20 +48,8 @@ export default defineConfig(({ mode }) => {
       },
     },
   },
-  css: {
-    postcss: {
-      plugins: [
-        cssnano({
-          preset: ['default', {
-            discardComments: {
-              removeAll: true,
-            },
-          }],
-        }),
-      ],
-    },
-  },
   resolve: {
+    tsconfigPaths: true,
     alias: {
       '@': resolve(__dirname, './src'),
     },

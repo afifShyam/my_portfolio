@@ -14,27 +14,45 @@ import {
   SimpleGrid,
   useColorModeValue,
   Divider,
+  Icon,
+  Grid,
+  GridItem,
 } from '@chakra-ui/react';
+import { FiArrowRight, FiCheckCircle, FiLayers, FiShield, FiSmartphone } from 'react-icons/fi';
 
 // Import local logos
 import DartLogo from '../assets/dart-logo.png';
 import FlutterLogo from '../assets/flutter-logo.png';
 
 const HIGHLIGHT_STATS = [
-  { label: 'Years crafting products', value: '2+' },
-  { label: 'Production releases', value: '10+' },
-  { label: 'Wallet & commerce launches', value: '6' },
-  { label: 'Primary stack', value: 'Flutter · Riverpod · Firebase' },
+  { label: 'Years in mobile delivery', value: '2+' },
+  { label: 'Production releases handled', value: '10+' },
+  { label: 'Reported issue reduction', value: '35%' },
+  { label: 'Engagement lift from tuning', value: '20%' },
+];
+
+const DELIVERY_POINTS = [
+  { icon: FiSmartphone, label: 'Production Flutter builds for wallet, commerce, and health workflows.' },
+  { icon: FiLayers, label: 'Clean state and feature architecture with Riverpod, BLoC, and REST APIs.' },
+  { icon: FiShield, label: 'Release-ready handling for error states, store submissions, and CI/CD.' },
 ];
 
 const Home: React.FC<{ scrollToPortfolio: () => void }> = ({ scrollToPortfolio }) => {
   const typedRef = useRef<HTMLSpanElement | null>(null);
   const accentColor = useColorModeValue('brand.600', 'brand.300');
+  const accentSoft = useColorModeValue('accent.500', 'accent.300');
   const mutedColor = useColorModeValue('neutral.500', 'neutral.200');
-  const surfaceColor = useColorModeValue('white', 'rgba(15, 23, 42, 0.9)');
-  const borderColor = useColorModeValue('gray.200', 'whiteAlpha.200');
-  const logoBg = useColorModeValue('gray.100', 'whiteAlpha.200');
+  const surfaceColor = useColorModeValue('rgba(255, 255, 255, 0.86)', 'rgba(20, 41, 39, 0.82)');
+  const borderColor = useColorModeValue('rgba(159, 184, 181, 0.45)', 'whiteAlpha.200');
+  const logoBg = useColorModeValue('white', 'whiteAlpha.100');
   const highlightValueColor = useColorModeValue('neutral.800', 'white');
+  const sectionBg = useColorModeValue(
+    'linear-gradient(135deg, #f7fbfa 0%, #edf8f5 42%, #fff1f3 100%)',
+    'linear-gradient(135deg, #071817 0%, #102622 52%, #241526 100%)'
+  );
+  const panelBg = useColorModeValue('rgba(255, 255, 255, 0.78)', 'rgba(20, 41, 39, 0.78)');
+  const railBg = useColorModeValue('rgba(238, 251, 248, 0.9)', 'whiteAlpha.100');
+  const patternColor = useColorModeValue('rgba(20, 104, 95, 0.08)', 'rgba(122, 214, 201, 0.08)');
 
   useEffect(() => {
     let typed: Typed | null = null;
@@ -61,50 +79,61 @@ const Home: React.FC<{ scrollToPortfolio: () => void }> = ({ scrollToPortfolio }
   }, []);
 
   return (
-    <Box id="home" bg={useColorModeValue('neutral.50', 'neutral.800')} py={{ base: 24, md: 32 }}>
+    <Box
+      id="home"
+      bg={sectionBg}
+      bgImage={`linear-gradient(${patternColor} 1px, transparent 1px), linear-gradient(90deg, ${patternColor} 1px, transparent 1px)`}
+      bgSize="44px 44px"
+      pt={{ base: 28, md: 32 }}
+      pb={{ base: 16, md: 24 }}
+    >
       <Container maxW="container.xl">
-        <Flex
-          direction={{ base: 'column', md: 'row' }}
-          align="center"
-          justify="space-between"
-          gap={{ base: 12, md: 16 }}
+        <Grid
+          templateColumns={{ base: '1fr', lg: 'minmax(0, 1.05fr) minmax(360px, 0.95fr)' }}
+          alignItems="center"
+          gap={{ base: 10, lg: 14 }}
         >
-          <VStack align="flex-start" spacing={6} flex="1" maxW="xl">
+          <GridItem>
+          <VStack align="flex-start" spacing={6} maxW="3xl">
             <Badge
               colorScheme="brand"
-              borderRadius="full"
+              borderRadius="md"
               px={3}
               py={1}
               textTransform="unset"
-              fontWeight="medium"
+              fontWeight="semibold"
             >
-              Flutter Mobile Developer / Frontend Lead
+              Resume-aligned Portfolio · Flutter Mobile Developer
             </Badge>
 
-            <Heading as="h1" size="2xl" lineHeight="shorter">
-              Shipping resilient wallet, commerce, and health apps.
+            <Heading as="h1" size={{ base: '2xl', md: '3xl' }} lineHeight="1.05" letterSpacing="normal">
+              Afif Shyamsul builds secure, polished mobile apps for fintech, commerce, and community products.
             </Heading>
 
-            <Text fontSize="lg" color={mutedColor} maxW="lg">
-              I translate product ideas into polished Flutter experiences with clean architecture,
-              production-ready state management, and trustworthy delivery.
+            <Text fontSize={{ base: 'md', md: 'xl' }} color={mutedColor} maxW="2xl" lineHeight="tall">
+              Flutter Mobile Developer and Frontend Lead with production experience at Coinyex and RF Infinite,
+              focused on Riverpod, BLoC, Firebase, REST APIs, store releases, and clean architecture.
             </Text>
 
             <Box
               borderWidth="1px"
               borderColor={borderColor}
               bg={surfaceColor}
-              borderRadius="lg"
-              px={4}
+              borderRadius="md"
+              px={5}
               py={3}
+              minH="52px"
+              display="flex"
+              alignItems="center"
+              w={{ base: 'full', md: 'auto' }}
             >
               <Text fontWeight="medium" color={accentColor}>
                 <span ref={typedRef} style={{ display: 'inline-block' }}></span>
               </Text>
             </Box>
 
-            <HStack spacing={4} pt={2}>
-              <Button colorScheme="brand" size="lg" onClick={scrollToPortfolio}>
+            <Flex gap={3} pt={2} direction={{ base: 'column', sm: 'row' }} w={{ base: 'full', sm: 'auto' }}>
+              <Button colorScheme="brand" size="lg" onClick={scrollToPortfolio} rightIcon={<FiArrowRight />}>
                 View projects
               </Button>
               <Button
@@ -116,23 +145,50 @@ const Home: React.FC<{ scrollToPortfolio: () => void }> = ({ scrollToPortfolio }
               >
                 Get in touch
               </Button>
-            </HStack>
-          </VStack>
+            </Flex>
 
+            <SimpleGrid columns={{ base: 1, md: 3 }} spacing={3} w="full" pt={4}>
+              {DELIVERY_POINTS.map((item) => (
+                <HStack
+                  key={item.label}
+                  align="flex-start"
+                  spacing={3}
+                  borderWidth="1px"
+                  borderColor={borderColor}
+                  borderRadius="md"
+                  bg={panelBg}
+                  p={4}
+                >
+                  <Icon as={item.icon} color={accentColor} boxSize={5} mt={0.5} />
+                  <Text color={mutedColor} fontSize="sm" lineHeight="tall">
+                    {item.label}
+                  </Text>
+                </HStack>
+              ))}
+            </SimpleGrid>
+          </VStack>
+          </GridItem>
+
+          <GridItem>
           <Box
-            flex="1"
             w="full"
-            maxW={{ base: 'full', md: 'lg' }}
-            bg={surfaceColor}
+            bg={panelBg}
             borderRadius="lg"
             borderWidth="1px"
             borderColor={borderColor}
             p={{ base: 6, md: 8 }}
+            boxShadow={useColorModeValue('0 24px 60px rgba(15, 23, 42, 0.08)', '0 24px 60px rgba(0, 0, 0, 0.28)')}
+            backdropFilter="blur(18px)"
           >
-            <SimpleGrid columns={{ base: 1, sm: 2 }} spacing={6}>
+            <HStack spacing={3} mb={6} color={accentColor}>
+              <Icon as={FiCheckCircle} boxSize={5} />
+              <Text fontWeight="semibold">Resume Highlights</Text>
+            </HStack>
+
+            <SimpleGrid columns={{ base: 1, sm: 2 }} spacing={4}>
               {HIGHLIGHT_STATS.map((item) => (
-                <VStack key={item.label} align="flex-start" spacing={1}>
-                  <Text fontSize="3xl" fontWeight="semibold" color={highlightValueColor}>
+                <VStack key={item.label} align="flex-start" spacing={1} bg={railBg} borderRadius="md" p={4}>
+                  <Text fontSize={{ base: '2xl', md: '3xl' }} fontWeight="semibold" color={highlightValueColor}>
                     {item.value}
                   </Text>
                   <Text fontSize="sm" color={mutedColor}>
@@ -144,15 +200,35 @@ const Home: React.FC<{ scrollToPortfolio: () => void }> = ({ scrollToPortfolio }
 
             <Divider my={8} borderColor={borderColor} />
 
+            <VStack align="stretch" spacing={3} mb={8}>
+              {[
+                'Coinyex Co. Ltd. · TuxC Wallet frontend ownership',
+                'RF Infinite · commerce, social, and food-ordering flows',
+                'UiTM · Computer Science, SVM flood prediction FYP',
+              ].map((item, index) => (
+                <HStack key={item} spacing={3} align="flex-start">
+                  <Box
+                    mt={1}
+                    w="8px"
+                    h="8px"
+                    borderRadius="full"
+                    bg={index === 1 ? accentSoft : accentColor}
+                    flexShrink={0}
+                  />
+                  <Text color={mutedColor} fontSize="sm">{item}</Text>
+                </HStack>
+              ))}
+            </VStack>
+
             <Text fontSize="sm" color={mutedColor} mb={4} fontWeight="medium">
-              Tools I rely on
+              Core tools
             </Text>
 
-            <HStack spacing={6}>
-              <VStack spacing={3}>
+            <HStack spacing={4} align="stretch">
+              <VStack spacing={3} flex="1">
                 <Box
                   bg={logoBg}
-                  borderRadius="lg"
+                  borderRadius="md"
                   p={4}
                   display="flex"
                   alignItems="center"
@@ -164,10 +240,10 @@ const Home: React.FC<{ scrollToPortfolio: () => void }> = ({ scrollToPortfolio }
                   Dart
                 </Text>
               </VStack>
-              <VStack spacing={3}>
+              <VStack spacing={3} flex="1">
                 <Box
                   bg={logoBg}
-                  borderRadius="lg"
+                  borderRadius="md"
                   p={4}
                   display="flex"
                   alignItems="center"
@@ -181,7 +257,8 @@ const Home: React.FC<{ scrollToPortfolio: () => void }> = ({ scrollToPortfolio }
               </VStack>
             </HStack>
           </Box>
-        </Flex>
+          </GridItem>
+        </Grid>
       </Container>
     </Box>
   );
