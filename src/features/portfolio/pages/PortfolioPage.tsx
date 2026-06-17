@@ -1,13 +1,13 @@
 import { memo } from 'react';
 import { usePortfolio } from '../hooks/usePortfolio';
 import ProjectCard from '../../../components/ProjectCard';
-import { 
-  Box, 
-  Grid, 
-  Heading, 
-  Skeleton, 
-  Container, 
-  Text, 
+import {
+  Box,
+  Grid,
+  Heading,
+  Skeleton,
+  Container,
+  Text,
   useColorModeValue,
   Flex,
   Icon
@@ -24,7 +24,7 @@ const MotionGrid = motionChakra(Grid);
 
 const PortfolioPage: React.FC = () => {
   const { projects, loading, error } = usePortfolio();
-  
+
   // Dynamic colors based on color mode
   const sectionBg = useColorModeValue(
     'linear-gradient(180deg, #eefbf8 0%, #fff8fa 100%)',
@@ -47,7 +47,7 @@ const PortfolioPage: React.FC = () => {
         <title>My Projects | Portfolio</title>
         <meta name="description" content="Browse my portfolio of web and mobile development projects" />
       </Helmet>
-      
+
       <MotionBox
         minH="100vh"
         bg={sectionBg}
@@ -72,88 +72,88 @@ const PortfolioPage: React.FC = () => {
             position="relative"
             overflow="hidden"
           >
-          {/* Page Title */}
-          <Flex justify="center" align="center" mb={6}>
-            <Icon as={FiCode} mr={3} boxSize={6} color={iconAccentColor} />
-            <MotionHeading 
-              as="h2" 
-              size="2xl" 
-              fontWeight="extrabold" 
+            {/* Page Title */}
+            <Flex justify="center" align="center" mb={6}>
+              <Icon as={FiCode} mr={3} boxSize={6} color={iconAccentColor} />
+              <MotionHeading
+                as="h2"
+                size="2xl"
+                fontWeight="extrabold"
+                textAlign="center"
+                letterSpacing="normal"
+                initial={{ opacity: 0, y: -20 }}
+                animate={{ opacity: 1, y: 0, transition: defaultTransition(0.5, 0.2) }}
+              >
+                My Projects
+              </MotionHeading>
+            </Flex>
+
+            {/* Subtitle */}
+            <Text
               textAlign="center"
-              letterSpacing="normal"
-              initial={{ opacity: 0, y: -20 }}
-              animate={{ opacity: 1, y: 0, transition: defaultTransition(0.5, 0.2) }}
+              fontSize="lg"
+              mb={12}
+              color={subtitleColor}
+              maxW="2xl"
+              mx="auto"
             >
-              Selected Work
-            </MotionHeading>
-          </Flex>
-          
-          {/* Subtitle */}
-          <Text 
-            textAlign="center" 
-            fontSize="lg" 
-            mb={12}
-            color={subtitleColor}
-            maxW="2xl"
-            mx="auto"
-          >
-            Resume-backed work across fintech, e-commerce, health, machine learning, and Android architecture.
+              Resume-backed work across fintech, e-commerce, health, machine learning, and Android architecture.
             </Text>
 
             {error ? (
               // Error State
-              <MotionBox 
-              textAlign="center" 
-              p={8} 
-              bg={errorBg}
-              color={errorColor}
-              borderRadius="xl"
-              borderWidth="1px"
-              borderColor={borderColor}
-              initial={{ opacity: 0, scale: 0.9 }}
-              animate={{ opacity: 1, scale: 1, transition: defaultTransition(0.3) }}
-            >
-              <Text fontSize="lg">Failed to load projects. Please try again later.</Text>
-            </MotionBox>
-          ) : loading ? (
-            // Skeleton Loading State
-            <MotionGrid
-              templateColumns={{ base: '1fr', md: 'repeat(2, 1fr)', lg: 'repeat(3, 1fr)' }}
-              gap={12}
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1, transition: defaultTransition(0.3) }}
-            >
-              {[1, 2, 3, 4, 5, 6].map((_, index) => (
-                <Skeleton
-                  key={index}
-                  height="350px"
-                  borderRadius="xl"
-                  borderWidth="1px"
-                  borderColor={borderColor}
-                  startColor={skeletonStartColor}
-                  endColor={skeletonEndColor}
-                />
-              ))}
-            </MotionGrid>
-          ) : (
-            // Projects Grid
-            <MotionGrid
-              templateColumns={{ base: '1fr', md: 'repeat(2, 1fr)', lg: 'repeat(3, 1fr)' }}
-              gap={10}
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1, transition: defaultTransition(0.5, 0.3) }}
-            >
-              {projects.map((project, index) => (
-                <MotionBox
-                  key={project.id}
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0, transition: defaultTransition(0.5, 0.1 * (index % 3)) }}
-                >
-                  <ProjectCard project={project} />
-                </MotionBox>
-              ))}
-            </MotionGrid>
-          )}
+              <MotionBox
+                textAlign="center"
+                p={8}
+                bg={errorBg}
+                color={errorColor}
+                borderRadius="xl"
+                borderWidth="1px"
+                borderColor={borderColor}
+                initial={{ opacity: 0, scale: 0.9 }}
+                animate={{ opacity: 1, scale: 1, transition: defaultTransition(0.3) }}
+              >
+                <Text fontSize="lg">Failed to load projects. Please try again later.</Text>
+              </MotionBox>
+            ) : loading ? (
+              // Skeleton Loading State
+              <MotionGrid
+                templateColumns={{ base: '1fr', md: 'repeat(2, 1fr)', lg: 'repeat(3, 1fr)' }}
+                gap={12}
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1, transition: defaultTransition(0.3) }}
+              >
+                {[1, 2, 3, 4, 5, 6].map((_, index) => (
+                  <Skeleton
+                    key={index}
+                    height="350px"
+                    borderRadius="xl"
+                    borderWidth="1px"
+                    borderColor={borderColor}
+                    startColor={skeletonStartColor}
+                    endColor={skeletonEndColor}
+                  />
+                ))}
+              </MotionGrid>
+            ) : (
+              // Projects Grid
+              <MotionGrid
+                templateColumns={{ base: '1fr', md: 'repeat(2, 1fr)', lg: 'repeat(3, 1fr)' }}
+                gap={10}
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1, transition: defaultTransition(0.5, 0.3) }}
+              >
+                {projects.map((project, index) => (
+                  <MotionBox
+                    key={project.id}
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0, transition: defaultTransition(0.5, 0.1 * (index % 3)) }}
+                  >
+                    <ProjectCard project={project} />
+                  </MotionBox>
+                ))}
+              </MotionGrid>
+            )}
           </MotionBox>
         </Container>
       </MotionBox>
