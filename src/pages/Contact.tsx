@@ -146,7 +146,7 @@ const Contact: React.FC = () => {
   return (
     <>
       <Helmet>
-        <title>Contact Me | Portfolio</title>
+        <title>Portfolio</title>
         <meta name="description" content="Get in touch for mobile development roles, freelance work, or collaborations." />
       </Helmet>
 

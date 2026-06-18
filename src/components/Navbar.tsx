@@ -2,7 +2,8 @@ import { useState, useEffect, memo } from 'react';
 import {
   Box,
   Flex,
-  Text,
+  Image,
+  VisuallyHidden,
   IconButton,
   Button,
   Drawer,
@@ -34,18 +35,18 @@ interface NavbarProps {
   scrolled?: boolean;
 }
 
-const Navbar = memo(function Navbar({ 
-  scrollToHome, 
-  scrollToPortfolio, 
-  scrollToAbout, 
-  scrollToContact, 
+const Navbar = memo(function Navbar({
+  scrollToHome,
+  scrollToPortfolio,
+  scrollToAbout,
+  scrollToContact,
   activeSection,
   scrolled = false
 }: NavbarProps) {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [isScrolled, setIsScrolled] = useState(false);
   const { colorMode, toggleColorMode } = useColorMode();
-  
+
   // Dynamic color values based on color mode and scroll state
   const isNavElevated = scrolled || isScrolled;
   const bgColor = useColorModeValue(
@@ -56,10 +57,7 @@ const Navbar = memo(function Navbar({
   const activeColor = useColorModeValue('brand.600', 'brand.300');
   const hoverBg = useColorModeValue('brand.50', 'whiteAlpha.100');
   const borderColor = useColorModeValue('rgba(159, 184, 181, 0.36)', 'whiteAlpha.200');
-  const logoGradient = useColorModeValue('linear(to-r, brand.500, accent.500)', 'linear(to-r, brand.400, accent.400)');
-  const logoInitialColor = useColorModeValue('white', 'white');
-  const logoSubtitleColor = useColorModeValue('neutral.500', 'neutral.300');
-  
+
   // Handle scroll events to change navbar appearance
   useEffect(() => {
     const handleScroll = () => {
@@ -95,77 +93,63 @@ const Navbar = memo(function Navbar({
       <Flex justify="space-between" align="center" maxW="1200px" mx="auto">
         {/* Logo/Brand */}
         <MotionFlex
-          fontSize="xl"
-          fontWeight="bold"
-          color={textColor}
           cursor="pointer"
           onClick={scrollToHome}
           align="center"
           whileHover={{ scale: 1.05 }}
           whileTap={{ scale: 0.95 }}
         >
-          <HStack spacing={3} align="center">
-            <Box
-              w="40px"
-              h="40px"
-              borderRadius="lg"
-              bgGradient={logoGradient}
-              display="flex"
-              alignItems="center"
-              justifyContent="center"
-              fontWeight="bold"
-              fontSize="lg"
-              color={logoInitialColor}
-              letterSpacing="widest"
-            >
-              A
-            </Box>
-            <Box textAlign="left">
-              <Text fontWeight="semibold" fontSize="md" color={textColor}>
-                Afif
-              </Text>
-              <Text fontSize="xs" color={logoSubtitleColor} letterSpacing="widest">
-                PORTFOLIO
-              </Text>
-            </Box>
-          </HStack>
+          <Box
+            w={{ base: '72px', md: '80px' }}
+            h={{ base: '72px', md: '80px' }}
+            borderRadius="xl"
+            overflow="hidden"
+            borderWidth="1px"
+            borderColor={borderColor}
+            bg={useColorModeValue('white', 'rgba(15, 23, 42, 0.72)')}
+            boxShadow={useColorModeValue('0 8px 24px rgba(15, 23, 42, 0.08)', '0 8px 24px rgba(0, 0, 0, 0.28)')}
+            flexShrink={0}
+          >
+            <Image src="/afif-logo.png" alt="Afif logo" w="100%" h="100%" objectFit="contain" />
+          </Box>
+          <VisuallyHidden>Afif portfolio</VisuallyHidden>
         </MotionFlex>
 
         {/* Desktop Navigation */}
         <HStack spacing={4} display={{ base: 'none', md: 'flex' }}>
-          <NavButton 
-            label="Home" 
-            isActive={activeSection === 'home'} 
-            onClick={scrollToHome} 
+          <NavButton
+            label="Home"
+            isActive={activeSection === 'home'}
+            onClick={scrollToHome}
             activeColor={activeColor}
             textColor={textColor}
             hoverBg={hoverBg}
           />
-          <NavButton 
-            label="My Projects" 
-            isActive={activeSection === 'portfolio'} 
-            onClick={scrollToPortfolio} 
+          <NavButton
+            label="My Projects"
+            isActive={activeSection === 'portfolio'}
+            onClick={scrollToPortfolio}
             activeColor={activeColor}
             textColor={textColor}
             hoverBg={hoverBg}
           />
-          <NavButton 
-            label="About" 
-            isActive={activeSection === 'about'} 
-            onClick={scrollToAbout} 
+          <NavButton
+            label="About"
+            isActive={activeSection === 'about'}
+            onClick={scrollToAbout}
             activeColor={activeColor}
             textColor={textColor}
             hoverBg={hoverBg}
           />
-          <NavButton 
-            label="Contact" 
-            isActive={activeSection === 'contact'} 
-            onClick={scrollToContact} 
+          <NavButton
+            label="Contact"
+            isActive={activeSection === 'contact'}
+            onClick={scrollToContact}
             activeColor={activeColor}
             textColor={textColor}
             hoverBg={hoverBg}
           />
-          
+
           {/* Color Mode Toggle */}
           <Tooltip label={`Switch to ${colorMode === 'light' ? 'dark' : 'light'} mode`}>
             <IconButton
@@ -190,7 +174,7 @@ const Navbar = memo(function Navbar({
             colorScheme="blue"
             size="sm"
           />
-          
+
           <IconButton
             aria-label="Open menu"
             icon={<HamburgerIcon />}
@@ -211,46 +195,46 @@ const Navbar = memo(function Navbar({
             </DrawerHeader>
             <DrawerBody py={4}>
               <VStack spacing={3} align="stretch">
-                <MobileNavButton 
-                  label="Home" 
-                  isActive={activeSection === 'home'} 
+                <MobileNavButton
+                  label="Home"
+                  isActive={activeSection === 'home'}
                   onClick={() => {
                     scrollToHome();
                     onClose();
-                  }} 
+                  }}
                   activeColor={activeColor}
                   textColor={textColor}
                   hoverBg={hoverBg}
                 />
-                <MobileNavButton 
-                  label="My Projects" 
-                  isActive={activeSection === 'portfolio'} 
+                <MobileNavButton
+                  label="My Projects"
+                  isActive={activeSection === 'portfolio'}
                   onClick={() => {
                     scrollToPortfolio();
                     onClose();
-                  }} 
+                  }}
                   activeColor={activeColor}
                   textColor={textColor}
                   hoverBg={hoverBg}
                 />
-                <MobileNavButton 
-                  label="About" 
-                  isActive={activeSection === 'about'} 
+                <MobileNavButton
+                  label="About"
+                  isActive={activeSection === 'about'}
                   onClick={() => {
                     scrollToAbout();
                     onClose();
-                  }} 
+                  }}
                   activeColor={activeColor}
                   textColor={textColor}
                   hoverBg={hoverBg}
                 />
-                <MobileNavButton 
-                  label="Contact" 
-                  isActive={activeSection === 'contact'} 
+                <MobileNavButton
+                  label="Contact"
+                  isActive={activeSection === 'contact'}
                   onClick={() => {
                     scrollToContact();
                     onClose();
-                  }} 
+                  }}
                   activeColor={activeColor}
                   textColor={textColor}
                   hoverBg={hoverBg}
@@ -274,9 +258,9 @@ interface NavButtonProps {
   hoverBg: string;
 }
 
-const NavButton = memo(function NavButton({ 
-  label, 
-  isActive, 
+const NavButton = memo(function NavButton({
+  label,
+  isActive,
   onClick,
   activeColor,
   textColor,
@@ -314,9 +298,9 @@ const NavButton = memo(function NavButton({
 })
 
 // Reusable NavButton component for mobile navigation
-const MobileNavButton = memo(function MobileNavButton({ 
-  label, 
-  isActive, 
+const MobileNavButton = memo(function MobileNavButton({
+  label,
+  isActive,
   onClick,
   activeColor,
   textColor,
