@@ -4,22 +4,18 @@ import ProjectCard from '../../../components/ProjectCard';
 import {
   Box,
   Grid,
-  Heading,
   Skeleton,
   Container,
   Text,
   useColorModeValue,
-  Flex,
-  Icon
 } from '@chakra-ui/react';
-import { FiCode } from 'react-icons/fi';
 import { type Transition } from 'framer-motion';
 import { Helmet } from 'react-helmet-async';
 import { motionChakra } from '../../../utils/motion';
+import SectionHeading from '../../../components/ui/SectionHeading';
 
 // Motion components
 const MotionBox = motionChakra(Box);
-const MotionHeading = motionChakra(Heading);
 const MotionGrid = motionChakra(Grid);
 
 const PortfolioPage: React.FC = () => {
@@ -31,10 +27,8 @@ const PortfolioPage: React.FC = () => {
     'linear-gradient(180deg, #102622 0%, #241526 100%)'
   );
   const textColor = useColorModeValue('neutral.900', 'whiteAlpha.900');
-  const subtitleColor = useColorModeValue('neutral.500', 'neutral.200');
   const skeletonStartColor = useColorModeValue('gray.100', 'whiteAlpha.200');
   const skeletonEndColor = useColorModeValue('gray.200', 'whiteAlpha.300');
-  const iconAccentColor = useColorModeValue('brand.600', 'brand.300');
   const borderColor = useColorModeValue('rgba(159, 184, 181, 0.45)', 'whiteAlpha.200');
   const errorBg = useColorModeValue('red.50', 'rgba(244, 63, 94, 0.12)');
   const errorColor = useColorModeValue('red.600', 'red.300');
@@ -60,10 +54,10 @@ const PortfolioPage: React.FC = () => {
         animate={{ opacity: 1, transition: defaultTransition() }}
       >
         <Container maxW="container.xl" position="relative" zIndex={1}>
-          <MotionBox
-            bg={panelBg}
-            border="1px solid"
-            borderColor={borderColor}
+            <MotionBox
+              bg={panelBg}
+              border="1px solid"
+              borderColor={borderColor}
             borderRadius="lg"
             boxShadow={useColorModeValue('0 24px 60px rgba(20, 104, 95, 0.1)', '0 24px 60px rgba(0, 0, 0, 0.24)')}
             backdropFilter="blur(18px)"
@@ -73,32 +67,13 @@ const PortfolioPage: React.FC = () => {
             overflow="hidden"
           >
             {/* Page Title */}
-            <Flex justify="center" align="center" mb={6}>
-              <Icon as={FiCode} mr={3} boxSize={6} color={iconAccentColor} />
-              <MotionHeading
-                as="h2"
-                size="2xl"
-                fontWeight="extrabold"
-                textAlign="center"
-                letterSpacing="normal"
-                initial={{ opacity: 0, y: -20 }}
-                animate={{ opacity: 1, y: 0, transition: defaultTransition(0.5, 0.2) }}
-              >
-                My Projects
-              </MotionHeading>
-            </Flex>
-
-            {/* Subtitle */}
-            <Text
-              textAlign="center"
-              fontSize="lg"
-              mb={12}
-              color={subtitleColor}
-              maxW="2xl"
-              mx="auto"
-            >
-              Resume-backed work across fintech, e-commerce, health, machine learning, and Android architecture.
-            </Text>
+            <Box mb={12}>
+              <SectionHeading
+                title="Featured Projects"
+                subtitle="A short selection of mobile work across fintech, e-commerce, health, and machine learning."
+                align="left"
+              />
+            </Box>
 
             {error ? (
               // Error State

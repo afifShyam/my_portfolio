@@ -6,12 +6,10 @@ import { Project } from '../types/projectTypes';
 const AppRoutes: React.FC = () => {
   const project: Project = {
     id: 1,
-    name: 'afif',
-    description: 'afif gay',
-    category: 'category afif',
-    demoUrl: 'demoUrl afif',
-    repoUrl: 'repoUrl afif',
-    techStack: ['techStack afif'],
+    name: 'Featured Project',
+    description: 'A mobile app project detail view.',
+    category: 'Mobile',
+    techStack: ['Flutter', 'Firebase'],
   };
   return (
     <Router>
@@ -20,9 +18,7 @@ const AppRoutes: React.FC = () => {
           path="/"
           element={
             <Home
-              scrollToPortfolio={function (): void {
-                throw new Error('Function not implemented.');
-              }}
+              scrollToPortfolio={() => undefined}
             />
           }
         />

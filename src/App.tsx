@@ -76,12 +76,12 @@ const App: React.FC = () => {
     >
       <Helmet>
         <title>Afif Shyamsul | Flutter Mobile Developer / Frontend Lead</title>
-        <meta name="description" content="Wallet, commerce, and productivity apps built with Flutter, Riverpod, Firebase, and clean architecture." />
-        <meta name="keywords" content="portfolio, flutter developer, mobile developer, riverpod, bloc, firebase, frontend lead" />
+        <meta name="description" content="Flutter mobile developer with 2+ years of experience building clean apps with Flutter, Firebase, REST APIs, Riverpod, Provider, and BLoC." />
+        <meta name="keywords" content="portfolio, flutter developer, mobile developer, riverpod, bloc, firebase, frontend lead, flutter portfolio" />
         <meta property="og:title" content="Afif Shyamsul | Flutter Mobile Developer / Frontend Lead" />
-        <meta property="og:description" content="Wallet, commerce, and productivity apps built with Flutter, Riverpod, Firebase, and clean architecture." />
+        <meta property="og:description" content="Flutter mobile developer with 2+ years of experience building clean apps with Flutter, Firebase, REST APIs, Riverpod, Provider, and BLoC." />
         <meta property="og:type" content="website" />
-        <link rel="canonical" href="https://your-portfolio-url.com" />
+        <link rel="canonical" href="https://mobile-dev-showcase-24.web.app/" />
       </Helmet>
       
       {/* Navbar */}

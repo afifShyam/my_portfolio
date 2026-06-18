@@ -1,19 +1,19 @@
 import { useState, useEffect } from 'react';
 import { Project } from '../../../types/projectTypes';
-import ihsanmadaniImage from '../../../assets/ihsanmadani_preview.png';
 import pcariImage from '../../../assets/pcari_preview.png';
-import todoImage from '../../../assets/todo_kotlin_preview.png';
 import tuxcPreview2 from '../../../assets/tuxc_preview_2.png';
 import tuxcPreview3 from '../../../assets/tuxc_preview_3.png';
 
-// Mock data
 export const mockProjects: Project[] = [
   {
     id: 1,
     name: 'TuxC Wallet',
     description:
-      'Crypto wallet experience with send, receive, and swap flows. Migrated to Riverpod, tightened API handling, and improved render speed for transaction journeys.',
+      'A cryptocurrency wallet app with clear send, receive, and swap flows. Built for fast navigation, simple actions, and reliable transaction handling.',
     category: 'Fintech',
+    role: 'Frontend Lead',
+    features: ['Send and receive crypto', 'Swap flow', 'Transaction history'],
+    impact: 'Led the frontend and helped improve wallet flow stability and state management.',
     images: [
       {
         src: '/tuxc-wallet-800.png',
@@ -26,96 +26,72 @@ export const mockProjects: Project[] = [
     ],
     playStoreLink: 'https://play.google.com/store/apps/details?id=io.tux.wallet&hl=en',
     appStoreLink: 'https://apps.apple.com/ly/app/tux-wallet/id1495945761',
-    techStack: ['Flutter', 'Riverpod', 'REST API', 'Firebase', 'CI/CD'],
+    techStack: ['Flutter', 'Dart', 'Riverpod', 'Firebase', 'REST API'],
   },
   {
     id: 2,
-    name: 'Hiring Caregiver Application',
+    name: 'Pcari.My App',
     description:
-      'Geolocation and task management app that reduced caregiver response time by 40%. Built reliable task flows, notifications, and data sync.',
-    category: 'Mobile',
+      'Shopping and reservation modules built for smooth browsing, booking, and checkout flows.',
+    category: 'E-commerce',
+    role: 'Flutter Developer',
+    features: ['Shopping module', 'Reservation flow', 'API-driven screens'],
+    impact: 'Helped deliver cleaner user flows and faster screen rendering for the app experience.',
+    image: pcariImage,
+    playStoreLink: 'https://play.google.com/store/apps/details?id=com.pcari.pcari_user&hl=en',
+    appStoreLink: 'https://apps.apple.com/my/app/pcari-my/id1536313176',
+    techStack: ['Flutter', 'Dart', 'BLoC', 'REST API'],
+  },
+  {
+    id: 3,
+    name: 'Hiring Caregiver App',
+    description:
+      'A location-based caregiver app with task management, status tracking, and dependable updates for daily operations.',
+    category: 'Health',
+    role: 'Flutter Developer',
+    features: ['Geolocation support', 'Task management', 'Status updates'],
+    impact: 'Built reliable workflows that made it easier to manage caregiver tasks and locations.',
     githubLink: 'https://github.com/afifShyam/seniormatchpro_v1',
     techStack: ['Flutter', 'Firebase', 'BLoC', 'REST API'],
   },
   {
-    id: 3,
-    name: 'Sleep Tracker',
-    description:
-      'Cross-platform sleep tracker with real-time visualization and sync. Increased user sleep awareness by 25% with clear insights.',
-    category: 'Health',
-    githubLink: 'https://github.com/afifShyam/sleep_tracker',
-    techStack: ['Flutter', 'Firebase', 'Dart', 'BLoC'],
-  },
-  {
     id: 4,
-    name: 'Flood Prediction App (FYP 2023)',
+    name: 'Sleep Tracker App',
     description:
-      'Support Vector Machine model delivering 90% accuracy, with real-time weather updates and two-day forecasts to improve flood preparedness.',
-    category: 'Machine Learning',
-    githubLink: 'https://github.com/afifShyam/flood_prediction_SVM_dart',
-    techStack: ['Flutter', 'SVM', 'Firebase', 'Flask API', 'Python'],
+      'A sleep tracking app that stores user data in Firebase and turns it into clear charts and useful insights.',
+    category: 'Health',
+    role: 'Flutter Developer',
+    features: ['Sleep logging', 'Firebase sync', 'Data insights'],
+    impact: 'Made sleep data easier to review with simple visuals and consistent state handling.',
+    githubLink: 'https://github.com/afifShyam/sleep_tracker',
+    techStack: ['Flutter', 'Dart', 'Firebase', 'BLoC'],
   },
   {
     id: 5,
-    name: 'Pcari.My App',
+    name: 'Flood Prediction App',
     description:
-      'Shopping and reservation experience tuned for performance. Improved engagement by 20% with optimized architecture and REST integrations.',
-    category: 'E-commerce',
-    image: pcariImage,
-    playStoreLink: 'https://play.google.com/store/apps/details?id=com.pcari.pcari_user&hl=en',
-    appStoreLink: 'https://apps.apple.com/my/app/pcari-my/id1536313176',
-    techStack: ['Flutter', 'REST API', 'BLoC', 'WebSockets', 'GitHub'],
-  },
-  {
-    id: 6,
-    name: 'Ihsanmadani App',
-    description:
-      'Implemented navigation, API flows, and responsive UI from Figma for a community app. Focused on stability and consistent delivery.',
-    category: 'Mobile',
-    image: ihsanmadaniImage,
-    playStoreLink: 'https://play.google.com/store/search?q=ihsan+madani&c=apps&hl=en',
-    appStoreLink: 'https://apps.apple.com/my/app/ihsan-madani/id6479978503',
-    techStack: ['Flutter', 'REST API', 'Figma', 'BLoC'],
-  },
-  {
-    id: 7,
-    name: 'Todo App (Kotlin)',
-    description:
-      'Jetpack Compose to-do app with Room, StateFlow, Hilt, and MVVM. Full CRUD flows, responsive UI, and production-ready architecture.',
-    category: 'Mobile',
-    image: todoImage,
-    githubLink: 'https://github.com/afifShyam/TodoAppKT',
-    techStack: [
-      'Kotlin',
-      'Jetpack Compose',
-      'Room',
-      'StateFlow',
-      'Hilt',
-      'Android Studio',
-      'MVVM',
-      'Coroutines',
-    ],
+      'A final year project that uses an SVM model to forecast flood risk with weather data and a simple mobile interface.',
+    category: 'Machine Learning',
+    role: 'Student Developer',
+    features: ['SVM-based forecast', 'Weather updates', 'Flood-risk view'],
+    impact: 'Reached 90% model accuracy and helped present flood predictions in a simple mobile format.',
+    githubLink: 'https://github.com/afifShyam/flood_prediction_SVM_dart',
+    techStack: ['Flutter', 'Python', 'Flask API', 'Firebase', 'SVM'],
   },
 ];
 
-// Custom hook
 export const usePortfolio = () => {
   const [projects, setProjects] = useState<Project[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    // Simulated API call with a delay
     const fetchProjects = async () => {
       try {
         setLoading(true);
-        // Simulate a delay
-        await new Promise((resolve) => setTimeout(resolve, 1000));
-
-        // Set project data
+        await new Promise((resolve) => setTimeout(resolve, 700));
         setProjects(mockProjects);
       } catch (err: unknown) {
-        // Detailed error logging
         console.error('Error fetching projects:', err);
         setError(err instanceof Error ? err.message : 'An unknown error occurred');
       } finally {

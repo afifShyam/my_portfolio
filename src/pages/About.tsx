@@ -2,7 +2,6 @@ import { memo } from 'react';
 import {
   Box,
   Container,
-  Heading,
   Text,
   SimpleGrid,
   VStack,
@@ -11,95 +10,22 @@ import {
   Button,
   Icon,
   useColorModeValue,
-  Divider,
   List,
   ListItem,
   ListIcon,
   HStack,
   Badge,
-  Grid,
-  GridItem,
 } from '@chakra-ui/react';
-import { type Variants } from 'framer-motion';
-import { FaGithub, FaLinkedin, FaGraduationCap, FaBriefcase, FaTrophy } from 'react-icons/fa';
-import { FiCheckCircle, FiBriefcase, FiMapPin, FiUsers, FiClock, FiSearch, FiPenTool, FiCode, FiUploadCloud } from 'react-icons/fi';
-import type { IconType } from 'react-icons';
-import { motionChakra } from '../utils/motion';
-
-// Motion components
-const MotionBox = motionChakra(Box);
-const MotionFlex = motionChakra(Flex);
-const MotionVStack = motionChakra(VStack);
-const MotionHeading = motionChakra(Heading);
-
-// Skill badge component
-interface SkillBadgeProps {
-  label: string;
-  colorScheme: string;
-}
-
-const SkillBadge = memo(function SkillBadge({ label, colorScheme }: SkillBadgeProps) {
-  const bgColor = useColorModeValue(`${colorScheme}.50`, `${colorScheme}.900`);
-  const textColor = useColorModeValue(`${colorScheme}.700`, `${colorScheme}.200`);
-  const borderColor = useColorModeValue(`${colorScheme}.200`, `${colorScheme}.700`);
-
-  return (
-    <Box
-      py={2}
-      px={4}
-      bg={bgColor}
-      color={textColor}
-      borderRadius="md"
-      fontSize="sm"
-      fontWeight="medium"
-      textAlign="center"
-      border="1px solid"
-      borderColor={borderColor}
-    >
-      {label}
-    </Box>
-  );
-});
-
-interface QuickFactProps {
-  icon: IconType;
-  label: string;
-  value: string;
-}
-
-const QuickFact = memo(function QuickFact({ icon: FactIcon, label, value }: QuickFactProps) {
-  const border = useColorModeValue('gray.200', 'whiteAlpha.200');
-  const labelColor = useColorModeValue('neutral.500', 'neutral.300');
-  const valueColor = useColorModeValue('neutral.800', 'whiteAlpha.900');
-
-  return (
-    <HStack
-      spacing={3}
-      align="flex-start"
-      p={3}
-      borderRadius="lg"
-      borderWidth="1px"
-      borderColor={border}
-      bg="transparent"
-    >
-      <Box as={FactIcon} boxSize={5} color="brand.500" mt={1} />
-      <VStack align="flex-start" spacing={0} fontSize="sm">
-        <Text fontWeight="medium" textTransform="uppercase" color={labelColor} fontSize="xs">
-          {label}
-        </Text>
-        <Text color={valueColor}>{value}</Text>
-      </VStack>
-    </HStack>
-  );
-});
+import { FaGithub, FaLinkedin, FaBriefcase, FaRocket } from 'react-icons/fa';
+import { FiCheckCircle, FiCode, FiCpu, FiDatabase, FiLayers, FiMapPin, FiTool } from 'react-icons/fi';
+import SectionHeading from '../components/ui/SectionHeading';
 
 interface ExperienceItem {
   role: string;
   company: string;
   period: string;
-  focus: string;
-  stack: string[];
-  highlights: string[];
+  summary: string;
+  bullets: string[];
 }
 
 const EXPERIENCE: ExperienceItem[] = [
@@ -107,491 +33,243 @@ const EXPERIENCE: ExperienceItem[] = [
     role: 'Flutter Developer · Frontend Lead',
     company: 'Coinyex Co. Ltd.',
     period: 'Aug 2025 — Present',
-    focus: 'Owns the TuxC Wallet frontend across send, receive, and swap experiences.',
-    stack: ['Flutter', 'Riverpod', 'REST', 'Firebase', 'CI/CD'],
-    highlights: [
-      'Led migration from Provider to Riverpod for safer state handling and faster renders.',
-      'Hardened API handling, error logging, and release notes for wallet transactions.',
-      'Managed store submissions, certificates, versioning, and release pipelines.',
+    summary: 'Leading the Flutter frontend for TuxC Wallet and supporting release delivery.',
+    bullets: [
+      'Led the frontend work for send, receive, and swap flows.',
+      'Improved state handling, API integration, and release readiness.',
+      'Worked with backend and product teams to ship stable updates.',
     ],
   },
   {
     role: 'Mobile Developer',
     company: 'RF Infinite Sdn. Bhd.',
     period: 'Sep 2023 — Jul 2025',
-    focus: 'Delivered super-app experiences (commerce, social, food ordering) from internship to full-time.',
-    stack: ['Flutter', 'REST', 'WebSockets', 'Clean Architecture', 'Performance'],
-    highlights: [
-      'Translated Figma to production UI/UX; improved engagement by 20% via perf tuning.',
-      'Built shopping and reservation modules with clean architecture and REST APIs.',
-      'Reduced reported issues by 35% through code reviews and shared standards.',
+    summary: 'Built and improved mobile app screens for commerce, reservation, and productivity flows.',
+    bullets: [
+      'Built clean mobile UI from design files and requirements.',
+      'Integrated REST APIs and improved app performance.',
+      'Supported release management, testing, and deployment.',
     ],
   },
 ];
 
-const RESUME_METRICS = [
-  { value: '2+', label: 'Years Flutter delivery' },
-  { value: '10+', label: 'Production releases' },
-  { value: '35%', label: 'Reported issue reduction' },
-  { value: '90%', label: 'SVM FYP accuracy' },
-];
-
-const WORKFLOW_STEPS = [
+const SKILL_GROUPS = [
   {
-    icon: FiSearch,
-    title: 'Discover',
-    description: 'Clarify product goals, constraints, and release risks before writing code.',
-  },
-  {
-    icon: FiPenTool,
-    title: 'Design',
-    description: 'Translate requirements into a UI and state model that stays maintainable.',
-  },
-  {
+    title: 'Mobile',
     icon: FiCode,
-    title: 'Build',
-    description: 'Implement Flutter features with Riverpod, BLoC, REST APIs, and clean architecture.',
+    items: ['Flutter', 'Dart', 'Firebase', 'Riverpod', 'Provider', 'BLoC'],
   },
   {
-    icon: FiUploadCloud,
-    title: 'Release',
-    description: 'Validate, ship, and stabilize with store submission, QA, and iteration.',
+    title: 'Backend/API',
+    icon: FiDatabase,
+    items: ['REST API integration', 'Firebase services'],
+  },
+  {
+    title: 'Tools',
+    icon: FiTool,
+    items: ['Git', 'VS Code', 'Android Studio', 'Figma', 'Xcode'],
+  },
+  {
+    title: 'Other',
+    icon: FiLayers,
+    items: ['Clean architecture', 'Performance optimization', 'Deployment'],
   },
 ];
 
 const About = memo(function About() {
-  // Dynamic color mode values
-  const cardBg = useColorModeValue('rgba(255, 255, 255, 0.84)', 'rgba(20, 41, 39, 0.86)');
+  const cardBg = useColorModeValue('rgba(255, 255, 255, 0.9)', 'rgba(15, 23, 42, 0.82)');
   const sectionBg = useColorModeValue(
-    'linear-gradient(180deg, #f7fbfa 0%, #eefbf8 100%)',
-    'linear-gradient(180deg, #071817 0%, #102622 100%)'
+    'linear-gradient(180deg, #f8fafc 0%, #eef6ff 100%)',
+    'linear-gradient(180deg, #0f172a 0%, #111827 100%)'
   );
-  const borderColor = useColorModeValue('rgba(159, 184, 181, 0.45)', 'whiteAlpha.200');
+  const borderColor = useColorModeValue('rgba(148, 163, 184, 0.28)', 'whiteAlpha.200');
   const headingColor = useColorModeValue('neutral.900', 'white');
-  const accentColor = useColorModeValue('brand.600', 'brand.300');
-  const accentSoft = useColorModeValue('accent.500', 'accent.300');
+  const accentColor = useColorModeValue('brand.700', 'brand.300');
   const textColor = useColorModeValue('neutral.600', 'neutral.200');
   const secondaryTextColor = useColorModeValue('neutral.500', 'neutral.300');
-  const insetBg = useColorModeValue('rgba(238, 251, 248, 0.86)', 'whiteAlpha.100');
-  const workflowBg = useColorModeValue('rgba(255, 255, 255, 0.72)', 'rgba(7, 24, 23, 0.46)');
-
-  // Animation variants
-  const containerVariants: Variants = {
-    hidden: { opacity: 0 },
-    visible: {
-      opacity: 1,
-      transition: {
-        staggerChildren: 0.2
-      }
-    }
-  };
-
-  const itemVariants: Variants = {
-    hidden: { y: 20, opacity: 0 },
-    visible: {
-      y: 0,
-      opacity: 1,
-      transition: {
-        type: 'spring',
-        stiffness: 100,
-        damping: 10
-      }
-    }
-  };
+  const insetBg = useColorModeValue('neutral.50', 'whiteAlpha.100');
 
   return (
     <Box bg={sectionBg}>
-      <Container
-        maxW="container.xl"
-        px={5}
-        py={{ base: 16, md: 24 }}
-        as={MotionBox}
-        variants={containerVariants}
-        initial="hidden"
-        animate="visible"
-      >
-        {/* Title */}
-        <MotionHeading
-          as="h2"
-          size="2xl"
-          fontWeight="extrabold"
-          textAlign="center"
-          mb={16}
-          color={headingColor}
-          lineHeight="tight"
-          variants={itemVariants}
-          bgGradient={useColorModeValue('linear(to-r, brand.700, accent.600)', 'linear(to-r, brand.200, accent.300)')}
-          bgClip="text"
-        >
-          About Me
-        </MotionHeading>
+      <Container maxW="container.xl" px={5} py={{ base: 16, md: 24 }}>
+        <VStack align="stretch" spacing={10}>
+          <SectionHeading
+            title="I build mobile apps that feel clean and dependable."
+            subtitle="I focus on Flutter mobile development, clean UI, API integration, Firebase, app performance, and smooth user experience."
+            align="left"
+          />
 
-        {/* Main Card */}
-        <MotionFlex justify="center" variants={itemVariants}>
+          <SimpleGrid columns={{ base: 1, lg: 2 }} spacing={6}>
+            <Box
+              bg={cardBg}
+              borderWidth="1px"
+              borderColor={borderColor}
+              borderRadius="2xl"
+              p={{ base: 5, md: 8 }}
+              boxShadow={useColorModeValue('0 18px 38px rgba(15, 23, 42, 0.08)', '0 18px 38px rgba(0, 0, 0, 0.28)')}
+            >
+              <HStack spacing={3} mb={4} color={accentColor}>
+                <Icon as={FaBriefcase} />
+                <Text fontWeight="semibold">Work style</Text>
+              </HStack>
+              <List spacing={3} color={textColor}>
+                <ListItem>
+                  <ListIcon as={FiCheckCircle} color={accentColor} />
+                  Built user-focused screens with Flutter and Dart.
+                </ListItem>
+                <ListItem>
+                  <ListIcon as={FiCheckCircle} color={accentColor} />
+                  Integrated REST APIs and Firebase services.
+                </ListItem>
+                <ListItem>
+                  <ListIcon as={FiCheckCircle} color={accentColor} />
+                  Improved performance, stability, and release quality.
+                </ListItem>
+                <ListItem>
+                  <ListIcon as={FiCheckCircle} color={accentColor} />
+                  Worked closely with backend and product teams.
+                </ListItem>
+              </List>
+            </Box>
+
+            <Box
+              bg={cardBg}
+              borderWidth="1px"
+              borderColor={borderColor}
+              borderRadius="2xl"
+              p={{ base: 5, md: 8 }}
+              boxShadow={useColorModeValue('0 18px 38px rgba(15, 23, 42, 0.08)', '0 18px 38px rgba(0, 0, 0, 0.28)')}
+            >
+              <HStack spacing={3} mb={4} color={accentColor}>
+                <Icon as={FiMapPin} />
+                <Text fontWeight="semibold">Quick facts</Text>
+              </HStack>
+              <SimpleGrid columns={{ base: 1, sm: 2 }} spacing={3}>
+                {[
+                  ['Role', 'Flutter Mobile Developer'],
+                  ['Focus', 'UI, APIs, Firebase'],
+                  ['Experience', '2+ years'],
+                  ['Projects', 'Fintech, e-commerce, health'],
+                ].map(([label, value]) => (
+                  <Box key={label} bg={insetBg} borderRadius="xl" p={4} borderWidth="1px" borderColor={borderColor}>
+                    <Text fontSize="xs" textTransform="uppercase" letterSpacing="widest" color={secondaryTextColor}>
+                      {label}
+                    </Text>
+                    <Text mt={1} fontWeight="semibold" color={headingColor}>
+                      {value}
+                    </Text>
+                  </Box>
+                ))}
+              </SimpleGrid>
+            </Box>
+          </SimpleGrid>
+
           <Box
-            maxW={{ base: 'full', md: '5xl' }}
             bg={cardBg}
-            border="1px solid"
+            borderWidth="1px"
             borderColor={borderColor}
+            borderRadius="2xl"
             p={{ base: 5, md: 8 }}
-            borderRadius="lg"
-            shadow={useColorModeValue('0 24px 60px rgba(20, 104, 95, 0.12)', '0 24px 60px rgba(0, 0, 0, 0.28)')}
-            textAlign="center"
-            backdropFilter="blur(18px)"
+            boxShadow={useColorModeValue('0 18px 38px rgba(15, 23, 42, 0.08)', '0 18px 38px rgba(0, 0, 0, 0.28)')}
           >
-            {/* Professional Summary */}
-            <MotionBox variants={itemVariants}>
-              <VStack align="flex-start" spacing={6} textAlign="left" color={textColor}>
-                <Badge colorScheme="brand" borderRadius="md" px={3} py={1} textTransform="capitalize">
-                  Coinyex · RF Infinite · UiTM Computer Science
-                </Badge>
-
-                <Heading as="h3" size="lg" color={headingColor} fontWeight="semibold">
-                  Flutter Mobile Developer Lead with fintech and commerce release experience.
-                </Heading>
-
-                <Text fontSize={{ base: 'md', md: 'lg' }} lineHeight="tall">
-                  I build and ship wallet, commerce, and productivity apps with Flutter. I’m hands-on with Riverpod, BLoC,
-                  Firebase, REST APIs, and release pipelines—keeping architecture clean, performance tight, and delivery predictable.
-                </Text>
-
-                <List spacing={2} fontSize="md">
-                  <ListItem>
-                    <ListIcon as={FiCheckCircle} color={accentColor} /> 2+ years delivering production releases across fintech, e-commerce, and productivity.
-                  </ListItem>
-                  <ListItem>
-                    <ListIcon as={FiCheckCircle} color={accentColor} /> Led migrations (Provider → Riverpod), release automation, and API resilience for wallets.
-                  </ListItem>
-                  <ListItem>
-                    <ListIcon as={FiCheckCircle} color={accentColor} /> Collaborate tightly with backend and product to keep launches secure and smooth.
-                  </ListItem>
-                </List>
-
-                <SimpleGrid columns={{ base: 1, sm: 2, md: 4 }} spacing={4} w="full">
-                  {RESUME_METRICS.map((metric) => (
-                    <Box
-                      key={metric.label}
-                      bg={insetBg}
-                      border="1px solid"
-                      borderColor={borderColor}
-                      borderRadius="md"
-                      p={4}
-                    >
-                      <Text fontSize="3xl" fontWeight="bold" color={metric.value === '90%' ? accentSoft : accentColor}>
-                        {metric.value}
-                      </Text>
-                      <Text fontSize="sm" color={secondaryTextColor}>{metric.label}</Text>
-                    </Box>
-                  ))}
-                </SimpleGrid>
-
-                <SimpleGrid columns={{ base: 1, sm: 2, md: 4 }} spacing={4} w="full">
-                  <QuickFact icon={FiBriefcase} label="Role" value="Flutter Mobile Dev / Frontend Lead" />
-                  <QuickFact icon={FiMapPin} label="Based in" value="Seri Kembangan, Selangor" />
-                  <QuickFact icon={FiUsers} label="Collaboration" value="Product & backend squads" />
-                  <QuickFact icon={FiCheckCircle} label="Focus" value="Wallets, commerce, health" />
-                </SimpleGrid>
-
+            <HStack spacing={3} mb={5} color={accentColor}>
+              <Icon as={FiCpu} />
+              <Text fontWeight="semibold">Skills</Text>
+            </HStack>
+            <SimpleGrid columns={{ base: 1, md: 2, xl: 4 }} spacing={4}>
+              {SKILL_GROUPS.map((group) => (
                 <Box
-                  w="full"
-                  borderRadius="lg"
+                  key={group.title}
                   borderWidth="1px"
                   borderColor={borderColor}
-                  bg={workflowBg}
-                  p={5}
+                  borderRadius="xl"
+                  p={4}
+                  bg={insetBg}
                 >
-                  <Text
-                    fontSize="sm"
-                    color={secondaryTextColor}
-                    textTransform="uppercase"
-                    fontWeight="semibold"
-                    mb={4}
-                  >
-                    Workflow
-                  </Text>
-                  <SimpleGrid columns={{ base: 1, md: 2, xl: 4 }} spacing={4}>
-                    {WORKFLOW_STEPS.map((step, index) => (
-                      <HStack
-                        key={step.title}
-                        align="flex-start"
-                        spacing={3}
-                        p={4}
-                        borderRadius="md"
-                        bg={index % 2 === 0 ? insetBg : 'transparent'}
-                        borderWidth="1px"
-                        borderColor={borderColor}
-                      >
-                        <Box
-                          as={step.icon}
-                          boxSize={5}
-                          color={index === WORKFLOW_STEPS.length - 1 ? accentSoft : accentColor}
-                          mt={0.5}
-                          flexShrink={0}
-                        />
-                        <VStack align="flex-start" spacing={1}>
-                          <Text color={headingColor} fontWeight="semibold">
-                            {step.title}
-                          </Text>
-                          <Text color={secondaryTextColor} fontSize="sm" lineHeight="tall">
-                            {step.description}
-                          </Text>
-                        </VStack>
-                      </HStack>
+                  <HStack spacing={2} mb={3} color={accentColor}>
+                    <Icon as={group.icon} />
+                    <Text fontWeight="semibold">{group.title}</Text>
+                  </HStack>
+                  <Flex wrap="wrap" gap={2}>
+                    {group.items.map((item) => (
+                      <Badge key={item} borderRadius="full" px={3} py={1} textTransform="none" colorScheme="brand" variant="subtle">
+                        {item}
+                      </Badge>
                     ))}
-                  </SimpleGrid>
+                  </Flex>
                 </Box>
-              </VStack>
-            </MotionBox>
-
-            <VStack spacing={{ base: 8, md: 10 }} mt={8} align="stretch">
-              {/* Experience */}
-              <MotionVStack
-                variants={itemVariants}
-                p={5}
-                borderRadius="lg"
-                bg={insetBg}
-                boxShadow="sm"
-                border="1px solid"
-                borderColor={borderColor}
-                align="flex-start"
-                spacing={5}
-                textAlign="left"
-                w="full"
-              >
-                <HStack spacing={3} align="center">
-                  <Icon as={FaBriefcase} boxSize={9} color={accentColor} />
-                  <Heading as="h3" size="md" color={accentColor}>
-                    Professional Experience
-                  </Heading>
-                </HStack>
-                <Divider />
-
-                <VStack align="stretch" spacing={8} w="full">
-                  {EXPERIENCE.map((job, index) => (
-                    <Grid key={job.role} templateColumns="24px 1fr" columnGap={6} position="relative">
-                      <GridItem position="relative">
-                        <Box
-                          w={3}
-                          h={3}
-                          borderRadius="full"
-                          bg={accentColor}
-                          mt={1}
-                        />
-                        {index !== EXPERIENCE.length - 1 && (
-                          <Box
-                            position="absolute"
-                            top={4}
-                            left="6px"
-                            width="1px"
-                            height="calc(100% + 24px)"
-                            bg={borderColor}
-                          />
-                        )}
-                      </GridItem>
-                      <GridItem>
-                        <VStack align="flex-start" spacing={3}>
-                          <HStack justify="space-between" spacing={4} flexWrap="wrap">
-                            <VStack align="flex-start" spacing={1}>
-                              <Text fontWeight="semibold" color={headingColor}>
-                                {job.role}
-                              </Text>
-                              <Text fontSize="sm" color={secondaryTextColor}>
-                                {job.company}
-                              </Text>
-                            </VStack>
-                            <HStack spacing={2} color={secondaryTextColor} fontSize="sm">
-                              <Icon as={FiClock} />
-                              <Text>{job.period}</Text>
-                            </HStack>
-                          </HStack>
-
-                          <Text fontSize="sm" color={secondaryTextColor}>
-                            {job.focus}
-                          </Text>
-
-                          <Flex wrap="wrap" gap={2}>
-                            {job.stack.map((tech) => (
-                              <Badge key={tech} variant="subtle" colorScheme="brand" borderRadius="md" px={2} py={1}>
-                                {tech}
-                              </Badge>
-                            ))}
-                          </Flex>
-
-                          <List spacing={1.5} fontSize="sm" color={secondaryTextColor}>
-                            {job.highlights.map((highlight) => (
-                              <ListItem key={highlight} display="flex" alignItems="flex-start" gap={2}>
-                                <ListIcon as={FiCheckCircle} color={accentColor} mt={1} />
-                                <Text>{highlight}</Text>
-                              </ListItem>
-                            ))}
-                          </List>
-                        </VStack>
-                      </GridItem>
-                    </Grid>
-                  ))}
-                </VStack>
-              </MotionVStack>
-              {/* Education */}
-              <MotionVStack
-                variants={itemVariants}
-                p={5}
-                borderRadius="lg"
-                bg={insetBg}
-                boxShadow="sm"
-                border="1px solid"
-                borderColor={borderColor}
-                align="flex-start"
-                spacing={3}
-                textAlign="left"
-              >
-                <Icon as={FaGraduationCap} boxSize={10} color={accentColor} mb={2} />
-                <Heading as="h3" size="md" color={accentColor}>
-                  Education
-                </Heading>
-                <Divider my={3} />
-                <Text color={headingColor} fontWeight="medium">
-                  Bachelor of Computer Science (Hons.)
-                </Text>
-                <Text fontSize="sm" color={secondaryTextColor}>
-                  UiTM Terengganu — CGPA 3.44 (Dean’s List)
-                </Text>
-                <Text fontSize="sm" color={secondaryTextColor} mt={2}>
-                  Focus: Software Development & Machine Learning (FYP: Flood Prediction with SVM)
-                </Text>
-                <Divider my={3} />
-                <Text color={headingColor} fontWeight="medium">
-                  Diploma in Computer Science
-                </Text>
-                <Text fontSize="sm" color={secondaryTextColor}>
-                  UiTM Terengganu — CGPA 3.08
-                </Text>
-              </MotionVStack>
-
-              {/* Achievements */}
-              <MotionVStack
-                variants={itemVariants}
-                p={5}
-                borderRadius="lg"
-                bg={insetBg}
-                boxShadow="sm"
-                border="1px solid"
-                borderColor={borderColor}
-                align="flex-start"
-                spacing={3}
-                textAlign="left"
-              >
-                <Icon as={FaTrophy} boxSize={10} color={accentColor} mb={2} />
-                <Heading as="h3" size="md" color={accentColor}>
-                  Achievements
-                </Heading>
-                <Divider my={3} />
-                <VStack spacing={2} align="start" mt={2}>
-                  <Text color={headingColor} fontWeight="medium">
-                    Flood Prediction App (FYP)
-                  </Text>
-                  <Text fontSize="sm" color={secondaryTextColor}>
-                    • Achieved 90% accuracy using SVM with real-time weather updates and two-day forecasts.
-                  </Text>
-                  <Text color={headingColor} fontWeight="medium" pt={2}>
-                    Leadership & Community
-                  </Text>
-                  <Text fontSize="sm" color={secondaryTextColor}>
-                    • Organized webinar “Artificial Intelligence, How It Works?” (100+ participants).
-                  </Text>
-                  <Text fontSize="sm" color={secondaryTextColor}>
-                    • Vice President, Bahasa Arab Club (2022) — 95% attendee satisfaction.
-                  </Text>
-                </VStack>
-              </MotionVStack>
-            </VStack>
-
-            {/* Technologies Used */}
-            <MotionBox
-              mt={16}
-              variants={itemVariants}
-              p={6}
-              borderRadius="lg"
-              bg={insetBg}
-              boxShadow="sm"
-              border="1px solid"
-              borderColor={borderColor}
-              textAlign="left"
-            >
-              <Heading as="h3" size="lg" color={accentColor} mb={6} textAlign="left">
-                Resume Skills
-              </Heading>
-              <SimpleGrid columns={{ base: 2, md: 3 }} spacing={{ base: 4, md: 6 }}>
-                <SkillBadge label="Flutter & Dart" colorScheme="blue" />
-                <SkillBadge label="Riverpod & BLoC" colorScheme="purple" />
-                <SkillBadge label="Firebase (Auth/Firestore)" colorScheme="yellow" />
-                <SkillBadge label="REST APIs & WebSockets" colorScheme="cyan" />
-                <SkillBadge label="Kotlin · Jetpack Compose" colorScheme="orange" />
-                <SkillBadge label="Clean Architecture / MVVM" colorScheme="green" />
-                <SkillBadge label="CI/CD & Release Pipelines" colorScheme="pink" />
-                <SkillBadge label="Figma to Production UI" colorScheme="teal" />
-                <SkillBadge label="Performance Optimization" colorScheme="red" />
-                <SkillBadge label="Git, VSCode, Android Studio, Xcode" colorScheme="gray" />
-              </SimpleGrid>
-            </MotionBox>
-
-            {/* Call-to-Action Links */}
-            <MotionFlex
-              justify="center"
-              mt={16}
-              gap={{ base: 6, md: 10 }}
-              direction={{ base: 'column', md: 'row' }}
-              variants={itemVariants}
-              position="relative"
-              zIndex="1"
-            >
-              <Button
-                as={Link}
-                href="https://github.com/afifShyam"
-                isExternal
-                px={{ base: 6, md: 8 }}
-                py={{ base: 3, md: 4 }}
-                fontSize={{ base: 'sm', md: 'md' }}
-                borderRadius="xl"
-                bgGradient={useColorModeValue('linear(to-tr, brand.600, accent.500)', 'linear(to-tr, brand.400, accent.400)')}
-                color="white"
-                fontWeight="semibold"
-                shadow="lg"
-                leftIcon={<FaGithub />}
-                _hover={{
-                  transform: 'translateY(-5px)',
-                  shadow: '2xl',
-                }}
-                transition="all 0.3s ease"
-              >
-                Visit My GitHub
-              </Button>
-
-              <Button
-                as={Link}
-                href="https://www.linkedin.com/in/afif-shyamsul-1333bb279/"
-                isExternal
-                px={{ base: 6, md: 8 }}
-                py={{ base: 3, md: 4 }}
-                fontSize={{ base: 'sm', md: 'md' }}
-                borderRadius="xl"
-                variant="outline"
-                borderWidth="2px"
-                borderColor={accentColor}
-                color={accentColor}
-                leftIcon={<FaLinkedin />}
-                _hover={{
-                  bg: useColorModeValue('brand.50', 'whiteAlpha.100'),
-                  transform: 'translateY(-5px)',
-                  shadow: 'md',
-                }}
-                fontWeight="semibold"
-                transition="all 0.3s ease"
-              >
-                Connect on LinkedIn
-              </Button>
-            </MotionFlex>
+              ))}
+            </SimpleGrid>
           </Box>
-        </MotionFlex>
+
+          <Box
+            bg={cardBg}
+            borderWidth="1px"
+            borderColor={borderColor}
+            borderRadius="2xl"
+            p={{ base: 5, md: 8 }}
+            boxShadow={useColorModeValue('0 18px 38px rgba(15, 23, 42, 0.08)', '0 18px 38px rgba(0, 0, 0, 0.28)')}
+          >
+            <HStack spacing={3} mb={5} color={accentColor}>
+              <Icon as={FaRocket} />
+              <Text fontWeight="semibold">Work experience</Text>
+            </HStack>
+            <VStack align="stretch" spacing={6}>
+              {EXPERIENCE.map((job) => (
+                <Box key={job.role} borderWidth="1px" borderColor={borderColor} borderRadius="xl" p={4} bg={insetBg}>
+                  <HStack justify="space-between" align="start" spacing={4} flexWrap="wrap">
+                    <Box>
+                      <Text fontWeight="semibold" color={headingColor}>
+                        {job.role}
+                      </Text>
+                      <Text fontSize="sm" color={secondaryTextColor}>
+                        {job.company}
+                      </Text>
+                    </Box>
+                    <Text fontSize="sm" color={secondaryTextColor}>
+                      {job.period}
+                    </Text>
+                  </HStack>
+                  <Text mt={3} color={textColor} fontSize="sm" lineHeight="tall">
+                    {job.summary}
+                  </Text>
+                  <List spacing={2} mt={3} fontSize="sm" color={textColor}>
+                    {job.bullets.map((bullet) => (
+                      <ListItem key={bullet}>
+                        <ListIcon as={FiCheckCircle} color={accentColor} />
+                        {bullet}
+                      </ListItem>
+                    ))}
+                  </List>
+                </Box>
+              ))}
+            </VStack>
+          </Box>
+
+          <Flex justify="center" gap={4} direction={{ base: 'column', sm: 'row' }}>
+            <Button
+              as={Link}
+              href="https://github.com/afifShyam"
+              isExternal
+              leftIcon={<FaGithub />}
+              colorScheme="brand"
+              size="lg"
+            >
+              GitHub
+            </Button>
+            <Button
+              as={Link}
+              href="https://www.linkedin.com/in/afif-shyamsul-1333bb279/"
+              isExternal
+              leftIcon={<FaLinkedin />}
+              variant="outline"
+              colorScheme="brand"
+              size="lg"
+            >
+              LinkedIn
+            </Button>
+          </Flex>
+        </VStack>
       </Container>
     </Box>
   );

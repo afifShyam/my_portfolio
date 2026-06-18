@@ -12,6 +12,9 @@ export interface Project {
   name: string;
   description: string;
   category: string;
+  role?: string;
+  features?: string[];
+  impact?: string;
   demoUrl?: string;
   repoUrl?: string;
   image?: ProjectImageSource;
