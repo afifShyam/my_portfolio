@@ -19,8 +19,10 @@ import {
   Icon,
   SimpleGrid,
   Link,
+  Badge,
+  HStack,
 } from '@chakra-ui/react';
-import { FiSend, FiMail, FiUser, FiMessageSquare, FiLinkedin, FiGithub, FiDownload } from 'react-icons/fi';
+import { FiSend, FiMail, FiUser, FiMessageSquare, FiLinkedin, FiGithub, FiDownload, FiZap } from 'react-icons/fi';
 import { type Transition } from 'framer-motion';
 import { Helmet } from 'react-helmet-async';
 import { motionChakra } from '../utils/motion';
@@ -35,6 +37,12 @@ interface FormErrors {
   message?: string;
 }
 
+const QUICK_PROMPTS = [
+  { label: '💼 Job Opportunity', text: 'Hi Afif! We are looking for a Flutter developer for an exciting role.' },
+  { label: '🚀 Flutter App Project', text: 'Hi Afif! I have a mobile app project I would like to consult with you on.' },
+  { label: '💬 General Inquiry', text: 'Hi Afif! Reaching out to connect and discuss mobile development.' },
+];
+
 const Contact: React.FC = () => {
   const [formData, setFormData] = useState<EmailData>({
     name: '',
@@ -48,18 +56,25 @@ const Contact: React.FC = () => {
   const toast = useToast();
 
   const borderColor = useColorModeValue('rgba(148, 163, 184, 0.28)', 'whiteAlpha.200');
-  const inputBgColor = useColorModeValue('rgba(255, 255, 255, 0.92)', 'rgba(15, 23, 42, 0.66)');
+  const inputBgColor = useColorModeValue('rgba(255, 255, 255, 0.95)', 'rgba(15, 23, 42, 0.7)');
   const textColor = useColorModeValue('neutral.900', 'whiteAlpha.900');
-  const labelColor = useColorModeValue('neutral.500', 'neutral.200');
-  const accentColor = useColorModeValue('brand.700', 'brand.300');
+  const labelColor = useColorModeValue('neutral.600', 'neutral.200');
+  const accentColor = useColorModeValue('brand.600', 'cyan.400');
   const cardBg = useColorModeValue('rgba(255, 255, 255, 0.9)', 'rgba(15, 23, 42, 0.84)');
-  const mutedPanelBg = useColorModeValue('neutral.50', 'whiteAlpha.100');
+  const mutedPanelBg = useColorModeValue('neutral.50', 'rgba(15, 23, 42, 0.6)');
   const sectionBg = useColorModeValue(
     'linear-gradient(180deg, #f8fafc 0%, #eef6ff 100%)',
-    'linear-gradient(180deg, #111827 0%, #0f172a 100%)'
+    'linear-gradient(180deg, #090d16 0%, #0f172a 100%)'
   );
 
   const buildTransition = (duration = 0.5, delay = 0): Transition => ({ duration, delay });
+
+  const handleQuickPrompt = (promptText: string) => {
+    setFormData((prev) => ({ ...prev, message: promptText }));
+    if (errors.message) {
+      setErrors((prev) => ({ ...prev, message: undefined }));
+    }
+  };
 
   const validateForm = useCallback((): boolean => {
     const newErrors: FormErrors = {};
@@ -117,8 +132,8 @@ const Contact: React.FC = () => {
         await emailService.sendEmail(formData);
         setSuccess('Your message was sent successfully.');
         toast({
-          title: 'Message sent',
-          description: 'Thanks for reaching out. I will reply soon.',
+          title: 'Message Sent!',
+          description: 'Thank you for reaching out. I will get back to you shortly.',
           status: 'success',
           duration: 5000,
           isClosable: true,
@@ -129,8 +144,8 @@ const Contact: React.FC = () => {
         console.error('Failed to send contact form message', err);
         setSuccess('Failed to send your message. Please try again later.');
         toast({
-          title: 'Error',
-          description: 'Failed to send your message. Please try again later.',
+          title: 'Submission Error',
+          description: 'Failed to send message. Please try again later.',
           status: 'error',
           duration: 5000,
           isClosable: true,
@@ -146,16 +161,16 @@ const Contact: React.FC = () => {
   return (
     <>
       <Helmet>
-        <title>Portfolio</title>
-        <meta name="description" content="Get in touch for mobile development roles, freelance work, or collaborations." />
+        <title>Get In Touch | Afif Shyamsul Portfolio</title>
+        <meta name="description" content="Get in touch for mobile development roles, Flutter freelance projects, or tech collaborations." />
       </Helmet>
 
-      <Box bg={sectionBg}>
-        <Container maxW="container.xl" py={{ base: 16, md: 24 }}>
+      <Box bg={sectionBg} py={{ base: 16, md: 24 }}>
+        <Container maxW="container.xl">
           <Box mb={12}>
             <SectionHeading
-              title="Interested in working together? Let’s connect."
-              subtitle="Send a quick note if you need a Flutter developer for a mobile app, a feature update, or a team role."
+              title="Let’s Build Something Great Together."
+              subtitle="Looking for a Flutter developer to build or scale your mobile app? Send a message below or connect directly."
               align="left"
             />
           </Box>
@@ -166,9 +181,9 @@ const Contact: React.FC = () => {
             bg={cardBg}
             border="1px solid"
             borderColor={borderColor}
-            p={{ base: 5, md: 8 }}
+            p={{ base: 6, md: 10 }}
             borderRadius="2xl"
-            shadow={useColorModeValue('0 24px 60px rgba(15, 23, 42, 0.08)', '0 24px 60px rgba(0, 0, 0, 0.3)')}
+            shadow={useColorModeValue('0 24px 60px rgba(15, 23, 42, 0.08)', '0 24px 60px rgba(0, 0, 0, 0.35)')}
             backdropFilter="blur(18px)"
             initial={{ opacity: 0, y: 16 }}
             animate={{ opacity: 1, y: 0, transition: buildTransition(0.5, 0.2) }}
@@ -176,7 +191,7 @@ const Contact: React.FC = () => {
             {success && (
               <Alert
                 status={success.includes('successfully') ? 'success' : 'error'}
-                borderRadius="lg"
+                borderRadius="xl"
                 size="sm"
                 mb={6}
                 variant="left-accent"
@@ -187,55 +202,101 @@ const Contact: React.FC = () => {
             )}
 
             <SimpleGrid columns={{ base: 1, lg: 3 }} spacing={{ base: 8, lg: 10 }}>
-              <Box bg={mutedPanelBg} borderRadius="xl" p={5} borderWidth="1px" borderColor={borderColor}>
+              {/* Direct Links Panel */}
+              <Box bg={mutedPanelBg} borderRadius="xl" p={6} borderWidth="1px" borderColor={borderColor}>
                 <VStack align="stretch" spacing={5}>
                   <Box>
-                    <Text fontSize="sm" color={labelColor} textTransform="uppercase" fontWeight="semibold" mb={2}>
-                      Direct links
+                    <Text fontSize="xs" color={labelColor} textTransform="uppercase" fontWeight="bold" letterSpacing="wider" mb={2}>
+                      Direct Connect
+                    </Text>
+                    <Text fontSize="sm" color="gray.400">
+                      Reach out via social profiles or preview my resume.
                     </Text>
                   </Box>
+
                   <Button
                     as={Link}
                     href="https://www.linkedin.com/in/afif-shyamsul-1333bb279/"
                     isExternal
                     leftIcon={<FiLinkedin />}
+                    colorScheme="cyan"
                     variant="outline"
-                    colorScheme="brand"
+                    borderRadius="xl"
                     justifyContent="flex-start"
+                    style={{ textDecoration: 'none' }}
                   >
-                    LinkedIn
+                    LinkedIn Profile
                   </Button>
                   <Button
                     as={Link}
                     href="https://github.com/afifShyam"
                     isExternal
                     leftIcon={<FiGithub />}
+                    colorScheme="gray"
                     variant="outline"
-                    colorScheme="brand"
+                    borderRadius="xl"
                     justifyContent="flex-start"
+                    style={{ textDecoration: 'none' }}
                   >
-                    GitHub
+                    GitHub Portfolio
                   </Button>
                   <Button
                     onClick={() => setIsResumeOpen(true)}
                     leftIcon={<FiDownload />}
-                    colorScheme="brand"
+                    colorScheme="cyan"
+                    borderRadius="xl"
                     justifyContent="flex-start"
                   >
-                    Preview Resume
+                    Preview Resume PDF
                   </Button>
-
                 </VStack>
               </Box>
 
+              {/* Contact Form */}
               <Box gridColumn={{ base: 'auto', lg: 'span 2' }}>
+                {/* Quick Prompts */}
+                <Box mb={6}>
+                  <HStack spacing={2} mb={2.5}>
+                    <Icon as={FiZap} color="cyan.400" />
+                    <Text fontSize="xs" fontWeight="bold" textTransform="uppercase" letterSpacing="wider" color={labelColor}>
+                      Quick Message Prompts
+                    </Text>
+                  </HStack>
+                  <Flex wrap="wrap" gap={2}>
+                    {QUICK_PROMPTS.map((prompt) => (
+                      <Badge
+                        key={prompt.label}
+                        as="button"
+                        type="button"
+                        onClick={() => handleQuickPrompt(prompt.text)}
+                        px={3}
+                        py={1.5}
+                        borderRadius="full"
+                        colorScheme="cyan"
+                        variant="subtle"
+                        fontSize="xs"
+                        fontWeight="medium"
+                        cursor="pointer"
+                        _hover={{
+                          transform: 'scale(1.03)',
+                          bg: 'cyan.500',
+                          color: 'white',
+                        }}
+                        transition="all 0.2s ease"
+                      >
+                        {prompt.label}
+                      </Badge>
+                    ))}
+                  </Flex>
+                </Box>
+
                 <form onSubmit={handleSubmit}>
-                  <VStack spacing={6}>
-                    <Flex direction={{ base: 'column', md: 'row' }} gap={6} w="full">
+                  <VStack spacing={5}>
+                    <Flex direction={{ base: 'column', md: 'row' }} gap={5} w="full">
                       <FormControl isInvalid={!!errors.name}>
-                        <FormLabel color={labelColor}>
+                        <FormLabel color={labelColor} fontSize="sm" fontWeight="semibold">
                           <Flex align="center" gap={2}>
-                            <Icon as={FiUser} />
+                            <Icon as={FiUser} color={accentColor} />
                             <Text>Name</Text>
                           </Flex>
                         </FormLabel>
@@ -246,14 +307,12 @@ const Contact: React.FC = () => {
                           onChange={handleChange}
                           bg={inputBgColor}
                           color={textColor}
+                          borderRadius="xl"
                           border="1px solid"
                           borderColor={borderColor}
                           _focus={{
                             borderColor: accentColor,
                             boxShadow: `0 0 0 1px ${accentColor}`,
-                          }}
-                          _hover={{
-                            borderColor: accentColor,
                           }}
                           placeholder="Your name"
                         />
@@ -261,9 +320,9 @@ const Contact: React.FC = () => {
                       </FormControl>
 
                       <FormControl isInvalid={!!errors.email}>
-                        <FormLabel color={labelColor}>
+                        <FormLabel color={labelColor} fontSize="sm" fontWeight="semibold">
                           <Flex align="center" gap={2}>
-                            <Icon as={FiMail} />
+                            <Icon as={FiMail} color={accentColor} />
                             <Text>Email</Text>
                           </Flex>
                         </FormLabel>
@@ -274,14 +333,12 @@ const Contact: React.FC = () => {
                           onChange={handleChange}
                           bg={inputBgColor}
                           color={textColor}
+                          borderRadius="xl"
                           border="1px solid"
                           borderColor={borderColor}
                           _focus={{
                             borderColor: accentColor,
                             boxShadow: `0 0 0 1px ${accentColor}`,
-                          }}
-                          _hover={{
-                            borderColor: accentColor,
                           }}
                           placeholder="your.email@example.com"
                         />
@@ -290,9 +347,9 @@ const Contact: React.FC = () => {
                     </Flex>
 
                     <FormControl isInvalid={!!errors.message}>
-                      <FormLabel color={labelColor}>
+                      <FormLabel color={labelColor} fontSize="sm" fontWeight="semibold">
                         <Flex align="center" gap={2}>
-                          <Icon as={FiMessageSquare} />
+                          <Icon as={FiMessageSquare} color={accentColor} />
                           <Text>Message</Text>
                         </Flex>
                       </FormLabel>
@@ -303,16 +360,14 @@ const Contact: React.FC = () => {
                         rows={5}
                         bg={inputBgColor}
                         color={textColor}
+                        borderRadius="xl"
                         border="1px solid"
                         borderColor={borderColor}
                         _focus={{
                           borderColor: accentColor,
                           boxShadow: `0 0 0 1px ${accentColor}`,
                         }}
-                        _hover={{
-                          borderColor: accentColor,
-                        }}
-                        placeholder="Tell me about the role or project."
+                        placeholder="Tell me about your mobile app project or team role."
                       />
                       <FormErrorMessage>{errors.message}</FormErrorMessage>
                     </FormControl>
@@ -325,21 +380,25 @@ const Contact: React.FC = () => {
                       <Button
                         type="submit"
                         isLoading={loading}
-                        colorScheme="brand"
-                        _hover={{ transform: 'translateY(-2px)' }}
+                        colorScheme="cyan"
+                        bgGradient="linear(to-r, cyan.500, blue.600)"
+                        color="white"
+                        _hover={{
+                          bgGradient: "linear(to-r, cyan.400, blue.500)",
+                          transform: 'translateY(-2px)',
+                          boxShadow: '0 10px 25px -5px rgba(6, 182, 212, 0.5)',
+                        }}
                         _active={{ transform: 'translateY(-1px)' }}
-                        _disabled={{ opacity: 0.6, cursor: 'not-allowed' }}
                         isDisabled={loading}
                         fontWeight="semibold"
-                        shadow="md"
                         size="lg"
                         borderRadius="xl"
-                        py={4}
+                        py={6}
                         rightIcon={<FiSend />}
                         w={{ base: 'full', md: 'auto' }}
                         alignSelf="flex-end"
                       >
-                        {loading ? 'Sending...' : 'Send Message'}
+                        {loading ? 'Sending Message...' : 'Send Message'}
                       </Button>
                     </MotionBox>
                   </VStack>
@@ -359,3 +418,4 @@ const Contact: React.FC = () => {
 };
 
 export default memo(Contact);
+
