@@ -26,7 +26,6 @@ const ScrollToTop = () => {
       position="fixed"
       bottom={10}
       right={10}
-      zIndex={20}
       p={4}
       colorScheme="blue"
       bg={useColorModeValue('blue.600', 'blue.500')}

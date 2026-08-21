@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import React, { useState } from 'react';
 import {
   Box,
   Heading,
@@ -6,272 +6,338 @@ import {
   Button,
   VStack,
   Flex,
-  Image,
   Container,
   HStack,
   Badge,
   SimpleGrid,
   useColorModeValue,
-  Divider,
   Icon,
   Grid,
   GridItem,
+  useToast,
+  Image,
+  Link,
 } from '@chakra-ui/react';
 import ResumePreviewModal from '../components/ResumePreviewModal';
-import { FiArrowRight, FiDownload, FiGithub, FiShield, FiSmartphone, FiZap } from 'react-icons/fi';
+import tuxcPreview from '../assets/tuxc_preview.png';
+import smsPreview from '../assets/sms_tickets_preview.png';
+import {
+  FiArrowRight,
+  FiDownload,
+  FiGithub,
+  FiLinkedin,
+  FiCopy,
+  FiCheck,
+  FiSmartphone,
+} from 'react-icons/fi';
 
-import DartLogo from '../assets/dart-logo.png';
-import FlutterLogo from '../assets/flutter-logo.png';
-
-const HIGHLIGHT_STATS = [
-  { label: 'Years in mobile delivery', value: '2+' },
-  { label: 'Featured apps', value: '5' },
-  { label: 'Frontend lead role', value: '1' },
-  { label: 'Production releases', value: '10+' },
+const TECH_PILLS = [
+  'Flutter',
+  'Dart',
+  'Riverpod',
+  'BLoC',
+  'Clean Architecture',
+  'RESTful APIs',
+  'CI/CD Pipelines',
+  'C# (.NET)',
 ];
 
-const DELIVERY_POINTS = [
-  { icon: FiSmartphone, label: 'Built mobile apps with Flutter, Dart, Firebase, and REST APIs.' },
-  { icon: FiZap, label: 'Kept UI clean, simple, and fast for smooth user journeys.' },
-  { icon: FiShield, label: 'Worked with teams to ship stable releases and fix issues quickly.' },
+const IMPACT_STATS = [
+  { value: '3+ Years', label: 'Mobile Engineering', sub: 'Enterprise & Fintech' },
+  { value: '20+', label: 'Store Releases', sub: 'App Store & Google Play' },
+  { value: '~90%', label: 'UI Speedup', sub: 'WebView to Native Flutter' },
+  { value: '3.44', label: 'CGPA (UiTM)', sub: 'B.Sc. Computer Science (Hons)' },
 ];
-
-const CORE_FOCUS = ['Flutter', 'Firebase', 'Riverpod', 'BLoC', 'Clean UI', 'Performance'];
 
 interface HomeProps {
   scrollToPortfolio: () => void;
 }
 
-const Home: React.FC<HomeProps> = ({ scrollToPortfolio }) => {
+export const Home: React.FC<HomeProps> = ({ scrollToPortfolio }) => {
   const [isResumeOpen, setIsResumeOpen] = useState(false);
-  const accentColor = useColorModeValue('brand.700', 'brand.300');
-  const mutedColor = useColorModeValue('neutral.600', 'neutral.200');
-  const surfaceColor = useColorModeValue('rgba(255, 255, 255, 0.9)', 'rgba(15, 23, 42, 0.82)');
-  const borderColor = useColorModeValue('rgba(148, 163, 184, 0.28)', 'whiteAlpha.200');
-  const logoBg = useColorModeValue('white', 'whiteAlpha.100');
-  const highlightValueColor = useColorModeValue('neutral.900', 'white');
-  const sectionBg = useColorModeValue(
-    'linear-gradient(135deg, #f8fafc 0%, #eef6ff 42%, #f8fafc 100%)',
-    'linear-gradient(135deg, #0f172a 0%, #111827 55%, #0b1220 100%)'
-  );
-  const panelBg = useColorModeValue('rgba(255, 255, 255, 0.82)', 'rgba(15, 23, 42, 0.78)');
-  const railBg = useColorModeValue('rgba(248, 250, 252, 0.95)', 'whiteAlpha.100');
-  const patternColor = useColorModeValue('rgba(37, 99, 235, 0.08)', 'rgba(34, 211, 238, 0.08)');
-  const focusBadgeBg = useColorModeValue('brand.50', 'whiteAlpha.100');
+  const [copiedEmail, setCopiedEmail] = useState(false);
+  const [activeShowcase, setActiveShowcase] = useState<'tuxc' | 'sms'>('tuxc');
+  const toast = useToast();
+
+  const textColor = useColorModeValue('neutral.900', 'white');
+  const mutedColor = useColorModeValue('neutral.600', 'gray.400');
+  const cardBg = useColorModeValue('white', 'rgba(15, 23, 42, 0.75)');
+  const borderColor = useColorModeValue('rgba(148, 163, 184, 0.25)', 'whiteAlpha.200');
+  const subtleBg = useColorModeValue('neutral.50', 'whiteAlpha.50');
+
+  const handleCopyEmail = () => {
+    navigator.clipboard.writeText('Afifshyamsul00@gmail.com');
+    setCopiedEmail(true);
+    toast({
+      title: 'Email Copied',
+      description: 'Afifshyamsul00@gmail.com copied to clipboard.',
+      status: 'success',
+      duration: 2500,
+      isClosable: true,
+      position: 'top',
+    });
+    setTimeout(() => setCopiedEmail(false), 2500);
+  };
 
   return (
     <Box
       id="home"
-      bg={sectionBg}
-      bgImage={`linear-gradient(${patternColor} 1px, transparent 1px), linear-gradient(90deg, ${patternColor} 1px, transparent 1px)`}
-      bgSize="48px 48px"
-      pt={{ base: 28, md: 32 }}
+      position="relative"
+      pt={{ base: 28, md: 36 }}
       pb={{ base: 16, md: 24 }}
     >
       <Container maxW="container.xl">
         <Grid
-          templateColumns={{ base: '1fr', lg: 'minmax(0, 1.05fr) minmax(360px, 0.95fr)' }}
+          templateColumns={{ base: '1fr', lg: 'minmax(0, 1.15fr) minmax(340px, 0.85fr)' }}
           alignItems="center"
-          gap={{ base: 10, lg: 14 }}
+          gap={{ base: 12, lg: 16 }}
         >
+          {/* Left Column: Hero Introduction */}
           <GridItem>
-            <VStack align="flex-start" spacing={6} maxW="3xl">
-              <Badge
-                colorScheme="brand"
+            <VStack align="flex-start" spacing={6}>
+              {/* Status Pill */}
+              <HStack
+                bg={subtleBg}
+                border="1px solid"
+                borderColor={borderColor}
+                px={3.5}
+                py={1.5}
                 borderRadius="full"
-                px={3}
-                py={1}
-                textTransform="unset"
-                fontWeight="semibold"
+                spacing={2.5}
               >
-                Flutter Mobile Developer
-              </Badge>
+                <Box w={2} h={2} borderRadius="full" bg="emerald.500" />
+                <Text fontSize="xs" fontWeight="semibold" color={mutedColor}>
+                  Available for Mobile Software Engineer roles
+                </Text>
+              </HStack>
 
-              <Heading as="h1" size={{ base: '2xl', md: '3xl' }} lineHeight="1.05" letterSpacing="-0.03em">
-                Flutter Mobile Developer building clean, fast, and reliable mobile apps.
-              </Heading>
+              {/* Main Headline */}
+              <Box>
+                <Text fontSize={{ base: 'lg', md: 'xl' }} fontWeight="semibold" color="cyan.400" mb={1}>
+                  Afif Shyamsul Syahiran
+                </Text>
+                <Heading
+                  as="h1"
+                  fontSize={{ base: '3xl', sm: '4xl', md: '5xl', lg: '5xl' }}
+                  fontWeight="900"
+                  lineHeight="1.15"
+                  letterSpacing="-0.03em"
+                  color={textColor}
+                >
+                  Building clean, scalable mobile apps with Flutter.
+                </Heading>
+              </Box>
 
-              <Text fontSize={{ base: 'md', md: 'xl' }} color={mutedColor} maxW="2xl" lineHeight="tall">
-                I have around 2 years of experience building mobile apps with Flutter, Dart, Firebase,
-                REST APIs, Riverpod, Provider, and BLoC. I focus on clear UI, smooth user flows, app
-                performance, and reliable delivery.
+              {/* Bio Paragraph */}
+              <Text
+                fontSize={{ base: 'md', md: 'lg' }}
+                color={mutedColor}
+                lineHeight="tall"
+                maxW="2xl"
+              >
+                Mobile Software Engineer with <strong>3+ years of experience</strong> across enterprise B2B procurement, cryptocurrency wallets, and e-commerce platforms. Specialized in Flutter, Dart, Riverpod, Clean Architecture, and automated store deployments.
               </Text>
 
-              <SimpleGrid columns={{ base: 1, md: 3 }} spacing={3} w="full">
-                {DELIVERY_POINTS.map((item) => (
-                  <HStack
-                    key={item.label}
-                    align="flex-start"
-                    spacing={3}
-                    borderWidth="1px"
+              {/* Tech Stack Pills */}
+              <Flex wrap="wrap" gap={2} pt={1}>
+                {TECH_PILLS.map((tech) => (
+                  <Badge
+                    key={tech}
+                    bg={subtleBg}
+                    color={textColor}
+                    border="1px solid"
                     borderColor={borderColor}
-                    borderRadius="xl"
-                    bg={surfaceColor}
-                    p={4}
+                    fontSize="xs"
+                    px={3}
+                    py={1}
+                    borderRadius="md"
+                    fontWeight="medium"
                   >
-                    <Icon as={item.icon} color={accentColor} boxSize={5} mt={0.5} />
-                    <Text color={mutedColor} fontSize="sm" lineHeight="tall">
-                      {item.label}
-                    </Text>
-                  </HStack>
+                    {tech}
+                  </Badge>
                 ))}
-              </SimpleGrid>
+              </Flex>
 
-              <Flex
-                wrap="wrap"
-                gap={3}
-                w="full"
-                maxW={{ base: 'full', xl: '4xl' }}
-                pt={2}
-                align="stretch"
-              >
+              {/* Call-to-Action Buttons */}
+              <Flex wrap="wrap" gap={3} pt={2} w="full">
                 <Button
-                  flex="1 1 220px"
-                  minW="220px"
-                  colorScheme="brand"
-                  size="lg"
                   onClick={scrollToPortfolio}
+                  colorScheme="cyan"
+                  size="lg"
                   rightIcon={<FiArrowRight />}
+                  px={6}
+                  borderRadius="xl"
+                  fontWeight="bold"
                 >
                   View Projects
                 </Button>
                 <Button
-                  flex="1 1 220px"
-                  minW="220px"
+                  onClick={() => setIsResumeOpen(true)}
                   variant="outline"
-                  colorScheme="brand"
+                  colorScheme="gray"
                   size="lg"
                   leftIcon={<FiDownload />}
-                  onClick={() => setIsResumeOpen(true)}
+                  px={5}
+                  borderRadius="xl"
                 >
-                  Preview Resume
+                  Resume PDF
                 </Button>
                 <Button
-                  flex="1 1 220px"
-                  minW="220px"
-                  as="a"
-                  href="https://github.com/afifShyam"
-                  target="_blank"
-                  rel="noreferrer"
-                  variant="outline"
-                  colorScheme="brand"
+                  onClick={handleCopyEmail}
+                  variant="ghost"
+                  colorScheme="cyan"
                   size="lg"
-                  leftIcon={<FiGithub />}
+                  leftIcon={copiedEmail ? <FiCheck /> : <FiCopy />}
+                  px={4}
+                  borderRadius="xl"
                 >
-                  GitHub
+                  {copiedEmail ? 'Copied' : 'Copy Email'}
                 </Button>
+                <HStack spacing={2} pl={{ base: 0, sm: 2 }}>
+                  <Button
+                    as={Link}
+                    href="https://github.com/afifShyam"
+                    isExternal
+                    variant="outline"
+                    size="lg"
+                    px={3.5}
+                    borderRadius="xl"
+                    aria-label="GitHub"
+                  >
+                    <Icon as={FiGithub} />
+                  </Button>
+                  <Button
+                    as={Link}
+                    href="https://www.linkedin.com/in/afif-shyamsul-1333bb279/"
+                    isExternal
+                    variant="outline"
+                    size="lg"
+                    px={3.5}
+                    borderRadius="xl"
+                    aria-label="LinkedIn"
+                  >
+                    <Icon as={FiLinkedin} />
+                  </Button>
+                </HStack>
               </Flex>
+
+              {/* Impact Highlights Grid */}
+              <SimpleGrid columns={{ base: 2, sm: 4 }} spacing={3} w="full" pt={4}>
+                {IMPACT_STATS.map((stat) => (
+                  <Box
+                    key={stat.label}
+                    bg={cardBg}
+                    border="1px solid"
+                    borderColor={borderColor}
+                    borderRadius="xl"
+                    p={3.5}
+                  >
+                    <Text fontSize="xs" color="gray.400" fontWeight="medium">
+                      {stat.label}
+                    </Text>
+                    <Text fontSize="lg" fontWeight="extrabold" color="cyan.400" mt={0.5}>
+                      {stat.value}
+                    </Text>
+                    <Text fontSize="2xs" color={mutedColor} mt={0.5} noOfLines={1}>
+                      {stat.sub}
+                    </Text>
+                  </Box>
+                ))}
+              </SimpleGrid>
             </VStack>
           </GridItem>
 
+          {/* Right Column: Clean App Preview Showcase */}
           <GridItem>
             <Box
-              w="full"
-              bg={panelBg}
-              borderRadius="2xl"
-              borderWidth="1px"
+              bg={cardBg}
+              border="1px solid"
               borderColor={borderColor}
-              p={{ base: 6, md: 8 }}
-              boxShadow={useColorModeValue('0 24px 60px rgba(15, 23, 42, 0.08)', '0 24px 60px rgba(0, 0, 0, 0.3)')}
-              backdropFilter="blur(18px)"
+              borderRadius="3xl"
+              p={{ base: 5, sm: 6 }}
+              boxShadow={useColorModeValue('0 20px 40px rgba(0,0,0,0.06)', '0 20px 40px rgba(0,0,0,0.4)')}
             >
-              <HStack spacing={3} mb={6} color={accentColor}>
-                <Icon as={FiSmartphone} boxSize={5} />
-                <Text fontWeight="semibold">What I bring</Text>
-              </HStack>
-
-              <SimpleGrid columns={{ base: 1, sm: 2 }} spacing={4}>
-                {HIGHLIGHT_STATS.map((item) => (
-                  <VStack key={item.label} align="flex-start" spacing={1} bg={railBg} borderRadius="xl" p={4}>
-                    <Text fontSize={{ base: '2xl', md: '3xl' }} fontWeight="semibold" color={highlightValueColor}>
-                      {item.value}
-                    </Text>
-                    <Text fontSize="sm" color={mutedColor}>
-                      {item.label}
-                    </Text>
-                  </VStack>
-                ))}
-              </SimpleGrid>
-
-              <Divider my={8} borderColor={borderColor} />
-
-              <VStack align="stretch" spacing={3}>
-                {[
-                  'Frontend lead on TuxC Wallet mobile development',
-                  'Built shopping, reservation, caregiver, and tracker apps',
-                  'Collaborated with backend and product teams on releases',
-                ].map((item, index) => (
-                  <HStack key={item} spacing={3} align="flex-start">
-                    <Box mt={1} w="8px" h="8px" borderRadius="full" bg={index === 1 ? accentColor : 'brand.400'} flexShrink={0} />
-                    <Text color={mutedColor} fontSize="sm" lineHeight="tall">
-                      {item}
-                    </Text>
-                  </HStack>
-                ))}
-              </VStack>
-
-              <Text fontSize="sm" color={mutedColor} mb={4} mt={8} fontWeight="medium">
-                Core tools
-              </Text>
-
-              <HStack spacing={4} align="stretch">
-                <VStack spacing={3} flex="1">
-                  <Box
-                    bg={logoBg}
-                    borderRadius="xl"
-                    p={4}
-                    display="flex"
-                    alignItems="center"
-                    justifyContent="center"
-                    borderWidth="1px"
-                    borderColor={borderColor}
-                  >
-                    <Image src={DartLogo} alt="Dart Logo" boxSize="48px" objectFit="contain" />
-                  </Box>
-                  <Text fontSize="sm" color={mutedColor}>
-                    Dart
+              {/* Switcher Header */}
+              <Flex justify="space-between" align="center" mb={4}>
+                <HStack spacing={2}>
+                  <Icon as={FiSmartphone} color="cyan.400" />
+                  <Text fontSize="xs" fontWeight="bold" textTransform="uppercase" letterSpacing="wider" color={mutedColor}>
+                    Production Apps
                   </Text>
-                </VStack>
-                <VStack spacing={3} flex="1">
-                  <Box
-                    bg={logoBg}
-                    borderRadius="xl"
-                    p={4}
-                    display="flex"
-                    alignItems="center"
-                    justifyContent="center"
-                    borderWidth="1px"
-                    borderColor={borderColor}
-                  >
-                    <Image src={FlutterLogo} alt="Flutter Logo" boxSize="48px" objectFit="contain" />
-                  </Box>
-                  <Text fontSize="sm" color={mutedColor}>
-                    Flutter
-                  </Text>
-                </VStack>
-              </HStack>
+                </HStack>
 
-              <Divider my={8} borderColor={borderColor} />
-
-              <Flex flexWrap="wrap" gap={2}>
-                {CORE_FOCUS.map((item) => (
-                  <Badge
-                    key={item}
-                    px={3}
-                    py={1}
-                    borderRadius="full"
-                    bg={focusBadgeBg}
-                    color={accentColor}
-                    textTransform="none"
+                <HStack spacing={1.5} bg={subtleBg} p={1} borderRadius="lg" border="1px solid" borderColor={borderColor}>
+                  <Button
+                    size="xs"
+                    variant={activeShowcase === 'tuxc' ? 'solid' : 'ghost'}
+                    colorScheme={activeShowcase === 'tuxc' ? 'cyan' : 'gray'}
+                    onClick={() => setActiveShowcase('tuxc')}
+                    borderRadius="md"
                   >
-                    {item}
-                  </Badge>
-                ))}
+                    TuxC Wallet
+                  </Button>
+                  <Button
+                    size="xs"
+                    variant={activeShowcase === 'sms' ? 'solid' : 'ghost'}
+                    colorScheme={activeShowcase === 'sms' ? 'cyan' : 'gray'}
+                    onClick={() => setActiveShowcase('sms')}
+                    borderRadius="md"
+                  >
+                    SMS System
+                  </Button>
+                </HStack>
               </Flex>
+
+              {/* Phone Frame with Real App Store Screenshot */}
+              <Box
+                position="relative"
+                borderRadius="2xl"
+                overflow="hidden"
+                bg="black"
+                border="1px solid"
+                borderColor={borderColor}
+                maxH="440px"
+                display="flex"
+                alignItems="center"
+                justifyContent="center"
+              >
+                <Image
+                  src={activeShowcase === 'tuxc' ? tuxcPreview : smsPreview}
+                  alt={activeShowcase === 'tuxc' ? 'TuxC Wallet Production App' : 'SMS Facilities Management App'}
+                  maxH="440px"
+                  w="full"
+                  objectFit="contain"
+                />
+              </Box>
+
+              {/* Showcase Meta Footer */}
+              <Box mt={4} pt={3} borderTop="1px solid" borderColor={borderColor}>
+                <Flex justify="space-between" align="center">
+                  <Box>
+                    <Text fontSize="sm" fontWeight="bold" color={textColor}>
+                      {activeShowcase === 'tuxc' ? 'TuxC Wallet (Coinyex)' : 'Service Management System (Radiant)'}
+                    </Text>
+                    <Text fontSize="xs" color={mutedColor}>
+                      {activeShowcase === 'tuxc' ? 'Cryptocurrency Wallet · Riverpod · 20+ Releases' : 'Enterprise Field Ticketing · C# Backend'}
+                    </Text>
+                  </Box>
+                  <Button
+                    size="xs"
+                    variant="outline"
+                    colorScheme="cyan"
+                    onClick={scrollToPortfolio}
+                    rightIcon={<FiArrowRight />}
+                  >
+                    Details
+                  </Button>
+                </Flex>
+              </Box>
             </Box>
           </GridItem>
         </Grid>
       </Container>
+
+      {/* Resume Preview Modal */}
       <ResumePreviewModal
         isOpen={isResumeOpen}
         onClose={() => setIsResumeOpen(false)}

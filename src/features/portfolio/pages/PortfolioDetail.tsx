@@ -1,123 +1,96 @@
-import type { SyntheticEvent } from 'react';
-import { Box, Image, Heading, Text, Tag, Flex, Button, Icon, Link, useColorModeValue, Divider, VStack, HStack, Badge } from '@chakra-ui/react';
+import { Box, Image, Heading, Text, Tag, Flex, Button, Icon, Link } from '@chakra-ui/react';
 import { FaGithub, FaGooglePlay, FaVideo, FaApple } from 'react-icons/fa';
 import { Project } from '../../../types/projectTypes';
 
 const ProjectCard: React.FC<{ project: Project }> = ({ project }) => {
-  const primaryImage = project.image ?? project.images?.[0];
-  const normalizedImage =
-    typeof primaryImage === 'string'
-      ? { src: primaryImage }
-      : primaryImage;
-  const hasImage = !!normalizedImage?.src;
+  const hasImage = !!project.image;
   const hasVideo = !!project.video;
   const hasGithub = !!project.githubLink;
   const hasPlayStore = !!project.playStoreLink;
   const hasAppStore = !!project.appStoreLink;
-  const surfaceColor = useColorModeValue('white', 'rgba(15, 23, 42, 0.9)');
-  const borderColor = useColorModeValue('gray.200', 'whiteAlpha.200');
-  const descriptionColor = useColorModeValue('neutral.500', 'neutral.200');
-  const badgeBg = useColorModeValue('brand.50', 'whiteAlpha.200');
-  const badgeColor = useColorModeValue('brand.600', 'brand.200');
 
   return (
     <Box
-      bg={surfaceColor}
+      bg="#112240"
+      p={6}
       borderRadius="lg"
-      borderWidth="1px"
-      borderColor={borderColor}
-      p={{ base: 6, md: 8 }}
+      shadow="lg"
+      transition="transform 0.2s, box-shadow 0.2s"
+      _hover={{
+        transform: 'scale(1.03)',
+        shadow: '2xl',
+      }}
+      cursor="pointer"
     >
-      <VStack align="stretch" spacing={5}>
-        {/* Image or Placeholder */}
-        {hasImage ? (
-          <Box
+      {/* Image or Placeholder */}
+      {hasImage ? (
+        <Box mb={6}>
+          <Image
+            src={typeof project.image === 'string' ? project.image : project.image?.src}
+            alt={`${project.name} preview`}
             borderRadius="lg"
-            overflow="hidden"
-            minH={{ base: '10rem', md: '11rem' }}
-            aspectRatio={{ base: 3 / 4, md: 4 / 5 }}
-          >
-            <Image
-              src={normalizedImage?.src}
-              srcSet={normalizedImage?.srcSet}
-              sizes={normalizedImage?.sizes}
-              alt={normalizedImage?.alt ?? `${project.name} preview`}
-              loading="lazy"
-              decoding="async"
-              objectFit="cover"
-              w="full"
-              h="12rem"
-              onError={(event: SyntheticEvent<HTMLImageElement>) => {
-                const target = event.currentTarget;
-                target.onerror = null;
-                target.srcset = '';
-                target.src = '/assets/placeholder.png';
-              }}
-            />
-          </Box>
-        ) : (
-          <Box
-            borderRadius="lg"
-            borderWidth="1px"
-            borderColor={borderColor}
+            objectFit="cover"
             w="full"
             h="12rem"
-            display="flex"
-            alignItems="center"
-            justifyContent="center"
-            textAlign="center"
-          >
-            <Text color={descriptionColor}>No preview available</Text>
-          </Box>
-        )}
-
-        <Badge
-          alignSelf="flex-start"
-          bg={badgeBg}
-          color={badgeColor}
-          px={3}
-          py={1}
-          borderRadius="full"
-          fontWeight="medium"
+            bg="gray.800"
+            onError={(e: any) => {
+              e.target.src = '/assets/placeholder.png';
+            }}
+          />
+        </Box>
+      ) : (
+        <Box
+          bg="gray.700"
+          color="whiteAlpha.700"
+          borderRadius="lg"
+          w="full"
+          h="12rem"
+          display="flex"
+          alignItems="center"
+          justifyContent="center"
+          mb={6}
+          textAlign="center"
         >
-          {project.category}
-        </Badge>
+          <Text>No Preview Available</Text>
+        </Box>
+      )}
 
-        {/* Project Name */}
-        <Heading as="h3" size="lg">
-          {project.name}
-        </Heading>
+      {/* Project Name */}
+      <Heading as="h3" size="lg" mb={4}>
+        {project.name}
+      </Heading>
 
-        {/* Project Description */}
-        <Text color={descriptionColor}>{project.description}</Text>
+      {/* Project Description */}
+      <Text color="gray.400" mb={4}>
+        {project.description}
+      </Text>
 
-        <Divider borderColor={borderColor} />
-
-        {/* Tech Stack */}
-        <VStack align="flex-start" spacing={3}>
-          <Text fontSize="sm" fontWeight="semibold" color={badgeColor} textTransform="uppercase">
-            Tech stack
+      {/* Tech Stack */}
+      <Flex wrap="wrap" gap={2} mt={4}>
+        {project.techStack?.length ? (
+          project.techStack.map((tech) => (
+            <Tag key={tech} bg="blue.600" color="white" size="sm" borderRadius="md">
+              {tech}
+            </Tag>
+          ))
+        ) : (
+          <Text color="gray.500" fontSize="sm">
+            No tech stack listed
           </Text>
-          <Flex wrap="wrap" gap={2}>
-            {project.techStack?.length ? (
-              project.techStack.map((tech) => (
-                <Tag key={tech} size="sm" borderRadius="md" borderWidth="1px" borderColor={borderColor}>
-                  {tech}
-                </Tag>
-              ))
-            ) : (
-              <Text color={descriptionColor} fontSize="sm">
-                No tech stack listed
-              </Text>
-            )}
-          </Flex>
-        </VStack>
+        )}
+      </Flex>
 
-        {/* Actions: GitHub, Play Store, App Store, Video Demo */}
-        <HStack spacing={3} pt={2} justifyContent="flex-start" flexWrap="wrap">
+      {/* Actions: GitHub, Play Store, App Store, Video Demo */}
+      <Flex justifyContent="space-between" alignItems="center" mt={6}>
+        <Flex gap={4}>
           {hasGithub && (
             <Link href={project.githubLink} isExternal aria-label="GitHub Repository">
-              <Button leftIcon={<Icon as={FaGithub} />} variant="outline" colorScheme="brand" size="sm">
+              <Button
+                leftIcon={<Icon as={FaGithub} />}
+                colorScheme="blue"
+                variant="outline"
+                size="sm"
+              >
                 GitHub
               </Button>
             </Link>
@@ -125,7 +98,12 @@ const ProjectCard: React.FC<{ project: Project }> = ({ project }) => {
 
           {hasPlayStore && (
             <Link href={project.playStoreLink} isExternal aria-label="Play Store Link">
-              <Button leftIcon={<Icon as={FaGooglePlay} />} colorScheme="green" variant="solid" size="sm">
+              <Button
+                leftIcon={<Icon as={FaGooglePlay} />}
+                colorScheme="green"
+                variant="solid"
+                size="sm"
+              >
                 Play Store
               </Button>
             </Link>
@@ -138,16 +116,16 @@ const ProjectCard: React.FC<{ project: Project }> = ({ project }) => {
               </Button>
             </Link>
           )}
+        </Flex>
 
-          {hasVideo && (
-            <Link href={project.video} isExternal aria-label="Watch Demo Video">
-              <Button leftIcon={<Icon as={FaVideo} />} colorScheme="red" variant="solid" size="sm">
-                Watch Demo
-              </Button>
-            </Link>
-          )}
-        </HStack>
-      </VStack>
+        {hasVideo && (
+          <Link href={project.video} isExternal aria-label="Watch Demo Video">
+            <Button leftIcon={<Icon as={FaVideo} />} colorScheme="red" variant="solid" size="sm">
+              Watch Demo
+            </Button>
+          </Link>
+        )}
+      </Flex>
     </Box>
   );
 };

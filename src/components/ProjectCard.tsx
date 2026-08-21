@@ -1,5 +1,4 @@
 import { useState } from 'react';
-import type { SyntheticEvent } from 'react';
 import {
   Box,
   Image,
@@ -18,7 +17,7 @@ import {
   Divider,
   Stack,
 } from '@chakra-ui/react';
-import { FaGithub, FaExternalLinkAlt, FaChevronLeft, FaChevronRight, FaInfoCircle } from 'react-icons/fa';
+import { FaGithub, FaExternalLinkAlt, FaChevronLeft, FaChevronRight, FaInfoCircle, FaStar, FaMobileAlt } from 'react-icons/fa';
 import { Project } from '../types/projectTypes';
 
 interface ProjectCardProps {
@@ -36,16 +35,15 @@ const ProjectCard: React.FC<ProjectCardProps> = ({ project, onSelectProject }) =
   const hasGithub = !!project.githubLink;
   const hasPlayStore = !!project.playStoreLink;
   const hasAppStore = !!project.appStoreLink;
-  const containerBg = useColorModeValue('rgba(255, 255, 255, 0.92)', 'rgba(15, 23, 42, 0.88)');
-  const borderColor = useColorModeValue('rgba(148, 163, 184, 0.28)', 'whiteAlpha.200');
+  const containerBg = useColorModeValue('rgba(255, 255, 255, 0.94)', 'rgba(15, 23, 42, 0.88)');
+  const borderColor = useColorModeValue(project.featured ? 'rgba(6, 182, 212, 0.4)' : 'rgba(148, 163, 184, 0.28)', project.featured ? 'rgba(6, 182, 212, 0.4)' : 'whiteAlpha.200');
   const textColor = useColorModeValue('neutral.900', 'white');
   const descriptionColor = useColorModeValue('neutral.600', 'neutral.200');
-  const badgeBg = useColorModeValue('brand.50', 'whiteAlpha.200');
-  const badgeColor = useColorModeValue('brand.700', 'cyan.300');
+  const badgeBg = useColorModeValue('cyan.50', 'whiteAlpha.200');
+  const badgeColor = useColorModeValue('cyan.700', 'cyan.300');
   const tagColor = useColorModeValue('neutral.700', 'neutral.100');
   const tagBorder = useColorModeValue('rgba(148, 163, 184, 0.28)', 'whiteAlpha.200');
   const featureBg = useColorModeValue('neutral.50', 'whiteAlpha.100');
-  const previewBg = useColorModeValue('brand.50', 'whiteAlpha.50');
   const activeImage = images[currentImage];
   const hasCarousel = images.length > 1;
 
@@ -65,38 +63,75 @@ const ProjectCard: React.FC<ProjectCardProps> = ({ project, onSelectProject }) =
       borderRadius="2xl"
       borderWidth="1px"
       borderColor={borderColor}
-      p={5}
+      p={{ base: 4, sm: 5 }}
+      w="100%"
+      maxW="100%"
       transition="transform 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease"
       boxShadow={useColorModeValue('0 14px 32px rgba(15, 23, 42, 0.08)', '0 18px 38px rgba(0, 0, 0, 0.34)')}
       _hover={{
         transform: 'translateY(-6px)',
-        boxShadow: useColorModeValue('0 24px 48px rgba(15, 23, 42, 0.14)', '0 24px 48px rgba(6, 182, 212, 0.25)'),
-        borderColor: badgeColor,
+        boxShadow: useColorModeValue('0 24px 48px rgba(6, 182, 212, 0.18)', '0 24px 48px rgba(6, 182, 212, 0.25)'),
+        borderColor: 'cyan.400',
       }}
       h="100%"
       display="flex"
       flexDirection="column"
       position="relative"
+      overflow="hidden"
     >
-      <VStack align="stretch" spacing={4} h="100%">
-        <Flex justify="space-between" align="center" gap={3} wrap="wrap">
-          <Badge
-            bg={badgeBg}
-            color={badgeColor}
-            px={3}
-            py={1}
-            borderRadius="full"
-            fontWeight="bold"
-            fontSize="xs"
-            letterSpacing="wide"
-          >
-            {project.category}
-          </Badge>
-          {project.role ? (
-            <Text fontSize="xs" fontWeight="semibold" color="purple.400">
+      <VStack align="stretch" spacing={3.5} h="100%" w="100%">
+        <Flex justify="space-between" align="center" gap={2} wrap="wrap">
+          <HStack spacing={1.5} wrap="wrap">
+            {project.featured && (
+              <Badge
+                bgGradient="linear(to-r, cyan.500, brand.600)"
+                color="white"
+                px={2}
+                py={0.5}
+                borderRadius="full"
+                fontWeight="extrabold"
+                fontSize="2xs"
+                letterSpacing="wide"
+                boxShadow="0 2px 6px rgba(6, 182, 212, 0.35)"
+                display="inline-flex"
+                alignItems="center"
+                gap={1}
+              >
+                <Icon as={FaStar} boxSize={2.5} />
+                FEATURED
+              </Badge>
+            )}
+            <Badge
+              bg={badgeBg}
+              color={badgeColor}
+              px={2.5}
+              py={0.5}
+              borderRadius="full"
+              fontWeight="bold"
+              fontSize="2xs"
+              letterSpacing="wide"
+            >
+              {project.category}
+            </Badge>
+            {project.metrics && (
+              <Badge
+                colorScheme="purple"
+                variant="subtle"
+                px={2}
+                py={0.5}
+                borderRadius="md"
+                fontSize="2xs"
+                fontWeight="medium"
+              >
+                {project.metrics}
+              </Badge>
+            )}
+          </HStack>
+          {project.role && (
+            <Text fontSize="xs" fontWeight="bold" color="cyan.400">
               {project.role}
             </Text>
-          ) : null}
+          )}
         </Flex>
 
         {images.length ? (
@@ -104,11 +139,14 @@ const ProjectCard: React.FC<ProjectCardProps> = ({ project, onSelectProject }) =
             position="relative"
             overflow="hidden"
             borderRadius="xl"
-            minH={{ base: '10rem', md: '11rem' }}
-            aspectRatio={{ base: 4 / 3, md: 16 / 10 }}
-            bg={previewBg}
+            minH={{ base: '12rem', md: '13rem' }}
+            maxH={{ base: '16rem', md: '18rem' }}
+            bg="black"
             cursor={onSelectProject ? 'pointer' : 'default'}
             onClick={() => onSelectProject?.(project)}
+            display="flex"
+            alignItems="center"
+            justifyContent="center"
           >
             <Image
               src={activeImage?.src}
@@ -117,50 +155,53 @@ const ProjectCard: React.FC<ProjectCardProps> = ({ project, onSelectProject }) =
               alt={activeImage?.alt ?? `${project.name} preview`}
               loading="lazy"
               decoding="async"
-              objectFit="cover"
+              objectFit="contain"
               w="full"
               h="100%"
+              maxH={{ base: '16rem', md: '18rem' }}
               transition="transform 0.35s ease"
-              _hover={{ transform: 'scale(1.04)' }}
-              onError={(event: SyntheticEvent<HTMLImageElement>) => {
-                const target = event.currentTarget;
-                target.onerror = null;
-                target.srcset = '';
-                target.src = '/assets/placeholder.png';
-              }}
+              _hover={{ transform: 'scale(1.03)' }}
+              fallback={
+                <Flex h="full" w="full" align="center" justify="center" bgGradient="linear(to-br, cyan.900, gray.900)" p={4} direction="column">
+                  <Text fontWeight="bold" fontSize="sm" color="white" mb={1}>{project.name}</Text>
+                  <Text fontSize="2xs" color="cyan.300">{project.category} App</Text>
+                </Flex>
+              }
             />
 
             {hasCarousel && (
               <>
                 <IconButton
                   aria-label="Previous image"
-                  icon={<FaChevronLeft />}
-                  size="sm"
-                  variant="ghost"
+                  icon={<FaChevronLeft size={11} />}
+                  size="xs"
                   position="absolute"
                   top="50%"
                   left={2}
                   transform="translateY(-50%)"
                   onClick={goToPrev}
-                  bg="blackAlpha.600"
-                  color="white"
-                  _hover={{ bg: 'blackAlpha.800' }}
+                  bg="white"
+                  color="gray.900"
+                  _hover={{ bg: 'cyan.400', color: 'gray.900' }}
+                  boxShadow="0 2px 8px rgba(0, 0, 0, 0.5)"
                   borderRadius="full"
+                  zIndex={2}
                 />
                 <IconButton
                   aria-label="Next image"
-                  icon={<FaChevronRight />}
-                  size="sm"
-                  variant="ghost"
+                  icon={<FaChevronRight size={11} />}
+                  size="xs"
                   position="absolute"
                   top="50%"
                   right={2}
                   transform="translateY(-50%)"
                   onClick={goToNext}
-                  bg="blackAlpha.600"
-                  color="white"
-                  _hover={{ bg: 'blackAlpha.800' }}
+                  bg="white"
+                  color="gray.900"
+                  _hover={{ bg: 'cyan.400', color: 'gray.900' }}
+                  boxShadow="0 2px 8px rgba(0, 0, 0, 0.5)"
                   borderRadius="full"
+                  zIndex={2}
                 />
                 <HStack
                   spacing={1}
@@ -168,10 +209,11 @@ const ProjectCard: React.FC<ProjectCardProps> = ({ project, onSelectProject }) =
                   bottom={2}
                   left="50%"
                   transform="translateX(-50%)"
-                  bg="blackAlpha.600"
+                  bg="blackAlpha.700"
                   borderRadius="full"
-                  px={3}
+                  px={2.5}
                   py={1}
+                  backdropFilter="blur(6px)"
                 >
                   {images.map((_, idx) => (
                     <Box
@@ -189,28 +231,36 @@ const ProjectCard: React.FC<ProjectCardProps> = ({ project, onSelectProject }) =
         ) : (
           <Box
             borderRadius="xl"
-            minH={{ base: '10rem', md: '11rem' }}
+            minH={{ base: '11rem', md: '12rem' }}
+            bgGradient="linear(to-br, #0f172a, #1e293b)"
             borderWidth="1px"
             borderColor={tagBorder}
             display="flex"
+            flexDirection="column"
             alignItems="center"
             justifyContent="center"
+            p={4}
+            textAlign="center"
+            cursor={onSelectProject ? 'pointer' : 'default'}
+            onClick={() => onSelectProject?.(project)}
           >
-            <Text fontSize="sm" color={descriptionColor}>
-              No preview available
+            <Icon as={FaMobileAlt} boxSize={8} color="cyan.400" mb={2} />
+            <Text fontSize="sm" fontWeight="bold" color="white">
+              {project.name}
+            </Text>
+            <Text fontSize="xs" color="gray.400" mt={1}>
+              Flutter Mobile Application
             </Text>
           </Box>
         )}
 
-        <Heading size="md" color={textColor} fontWeight="bold">
+        <Heading size="md" fontSize={{ base: 'md', md: 'lg' }} color={textColor} fontWeight="bold" wordBreak="break-word">
           {project.name}
         </Heading>
 
         <Text color={descriptionColor} fontSize="sm" lineHeight="tall" noOfLines={3}>
           {project.description}
         </Text>
-
-        <Divider borderColor={borderColor} />
 
         <Stack spacing={3}>
           {project.features?.length ? (
@@ -326,4 +376,3 @@ const ProjectCard: React.FC<ProjectCardProps> = ({ project, onSelectProject }) =
 };
 
 export default ProjectCard;
-

@@ -1,0 +1,56 @@
+<svg width="120" height="120" viewBox="0 0 120 120" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <rect width="120" height="120" rx="32" fill="url(#bgGrad)" stroke="url(#borderGrad)" stroke-width="2"/>
+  
+  <!-- Ambient Glow -->
+  <circle cx="60" cy="60" r="40" fill="url(#glowGrad)" opacity="0.3" filter="blur(10px)"/>
+  
+  <!-- Flutter/Dart Inspired Geometric Monogram "AS" -->
+  <g transform="translate(26, 26)">
+    <!-- Top Left Wing (A apex) -->
+    <path d="M34 4L8 30L18 40L44 14L34 4Z" fill="url(#cyanGrad)"/>
+    
+    <!-- Central Flutter Beam -->
+    <path d="M44 14L18 40L34 56L60 30L44 14Z" fill="url(#blueGrad)"/>
+    
+    <!-- Bottom Right Wing (S loop/tail) -->
+    <path d="M34 56L44 66L68 42L58 32L34 56Z" fill="url(#purpleGrad)"/>
+    
+    <!-- Stylized "S" curve accent -->
+    <path d="M12 46L24 58L40 42L28 30L12 46Z" fill="url(#cyanLightGrad)"/>
+    
+    <!-- Center Core Dot -->
+    <circle cx="34" cy="35" r="4" fill="#FFFFFF"/>
+  </g>
+  
+  <defs>
+    <linearGradient id="bgGrad" x1="0" y1="0" x2="120" y2="120" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#0F172A"/>
+      <stop offset="1" stop-color="#020617"/>
+    </linearGradient>
+    <linearGradient id="borderGrad" x1="0" y1="0" x2="120" y2="120" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#22D3EE" stop-opacity="0.8"/>
+      <stop offset="0.5" stop-color="#3B82F6" stop-opacity="0.5"/>
+      <stop offset="1" stop-color="#A855F7" stop-opacity="0.8"/>
+    </linearGradient>
+    <radialGradient id="glowGrad" cx="0" cy="0" r="1" gradientUnits="userSpaceOnUse" gradientTransform="translate(60 60) scale(40)">
+      <stop stop-color="#06B6D4"/>
+      <stop offset="1" stop-color="#3B82F6" stop-opacity="0"/>
+    </radialGradient>
+    <linearGradient id="cyanGrad" x1="8" y1="4" x2="44" y2="40" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#38BDF8"/>
+      <stop offset="1" stop-color="#06B6D4"/>
+    </linearGradient>
+    <linearGradient id="blueGrad" x1="18" y1="14" x2="60" y2="56" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#06B6D4"/>
+      <stop offset="1" stop-color="#3B82F6"/>
+    </linearGradient>
+    <linearGradient id="purpleGrad" x1="34" y1="32" x2="68" y2="66" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#6366F1"/>
+      <stop offset="1" stop-color="#A855F7"/>
+    </linearGradient>
+    <linearGradient id="cyanLightGrad" x1="12" y1="30" x2="40" y2="58" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#22D3EE" stop-opacity="0.9"/>
+      <stop offset="1" stop-color="#0284C7" stop-opacity="0.9"/>
+    </linearGradient>
+  </defs>
+</svg>

@@ -13,6 +13,8 @@ export interface Project {
   description: string;
   category: string;
   role?: string;
+  featured?: boolean;
+  metrics?: string;
   features?: string[];
   impact?: string;
   demoUrl?: string;

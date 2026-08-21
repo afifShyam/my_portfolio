@@ -5,6 +5,7 @@ import ProjectDetailModal from '../../../components/ProjectDetailModal';
 import { Project } from '../../../types/projectTypes';
 import {
   Box,
+  Heading,
   Grid,
   Skeleton,
   Container,
@@ -20,16 +21,14 @@ import {
   Badge,
 } from '@chakra-ui/react';
 import { FiSearch, FiLayers, FiCheck } from 'react-icons/fi';
-import { type Transition } from 'framer-motion';
-import { Helmet } from 'react-helmet-async';
-import { motionChakra } from '../../../utils/motion';
-import SectionHeading from '../../../components/ui/SectionHeading';
+import { motion, type Transition } from 'framer-motion';
 
 // Motion components
-const MotionBox = motionChakra(Box);
-const MotionGrid = motionChakra(Grid);
+const MotionBox = motion.create(Box);
+const MotionGrid = motion.create(Grid);
 
-const CATEGORIES = ['All', 'Fintech', 'E-commerce', 'Health', 'Machine Learning'];
+const CATEGORIES = ['All', 'Fintech', 'E-commerce', 'Enterprise', 'Service', 'Productivity'];
+const TECH_TAGS = ['Riverpod', 'BLoC', 'Clean Architecture', 'RESTful APIs', 'Firebase', 'Figma', 'CI/CD'];
 
 const PortfolioPage: React.FC = () => {
   const { projects, loading, error } = usePortfolio();
@@ -79,23 +78,18 @@ const PortfolioPage: React.FC = () => {
 
   return (
     <>
-      <Helmet>
-        <title>My Projects | Afif Shyamsul Portfolio</title>
-        <meta name="description" content="Browse my mobile application development projects built with Flutter, Dart, Firebase, Riverpod, and BLoC." />
-      </Helmet>
-
       <MotionBox
         minH="100vh"
         bg={sectionBg}
         color={textColor}
-        py={{ base: 16, md: 24 }}
-        px={{ base: 4, md: 6 }}
+        py={{ base: 12, md: 24 }}
+        px={{ base: 2, sm: 4, md: 6 }}
         position="relative"
         overflow="hidden"
         initial={{ opacity: 0 }}
         animate={{ opacity: 1, transition: defaultTransition() }}
       >
-        <Container maxW="container.xl" position="relative" zIndex={1}>
+        <Container maxW="container.xl" px={{ base: 1, sm: 4 }} position="relative" zIndex={1}>
           <MotionBox
             bg={panelBg}
             border="1px solid"
@@ -103,18 +97,22 @@ const PortfolioPage: React.FC = () => {
             borderRadius="2xl"
             boxShadow={useColorModeValue('0 24px 60px rgba(15, 23, 42, 0.08)', '0 24px 60px rgba(0, 0, 0, 0.35)')}
             backdropFilter="blur(18px)"
-            px={{ base: 5, md: 8 }}
-            py={{ base: 6, md: 10 }}
+            px={{ base: 3.5, sm: 6, md: 8 }}
+            py={{ base: 5, md: 10 }}
             position="relative"
             overflow="hidden"
           >
             {/* Header */}
             <Box mb={8}>
-              <SectionHeading
-                title="Featured Projects Showcase"
-                subtitle="High-impact Flutter mobile applications spanning fintech, e-commerce, healthcare, and machine learning."
-                align="left"
-              />
+              <Text fontSize="xs" fontWeight="bold" color="cyan.400" textTransform="uppercase" letterSpacing="wider" mb={1}>
+                Work & Projects
+              </Text>
+              <Heading as="h2" size="xl" fontWeight="extrabold" mb={2} color={textColor}>
+                Selected Mobile Projects
+              </Heading>
+              <Text color="gray.400" fontSize="sm">
+                Production cross-platform mobile applications engineered with Flutter, Dart, Riverpod, and Clean Architecture.
+              </Text>
             </Box>
 
             {/* Category Filter & Search Bar Controls */}
@@ -123,7 +121,7 @@ const PortfolioPage: React.FC = () => {
               justify="space-between"
               align={{ base: 'stretch', md: 'center' }}
               gap={4}
-              mb={10}
+              mb={6}
             >
               {/* Filter Pills */}
               <Flex wrap="wrap" gap={2}>
@@ -159,10 +157,12 @@ const PortfolioPage: React.FC = () => {
                   <Icon as={FiSearch} color="gray.400" />
                 </InputLeftElement>
                 <Input
-                  placeholder="Search project or tech..."
+                  placeholder="Search project or tech stack..."
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
                   bg={inputBg}
+                  color={textColor}
+                  _placeholder={{ color: useColorModeValue('gray.500', 'gray.400') }}
                   borderRadius="full"
                   fontSize="sm"
                   borderColor={borderColor}
@@ -174,8 +174,42 @@ const PortfolioPage: React.FC = () => {
               </InputGroup>
             </Flex>
 
+            {/* Tech Stack Quick Filter Chips */}
+            <Flex align="center" gap={2} mb={8} wrap="wrap">
+              <Text fontSize="xs" fontWeight="bold" color="gray.400" textTransform="uppercase" letterSpacing="wider">
+                Filter by Tech:
+              </Text>
+              {TECH_TAGS.map((tag) => {
+                const isSelected = searchQuery.toLowerCase() === tag.toLowerCase();
+                return (
+                  <Badge
+                    key={tag}
+                    as="button"
+                    type="button"
+                    onClick={() => setSearchQuery(isSelected ? '' : tag)}
+                    px={3}
+                    py={1}
+                    borderRadius="full"
+                    variant={isSelected ? 'solid' : 'subtle'}
+                    colorScheme="cyan"
+                    fontSize="xs"
+                    cursor="pointer"
+                    _hover={{ transform: 'scale(1.04)' }}
+                    transition="all 0.15s ease"
+                  >
+                    {tag} {isSelected && '✕'}
+                  </Badge>
+                );
+              })}
+              {searchQuery && (
+                <Button size="xs" variant="ghost" colorScheme="red" onClick={() => setSearchQuery('')}>
+                  Clear search
+                </Button>
+              )}
+            </Flex>
+
             {/* Results count pill */}
-            <HStack mb={6} spacing={2}>
+            <HStack mb={6} spacing={2} wrap="wrap">
               <Icon as={FiLayers} color="cyan.400" />
               <Text fontSize="sm" color="gray.400">
                 Showing{' '}
@@ -191,7 +225,7 @@ const PortfolioPage: React.FC = () => {
               )}
               {searchQuery && (
                 <Badge colorScheme="purple" borderRadius="full" px={2} py={0.5}>
-                  Search: "{searchQuery}"
+                  Filter: "{searchQuery}"
                 </Badge>
               )}
             </HStack>
@@ -281,4 +315,3 @@ const PortfolioPage: React.FC = () => {
 };
 
 export default memo(PortfolioPage);
-

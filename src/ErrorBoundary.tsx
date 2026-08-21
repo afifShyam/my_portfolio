@@ -1,73 +1,53 @@
-import { ReactNode } from 'react';
-import { ErrorBoundary as ReactErrorBoundary, FallbackProps } from 'react-error-boundary';
-import { Box, Heading, Text, Button, Code, VStack } from '@chakra-ui/react';
+import React, { Component, ReactNode } from 'react';
 
 interface ErrorBoundaryProps {
   children: ReactNode;
 }
 
-// Custom fallback component with better UI
-const ErrorFallback = ({ error, resetErrorBoundary }: FallbackProps) => {
-  const message = error instanceof Error ? error.message : String(error);
-  const stack = error instanceof Error ? error.stack : undefined;
+interface ErrorBoundaryState {
+  hasError: boolean;
+  error: Error | null;
+  errorInfo: React.ErrorInfo | null;
+}
 
-  return (
-    <Box 
-      p={6} 
-      m={4} 
-      bg="red.50" 
-      color="red.900" 
-      borderRadius="md" 
-      borderWidth="1px" 
-      borderColor="red.200"
-    >
-      <VStack align="flex-start" spacing={4}>
-        <Heading size="lg">Something went wrong</Heading>
-        
-        <Text>
-          <strong>Error:</strong> {message}
-        </Text>
-        
-        {stack && (
-          <Box w="100%" overflowX="auto">
-            <Text mb={2}><strong>Stack Trace:</strong></Text>
-            <Code p={3} borderRadius="md" variant="subtle" w="100%" display="block" whiteSpace="pre-wrap">
-              {stack}
-            </Code>
-          </Box>
-        )}
-        
-        <Button 
-          colorScheme="red" 
-          onClick={resetErrorBoundary}
-          size="md"
-        >
-          Try again
-        </Button>
-      </VStack>
-    </Box>
-  );
-};
+class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundaryState> {
+  constructor(props: ErrorBoundaryProps) {
+    super(props);
+    this.state = { hasError: false, error: null, errorInfo: null };
+  }
 
-// Modern functional component using react-error-boundary
-const ErrorBoundary = ({ children }: ErrorBoundaryProps) => {
-  const handleError = (error: unknown) => {
-    // Log error details or send to a monitoring service
-    console.error('Error caught by Error Boundary:', error);
-  };
+  static getDerivedStateFromError(error: Error) {
+    // Update state so the next render shows the fallback UI.
+    return { hasError: true, error };
+  }
 
-  return (
-    <ReactErrorBoundary
-      FallbackComponent={ErrorFallback}
-      onError={handleError}
-      onReset={() => {
-        // Reset application state here if needed
-        console.log('Error boundary reset');
-      }}
-    >
-      {children}
-    </ReactErrorBoundary>
-  );
+  componentDidCatch(error: Error, errorInfo: React.ErrorInfo) {
+    // Log error details to the console or send to a monitoring service.
+    console.error('Error caught by Error Boundary:', error, errorInfo);
+    this.setState({ error, errorInfo });
+  }
+
+  render() {
+    if (this.state.hasError) {
+      // Render a fallback UI with error details
+      return (
+        <div style={{ padding: '20px', backgroundColor: '#f8d7da', color: '#721c24' }}>
+          <h1>Something went wrong.</h1>
+          <p>
+            <strong>Error:</strong> {this.state.error?.message}
+          </p>
+          <p>
+            <strong>Stack Trace:</strong>
+          </p>
+          <pre style={{ whiteSpace: 'pre-wrap', overflowX: 'auto' }}>
+            {this.state.errorInfo?.componentStack}
+          </pre>
+        </div>
+      );
+    }
+
+    return this.props.children;
+  }
 }
 
 export default ErrorBoundary;

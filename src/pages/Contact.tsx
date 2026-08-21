@@ -2,6 +2,7 @@ import { useState, memo, useCallback } from 'react';
 import emailService, { EmailData } from '../services/emailService';
 import {
   Box,
+  Heading,
   Button,
   Container,
   Flex,
@@ -22,14 +23,11 @@ import {
   Badge,
   HStack,
 } from '@chakra-ui/react';
-import { FiSend, FiMail, FiUser, FiMessageSquare, FiLinkedin, FiGithub, FiDownload, FiZap } from 'react-icons/fi';
-import { type Transition } from 'framer-motion';
-import { Helmet } from 'react-helmet-async';
-import { motionChakra } from '../utils/motion';
-import SectionHeading from '../components/ui/SectionHeading';
+import { FiSend, FiMail, FiUser, FiMessageSquare, FiLinkedin, FiGithub, FiDownload, FiZap, FiCopy, FiCheck } from 'react-icons/fi';
+import { motion, type Transition } from 'framer-motion';
 import ResumePreviewModal from '../components/ResumePreviewModal';
 
-const MotionBox = motionChakra(Box);
+const MotionBox = motion.create(Box);
 
 interface FormErrors {
   name?: string;
@@ -53,6 +51,7 @@ const Contact: React.FC = () => {
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState<string | null>(null);
   const [isResumeOpen, setIsResumeOpen] = useState(false);
+  const [copiedEmail, setCopiedEmail] = useState(false);
   const toast = useToast();
 
   const borderColor = useColorModeValue('rgba(148, 163, 184, 0.28)', 'whiteAlpha.200');
@@ -69,10 +68,24 @@ const Contact: React.FC = () => {
 
   const buildTransition = (duration = 0.5, delay = 0): Transition => ({ duration, delay });
 
+  const handleCopyEmail = () => {
+    navigator.clipboard.writeText('Afifshyamsul00@gmail.com');
+    setCopiedEmail(true);
+    toast({
+      title: 'Email Copied!',
+      description: 'Afifshyamsul00@gmail.com copied to clipboard.',
+      status: 'success',
+      duration: 3000,
+      isClosable: true,
+      position: 'top',
+    });
+    setTimeout(() => setCopiedEmail(false), 2500);
+  };
+
   const handleQuickPrompt = (promptText: string) => {
-    setFormData((prev) => ({ ...prev, message: promptText }));
+    setFormData((prev: EmailData) => ({ ...prev, message: promptText }));
     if (errors.message) {
-      setErrors((prev) => ({ ...prev, message: undefined }));
+      setErrors((prev: FormErrors) => ({ ...prev, message: undefined }));
     }
   };
 
@@ -108,10 +121,10 @@ const Contact: React.FC = () => {
   const handleChange = useCallback(
     (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
       const { name, value } = e.target;
-      setFormData((prev) => ({ ...prev, [name]: value }));
+      setFormData((prev: EmailData) => ({ ...prev, [name]: value }));
 
       if (errors[name as keyof FormErrors]) {
-        setErrors((prev) => ({ ...prev, [name]: undefined }));
+        setErrors((prev: FormErrors) => ({ ...prev, [name]: undefined }));
       }
     },
     [errors]
@@ -160,19 +173,18 @@ const Contact: React.FC = () => {
 
   return (
     <>
-      <Helmet>
-        <title>Get In Touch | Afif Shyamsul Portfolio</title>
-        <meta name="description" content="Get in touch for mobile development roles, Flutter freelance projects, or tech collaborations." />
-      </Helmet>
-
       <Box bg={sectionBg} py={{ base: 16, md: 24 }}>
         <Container maxW="container.xl">
-          <Box mb={12}>
-            <SectionHeading
-              title="Let’s Build Something Great Together."
-              subtitle="Looking for a Flutter developer to build or scale your mobile app? Send a message below or connect directly."
-              align="left"
-            />
+          <Box mb={10}>
+            <Text fontSize="xs" fontWeight="bold" color="cyan.400" textTransform="uppercase" letterSpacing="wider" mb={1}>
+              Get in Touch
+            </Text>
+            <Heading as="h2" size="xl" fontWeight="extrabold" mb={2} color={textColor}>
+              Let's Connect
+            </Heading>
+            <Text color="gray.400" fontSize="sm">
+              Looking for a Flutter developer or want to discuss a mobile project? Drop a message or reach out directly.
+            </Text>
           </Box>
 
           <MotionBox
@@ -214,6 +226,22 @@ const Contact: React.FC = () => {
                     </Text>
                   </Box>
 
+                  <VStack align="stretch" spacing={1} w="full">
+                    <Button
+                      onClick={handleCopyEmail}
+                      leftIcon={copiedEmail ? <FiCheck /> : <FiCopy />}
+                      colorScheme="cyan"
+                      variant="solid"
+                      borderRadius="xl"
+                      w="full"
+                      justifyContent="flex-start"
+                    >
+                      {copiedEmail ? 'Email Copied!' : 'Copy Email Address'}
+                    </Button>
+                    <Text fontSize="2xs" color="gray.400" px={1} noOfLines={1}>
+                      Afifshyamsul00@gmail.com
+                    </Text>
+                  </VStack>
                   <Button
                     as={Link}
                     href="https://www.linkedin.com/in/afif-shyamsul-1333bb279/"
@@ -243,7 +271,8 @@ const Contact: React.FC = () => {
                   <Button
                     onClick={() => setIsResumeOpen(true)}
                     leftIcon={<FiDownload />}
-                    colorScheme="cyan"
+                    colorScheme="gray"
+                    variant="outline"
                     borderRadius="xl"
                     justifyContent="flex-start"
                   >
@@ -307,6 +336,7 @@ const Contact: React.FC = () => {
                           onChange={handleChange}
                           bg={inputBgColor}
                           color={textColor}
+                          _placeholder={{ color: useColorModeValue('gray.500', 'gray.400') }}
                           borderRadius="xl"
                           border="1px solid"
                           borderColor={borderColor}
@@ -333,6 +363,7 @@ const Contact: React.FC = () => {
                           onChange={handleChange}
                           bg={inputBgColor}
                           color={textColor}
+                          _placeholder={{ color: useColorModeValue('gray.500', 'gray.400') }}
                           borderRadius="xl"
                           border="1px solid"
                           borderColor={borderColor}
@@ -360,6 +391,7 @@ const Contact: React.FC = () => {
                         rows={5}
                         bg={inputBgColor}
                         color={textColor}
+                        _placeholder={{ color: useColorModeValue('gray.500', 'gray.400') }}
                         borderRadius="xl"
                         border="1px solid"
                         borderColor={borderColor}
@@ -418,4 +450,3 @@ const Contact: React.FC = () => {
 };
 
 export default memo(Contact);
-

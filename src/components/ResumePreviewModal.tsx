@@ -12,6 +12,7 @@ import {
   ModalOverlay,
   Text,
   useColorModeValue,
+  HStack,
 } from '@chakra-ui/react';
 import { FiDownload, FiExternalLink } from 'react-icons/fi';
 
@@ -48,12 +49,27 @@ const ResumePreviewModal = memo(function ResumePreviewModal({
         </ModalHeader>
         <ModalCloseButton />
         <ModalBody px={{ base: 4, md: 6 }} pb={6}>
+          {/* Mobile direct download note */}
+          <Box display={{ base: 'block', md: 'none' }} mb={4} p={3} borderRadius="xl" bg={useColorModeValue('cyan.50', 'whiteAlpha.100')} borderWidth="1px" borderColor={borderColor}>
+            <Text fontSize="xs" color={textColor} mb={2}>
+              Browsing on mobile? For the best viewing experience, open the PDF directly or download it:
+            </Text>
+            <HStack spacing={2}>
+              <Button as="a" href={resumeUrl} target="_blank" rel="noreferrer" size="sm" colorScheme="cyan" variant="solid" leftIcon={<FiExternalLink />} flex="1">
+                Open PDF
+              </Button>
+              <Button as="a" href={resumeUrl} download size="sm" colorScheme="gray" variant="outline" leftIcon={<FiDownload />} flex="1">
+                Download
+              </Button>
+            </HStack>
+          </Box>
+
           <Box
             as="iframe"
             src={`${resumeUrl}#view=FitH`}
             title="Resume preview"
             w="full"
-            minH={{ base: '70vh', lg: '75vh' }}
+            minH={{ base: '60vh', lg: '75vh' }}
             borderWidth="1px"
             borderColor={borderColor}
             borderRadius="xl"

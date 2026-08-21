@@ -4,27 +4,13 @@ export interface EmailData {
   message: string;
 }
 
-/**
- * Sends an email using the mailto protocol
- * @param data The email data containing name, email and message
- * @returns A promise that resolves when the email is sent
- */
-const sendEmail = async (data: EmailData): Promise<void> => {
-  return new Promise((resolve) => {
-    const { name, email, message } = data;
+export const sendEmail = async (data: EmailData): Promise<void> => {
+  const { name, message } = data;
 
-    const subject = encodeURIComponent(`Portfolio Contact: ${name}`);
-    const body = encodeURIComponent(`Message from ${name} (${email}):\n\n${message}`);
+  const subject = encodeURIComponent(`Portfolio Inquiry from ${name}`);
+  const body = encodeURIComponent(`${message}\n\nFrom: ${name} (${data.email})`);
 
-    window.location.href = `mailto:afifshyamsul12@email.com?subject=${subject}&body=${body}`;
-    
-    // Resolve after a short delay to simulate async behavior
-    setTimeout(resolve, 500);
-  });
+  window.location.href = `mailto:Afifshyamsul00@gmail.com?subject=${subject}&body=${body}`;
 };
 
-const emailService = {
-  sendEmail
-};
-
-export default emailService;
+export default { sendEmail };
