@@ -138,7 +138,7 @@ const App: React.FC = () => {
       <ResumePreviewModal
         isOpen={isResumeOpen}
         onClose={() => setIsResumeOpen(false)}
-        resumeUrl="/Afif_Shyamsul_Syahiran_bin_Suhaimi_Resume.pdf"
+        resumeUrl="./Afif_Shyamsul_Syahiran_bin_Suhaimi_Resume.pdf"
       />
     </Box>
   );

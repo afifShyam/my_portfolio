@@ -20,6 +20,7 @@ import {
 } from '@chakra-ui/react';
 import { HamburgerIcon, MoonIcon, SunIcon } from '@chakra-ui/icons';
 import { motion } from 'framer-motion';
+import afifLogo from '../assets/afif-logo.svg';
 
 // Motion components
 const MotionBox = motion.create(Box);
@@ -100,7 +101,7 @@ const Navbar = memo(function Navbar({
       <Flex justify="space-between" align="center" maxW="1200px" mx="auto">
         <MotionFlex cursor="pointer" onClick={scrollToHome} align="center" gap={3} whileHover={{ scale: 1.03 }} whileTap={{ scale: 0.97 }}>
           <Box w="42px" h="42px" borderRadius="xl" overflow="hidden" borderWidth="1px" borderColor={borderColor} p={0.5}>
-            <Image src="/afif-logo.svg" alt="Afif logo" w="100%" h="100%" objectFit="contain" />
+            <Image src={afifLogo} alt="Afif logo" w="100%" h="100%" objectFit="contain" />
           </Box>
           <Box display={{ base: 'none', sm: 'block' }}>
             <Flex align="center" gap={2}>

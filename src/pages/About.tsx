@@ -24,6 +24,7 @@ import {
   FiCpu,
   FiGitPullRequest,
 } from 'react-icons/fi';
+import afifLogo from '../assets/afif-logo.svg';
 
 const PILLARS = [
   {
@@ -145,7 +146,7 @@ export const About: React.FC = () => {
             flexShrink={0}
           >
             <Image
-              src="/afif-logo.svg"
+              src={afifLogo}
               alt="Afif Shyamsul Syahiran Logo"
               w="100%"
               h="100%"
