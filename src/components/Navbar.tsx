@@ -32,6 +32,7 @@ interface NavbarProps {
   scrollToContact: () => void;
   activeSection: string;
   scrolled?: boolean;
+  onOpenCommandPalette?: () => void;
 }
 
 const Navbar = memo(function Navbar({
@@ -40,7 +41,8 @@ const Navbar = memo(function Navbar({
   scrollToAbout,
   scrollToContact,
   activeSection,
-  scrolled = false
+  scrolled = false,
+  onOpenCommandPalette,
 }: NavbarProps) {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [isScrolled, setIsScrolled] = useState(false);
@@ -97,21 +99,53 @@ const Navbar = memo(function Navbar({
 
       <Flex justify="space-between" align="center" maxW="1200px" mx="auto">
         <MotionFlex cursor="pointer" onClick={scrollToHome} align="center" gap={3} whileHover={{ scale: 1.03 }} whileTap={{ scale: 0.97 }}>
-          <Box w="46px" h="46px" borderRadius="xl" overflow="hidden" borderWidth="1px" borderColor={borderColor} p={0.5}>
-            <Image src="/afif-logo.png" alt="Afif logo" w="100%" h="100%" objectFit="contain" />
+          <Box w="42px" h="42px" borderRadius="xl" overflow="hidden" borderWidth="1px" borderColor={borderColor} p={0.5}>
+            <Image src="/afif-logo.svg" alt="Afif logo" w="100%" h="100%" objectFit="contain" />
           </Box>
           <Box display={{ base: 'none', sm: 'block' }}>
             <Flex align="center" gap={2}>
               <Box as="span" fontWeight="bold" fontSize="sm" color={useColorModeValue('neutral.900', 'white')}>Afif Shyamsul</Box>
+              <Box
+                as="span"
+                fontSize="2xs"
+                fontWeight="semibold"
+                px={1.5}
+                py={0.5}
+                borderRadius="md"
+                bg={useColorModeValue('cyan.50', 'whiteAlpha.200')}
+                color={useColorModeValue('cyan.700', 'cyan.300')}
+                border="1px solid"
+                borderColor={useColorModeValue('cyan.200', 'cyan.800')}
+              >
+                Mobile Software Engineer
+              </Box>
             </Flex>
           </Box>
         </MotionFlex>
 
-        <HStack spacing={3} display={{ base: 'none', md: 'flex' }}>
+        <HStack spacing={2} display={{ base: 'none', md: 'flex' }}>
           <NavButton label="Home" isActive={activeSection === 'home'} onClick={scrollToHome} activeColor={activeColor} textColor={textColor} hoverBg={hoverBg} />
           <NavButton label="My Projects" isActive={activeSection === 'portfolio'} onClick={scrollToPortfolio} activeColor={activeColor} textColor={textColor} hoverBg={hoverBg} />
           <NavButton label="About" isActive={activeSection === 'about'} onClick={scrollToAbout} activeColor={activeColor} textColor={textColor} hoverBg={hoverBg} />
           <NavButton label="Contact" isActive={activeSection === 'contact'} onClick={scrollToContact} activeColor={activeColor} textColor={textColor} hoverBg={hoverBg} />
+
+          {/* Spotlight Command Palette Button */}
+          {onOpenCommandPalette && (
+            <Tooltip label="Open Command Palette (Cmd + K)">
+              <Button
+                size="sm"
+                variant="outline"
+                colorScheme="cyan"
+                borderRadius="xl"
+                onClick={onOpenCommandPalette}
+                px={3}
+                fontSize="xs"
+                fontWeight="medium"
+              >
+                Quick Search <Box as="span" ml={1.5} px={1} py={0.5} bg={useColorModeValue('gray.100', 'whiteAlpha.200')} borderRadius="md" fontSize="2xs">⌘K</Box>
+              </Button>
+            </Tooltip>
+          )}
 
           <Tooltip label={`Switch to ${colorMode === 'light' ? 'dark' : 'light'} mode`}>
             <IconButton aria-label="Toggle mode" icon={colorMode === 'light' ? <MoonIcon /> : <SunIcon />} onClick={toggleColorMode} variant="ghost" colorScheme="cyan" size="sm" borderRadius="lg" />
@@ -119,6 +153,20 @@ const Navbar = memo(function Navbar({
         </HStack>
 
         <HStack spacing={2} display={{ base: 'flex', md: 'none' }}>
+          {onOpenCommandPalette && (
+            <IconButton
+              aria-label="Search"
+              icon={<Box as="span" fontSize="xs" fontWeight="bold">⌘K</Box>}
+              onClick={onOpenCommandPalette}
+              variant="outline"
+              colorScheme="cyan"
+              size="sm"
+              borderRadius="lg"
+            />
+          )}
+          <Tooltip label={`Switch to ${colorMode === 'light' ? 'dark' : 'light'} mode`}>
+            <IconButton aria-label="Toggle mode" icon={colorMode === 'light' ? <MoonIcon /> : <SunIcon />} onClick={toggleColorMode} variant="ghost" colorScheme="cyan" size="sm" borderRadius="lg" />
+          </Tooltip>
           <IconButton aria-label="Open menu" icon={<HamburgerIcon />} onClick={onOpen} variant="ghost" color={textColor} _hover={{ bg: hoverBg }} size="sm" borderRadius="lg" />
         </HStack>
 
