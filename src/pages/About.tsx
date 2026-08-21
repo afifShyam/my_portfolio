@@ -1,207 +1,314 @@
+import React from 'react';
 import {
   Box,
+  Image,
   Container,
   Heading,
   Text,
   SimpleGrid,
   VStack,
-  Link,
+  HStack,
   Flex,
-  Button,
+  Badge,
+  Icon,
+  useColorModeValue,
 } from '@chakra-ui/react';
+import {
+  FiCode,
+  FiAward,
+  FiBriefcase,
+  FiCheckCircle,
+  FiMapPin,
+  FiSmartphone,
+  FiLayers,
+  FiCpu,
+  FiGitPullRequest,
+} from 'react-icons/fi';
 
-const About: React.FC = () => (
-  <Container maxW="container.xl" px={5} py={28}>
-    {/* Title */}
-    <Heading
-      as="h2"
-      size="2xl"
-      fontWeight="extrabold"
-      textAlign="center"
-      mb={16}
-      color="white"
-      lineHeight="tight"
-    >
-      About Me
-    </Heading>
+const PILLARS = [
+  {
+    icon: FiSmartphone,
+    title: 'Mobile Engineering',
+    desc: 'Deep expertise in Flutter & Dart with Riverpod and BLoC for reactive state management, responsive UI development from Figma, and cross-platform optimization.',
+  },
+  {
+    icon: FiLayers,
+    title: 'Clean Architecture',
+    desc: 'Structured codebase design enforcing strict separation of concerns between UI, domain business rules, and data sources for testability and long-term maintainability.',
+  },
+  {
+    icon: FiCpu,
+    title: 'Performance & APIs',
+    desc: 'Experience migrating legacy WebViews to native Flutter (delivering ~90% UI speedup), integrating RESTful APIs with Dio, and C# (.NET) notification backend support.',
+  },
+  {
+    icon: FiGitPullRequest,
+    title: 'Release & CI/CD Pipelines',
+    desc: 'Managed 20+ production store releases on Google Play Console and Apple App Store, automated builds via TestFlight and Firebase App Distribution.',
+  },
+];
 
-    {/* Main Card */}
-    <Flex justify="center">
-      <Box
-        maxW={{ base: 'full', md: '5xl' }}
-        bg="rgba(255, 255, 255, 0.1)"
-        backdropFilter="blur(10px)"
-        border="1px solid"
-        borderColor="whiteAlpha.300"
-        p={12}
-        borderRadius="3xl"
-        shadow="2xl"
-        textAlign="center"
-      >
-        {/* Professional Summary */}
-        <Text fontSize="xl" color="gray.300" mb={12} lineHeight="relaxed">
-          🚀 I'm a{' '}
-          <Text as="span" fontWeight="semibold" color="blue.400">
-            Flutter and React Developer
-          </Text>{' '}
-          with{' '}
-          <Text as="span" fontWeight="semibold" color="blue.400">
-            1.5 years of experience in Flutter
-          </Text>{' '}
-          crafting intuitive mobile apps for{' '}
-          <Text as="span" fontWeight="semibold" color="white">
-            social media
-          </Text>
-          ,{' '}
-          <Text as="span" fontWeight="semibold" color="white">
-            e-commerce
-          </Text>
-          , and{' '}
-          <Text as="span" fontWeight="semibold" color="white">
-            food ordering
-          </Text>
-          . I'm currently expanding my skillset in{' '}
-          <Text as="span" fontWeight="semibold" color="blue.400">
-            React development
-          </Text>{' '}
-          to create seamless and dynamic web experiences. I enjoy solving complex problems,
-          collaborating with teams, and building solutions that deliver exceptional user value.
-        </Text>
+const TIMELINE_EXPERIENCES = [
+  {
+    period: 'Mar 2026 — Present',
+    role: 'Mobile Developer',
+    company: 'Radiant GlobalTech Sdn. Bhd.',
+    tag: 'Enterprise & B2B Procurement',
+    highlights: [
+      'Sole Mobile Developer owning the development, architecture, and maintenance of the company’s enterprise mobile applications.',
+      'Developing Sigma (centralized B2B procurement platform) and Service Management System (SMS) ticketing application.',
+      'Migrated legacy WebView screens into responsive native Flutter interfaces, boosting UI responsiveness by ~90%.',
+      'Automated deployment pipelines using TestFlight & Firebase App Distribution, with C# (.NET) notification backend support.',
+    ],
+  },
+  {
+    period: 'Aug 2025 — Feb 2026',
+    role: 'Mobile Developer',
+    company: 'Coinyex Co. Ltd.',
+    tag: 'TuxC Cryptocurrency Wallet',
+    highlights: [
+      'Primary Flutter engineer responsible for the frontend architecture, feature delivery, and maintenance of TuxC Wallet (Send, Receive, Swap).',
+      'Migrated state management from Provider to Riverpod for better scalability, API error handling, and predictable data flow.',
+      'Refactored the codebase into Clean Architecture, optimizing UI rendering and transaction flows by 10–20%.',
+      'Managed 20+ production releases across the Apple App Store and Google Play Store.',
+    ],
+  },
+  {
+    period: 'Sep 2023 — Jul 2025',
+    role: 'Mobile Developer (Flutter)',
+    company: 'RF Infinite Sdn. Bhd.',
+    tag: 'E-Commerce & Service Apps',
+    highlights: [
+      'Progressed from intern to full-time Mobile Developer, building Flutter interfaces and integrating RESTful APIs.',
+      'Translated high-fidelity Figma designs into responsive mobile screens, boosting user engagement by 20%.',
+      'Developed shopping and reservation modules for Pcari.My using Clean Architecture, reducing reported issues by 35%.',
+      'Delivered Ihsan Madani service application with navigation workflows, backend API integration, and social media package modules.',
+    ],
+  },
+  {
+    period: '2021 — 2024',
+    role: 'Bachelor of Computer Science (Hons.) - CS230',
+    company: 'Universiti Teknologi MARA (UiTM)',
+    tag: 'CGPA: 3.44 · Dean’s List',
+    highlights: [
+      'Graduated with Bachelor of Computer Science (Hons.) focused on Software Development and Machine Learning.',
+      'Final Year Project: Developed a flood prediction mobile application using Support Vector Machine (SVM) with 90% forecast accuracy.',
+    ],
+  },
+];
 
-        {/* Key Highlights */}
-        <SimpleGrid columns={{ base: 1, md: 3 }} spacing={{ base: 6, md: 12 }} mt={8}>
-          {/* Education */}
-          <VStack
-            _hover={{ transform: 'scale(1.05)', transition: 'transform 0.3s ease' }}
-            transition="transform 0.3s ease"
+const SKILL_CATEGORIES = [
+  {
+    title: 'Mobile Development',
+    skills: ['Flutter', 'Dart', 'Riverpod', 'BLoC', 'Provider', 'Android', 'iOS', 'Responsive UI'],
+  },
+  {
+    title: 'Architecture & APIs',
+    skills: ['Clean Architecture', 'RESTful APIs', 'Dio', 'JSON Serialization', 'Repository Pattern', 'Performance Tuning'],
+  },
+  {
+    title: 'Deployment & Tools',
+    skills: ['CI/CD Pipelines', 'App Store Connect', 'Google Play Console', 'TestFlight', 'Firebase App Distribution', 'Git / GitHub', 'Figma'],
+  },
+  {
+    title: 'Backend & Other Languages',
+    skills: ['Firebase Auth & Firestore', 'C# (.NET basics)', 'Kotlin (Jetpack Compose)', 'Java', 'Python', 'SQL / SQLite'],
+  },
+];
+
+export const About: React.FC = () => {
+  const textColor = useColorModeValue('neutral.900', 'white');
+  const mutedColor = useColorModeValue('neutral.600', 'gray.400');
+  const cardBg = useColorModeValue('white', 'rgba(15, 23, 42, 0.75)');
+  const borderColor = useColorModeValue('rgba(148, 163, 184, 0.25)', 'whiteAlpha.200');
+  const subtleBg = useColorModeValue('neutral.50', 'whiteAlpha.50');
+
+  return (
+    <Box id="about" py={{ base: 16, md: 24 }}>
+      <Container maxW="container.xl">
+        {/* Section Heading & Profile Intro */}
+        <Flex
+          direction={{ base: 'column', md: 'row' }}
+          align={{ base: 'flex-start', md: 'center' }}
+          gap={{ base: 6, md: 8 }}
+          mb={14}
+        >
+          <Box
+            w={{ base: '72px', md: '84px' }}
+            h={{ base: '72px', md: '84px' }}
+            borderRadius="2xl"
+            overflow="hidden"
+            border="1px solid"
+            borderColor={borderColor}
+            p={1}
+            bg={cardBg}
+            flexShrink={0}
           >
-            <Heading as="h3" size="lg" color="blue.400">
-              Education 🎓
-            </Heading>
-            <Text color="gray.300" mt={4}>
-              Bachelor of Computer Science
-              <Text as="span" fontSize="sm" display="block" color="gray.400">
-                UiTM Kampus Terengganu
-              </Text>
-            </Text>
-            <Text fontSize="sm" color="gray.500">
-              - Focus: Software Development and Machine Learning
-            </Text>
-          </VStack>
+            <Image
+              src="/afif-logo.svg"
+              alt="Afif Shyamsul Syahiran Logo"
+              w="100%"
+              h="100%"
+              objectFit="contain"
+            />
+          </Box>
 
-          {/* Experience */}
-          <VStack
-            _hover={{ transform: 'scale(1.05)', transition: 'transform 0.3s ease' }}
-            transition="transform 0.3s ease"
-          >
-            <Heading as="h3" size="lg" color="blue.400">
-              Experience 💼
-            </Heading>
-            <Text color="gray.300" mt={4}>
-              Mobile Developer
-              <Text as="span" fontSize="sm" display="block" color="gray.400">
-                RF Infinite Sdn. Bhd.
-              </Text>
-            </Text>
-            <Text fontSize="sm" color="gray.500">
-              - 1.5 years developing Flutter apps for social media, e-commerce, and food ordering.
-            </Text>
-            <Text fontSize="sm" color="gray.500">
-              - Integrated WebSockets for real-time communication and RESTful APIs for scalable
-              backends.
-            </Text>
-            <Text fontSize="sm" color="gray.500">
-              - Enhanced app performance by 20% using clean architecture and optimization.
-            </Text>
-          </VStack>
+          <Box flex="1">
+            <Flex wrap="wrap" align="center" gap={3} mb={1.5}>
+              <HStack spacing={1.5} color="cyan.400">
+                <Icon as={FiCode} />
+                <Text fontSize="xs" fontWeight="bold" textTransform="uppercase" letterSpacing="wider">
+                  Mobile Software Engineer
+                </Text>
+              </HStack>
+              <HStack spacing={1} color={mutedColor} fontSize="xs">
+                <Icon as={FiMapPin} color="cyan.400" />
+                <Text>Seri Kembangan, Selangor, Malaysia</Text>
+              </HStack>
+            </Flex>
 
-          {/* Achievements */}
-          <VStack
-            _hover={{ transform: 'scale(1.05)', transition: 'transform 0.3s ease' }}
-            transition="transform 0.3s ease"
-          >
-            <Heading as="h3" size="lg" color="blue.400">
-              Achievements 🏆
+            <Heading as="h2" size="xl" fontWeight="extrabold" color={textColor} mb={2}>
+              Afif Shyamsul Syahiran
             </Heading>
-            <Text color="gray.300" mt={4}>
-              Flood Prediction App (Final Year Project)
-              <Text as="span" fontSize="sm" display="block" color="gray.400">
-                Achieved 90% accuracy using SVM
-              </Text>
+            <Text color={mutedColor} fontSize={{ base: 'md', md: 'lg' }} maxW="3xl" lineHeight="relaxed">
+              Mobile developer with <strong>3+ years of professional experience</strong> engineering robust Flutter applications. Experienced in owning full feature lifecycles—from translating Figma specifications into responsive code to architecting Riverpod state models and releasing apps to the stores.
             </Text>
-            <Text fontSize="sm" color="gray.500">
-              - Delivered real-time weather updates and forecasts for disaster prevention.
-            </Text>
-          </VStack>
-        </SimpleGrid>
+          </Box>
+        </Flex>
 
-        {/* Technologies Used */}
-        <Box mt={12}>
-          <Heading as="h3" size="lg" color="blue.400" mb={4}>
-            Technologies I Work With 🛠️
-          </Heading>
-          <SimpleGrid columns={{ base: 1, md: 3 }} spacing={4}>
-            <Text color="gray.300">✅ Flutter & Dart</Text>
-            <Text color="gray.300">✅ React & TypeScript</Text>
-            <Text color="gray.300">✅ Firebase & REST APIs</Text>
-            <Text color="gray.300">✅ WebSockets for Real-time Apps</Text>
-            <Text color="gray.300">✅ Clean Architecture Principles</Text>
-            <Text color="gray.300">✅ Collaborative Team Development</Text>
+        {/* Core Pillars */}
+        <Box mb={16}>
+          <Text fontSize="xs" fontWeight="bold" color="cyan.400" textTransform="uppercase" letterSpacing="wider" mb={4}>
+            Engineering Focus
+          </Text>
+          <SimpleGrid columns={{ base: 1, md: 2, lg: 4 }} spacing={4}>
+            {PILLARS.map((pillar) => (
+              <Box
+                key={pillar.title}
+                bg={cardBg}
+                border="1px solid"
+                borderColor={borderColor}
+                borderRadius="2xl"
+                p={5}
+              >
+                <Icon as={pillar.icon} color="cyan.400" boxSize={5} mb={3} />
+                <Heading as="h3" size="sm" color={textColor} mb={2}>
+                  {pillar.title}
+                </Heading>
+                <Text fontSize="xs" color={mutedColor} lineHeight="tall">
+                  {pillar.desc}
+                </Text>
+              </Box>
+            ))}
           </SimpleGrid>
         </Box>
 
-        {/* Call-to-Action Links */}
-        <Flex
-          justify="center"
-          mt={16}
-          gap={{ base: 6, md: 10 }}
-          direction={{ base: 'column', md: 'row' }}
-        >
-          <Button
-            as={Link}
-            href="https://github.com/afifShyam"
-            isExternal
-            px={{ base: 6, md: 8 }}
-            py={{ base: 3, md: 4 }}
-            fontSize={{ base: 'sm', md: 'md' }}
-            borderRadius="xl"
-            bgGradient="linear(to-tr, teal.500, green.400)"
-            color="white"
-            fontWeight="semibold"
-            shadow="lg"
-            _hover={{
-              bgGradient: 'linear(to-br, green.400, teal.500)',
-              transform: 'scale(1.05)',
-            }}
-            transition="all 0.3s ease"
-          >
-            Visit My GitHub
-          </Button>
+        {/* Experience Timeline */}
+        <Box mb={16}>
+          <HStack spacing={2} color="cyan.400" mb={6}>
+            <Icon as={FiBriefcase} />
+            <Heading as="h3" size="md" color={textColor}>
+              Experience & Education
+            </Heading>
+          </HStack>
 
-          <Button
-            as={Link}
-            href="https://www.linkedin.com/in/afif-shyamsul-1333bb279/"
-            isExternal
-            px={{ base: 6, md: 8 }}
-            py={{ base: 3, md: 4 }}
-            fontSize={{ base: 'sm', md: 'md' }}
-            borderRadius="xl"
-            bgGradient="linear(to-r, teal.500, green.400)"
-            _hover={{
-              bgGradient: 'linear(to-l, green.400, teal.500)',
-              transform: 'scale(1.05)',
-            }}
-            color="white"
-            fontWeight="semibold"
-            shadow="lg"
-            transition="all 0.3s ease"
-          >
-            Connect on LinkedIn
-          </Button>
-        </Flex>
-      </Box>
-    </Flex>
-  </Container>
-);
+          <VStack align="stretch" spacing={4}>
+            {TIMELINE_EXPERIENCES.map((item) => (
+              <Box
+                key={item.company}
+                bg={cardBg}
+                border="1px solid"
+                borderColor={borderColor}
+                borderRadius="2xl"
+                p={{ base: 5, md: 6 }}
+              >
+                <Flex
+                  justify="space-between"
+                  align={{ base: 'flex-start', sm: 'center' }}
+                  direction={{ base: 'column', sm: 'row' }}
+                  gap={2}
+                  mb={3}
+                >
+                  <Box>
+                    <Heading as="h4" size="sm" color={textColor}>
+                      {item.role}
+                    </Heading>
+                    <Text fontSize="sm" fontWeight="semibold" color="cyan.400" mt={0.5}>
+                      {item.company}
+                    </Text>
+                  </Box>
+                  <HStack spacing={2} wrap="wrap">
+                    <Badge bg={subtleBg} color={mutedColor} border="1px solid" borderColor={borderColor} fontSize="xs" px={2.5} py={0.5} borderRadius="md">
+                      {item.tag}
+                    </Badge>
+                    <Text fontSize="xs" fontWeight="bold" color="gray.400">
+                      {item.period}
+                    </Text>
+                  </HStack>
+                </Flex>
+
+                <VStack align="flex-start" spacing={1.5} pl={1}>
+                  {item.highlights.map((highlight, idx) => (
+                    <HStack key={idx} align="flex-start" spacing={2.5}>
+                      <Icon as={FiCheckCircle} color="cyan.400" boxSize={3.5} mt={1} flexShrink={0} />
+                      <Text fontSize="xs" color={mutedColor} lineHeight="tall">
+                        {highlight}
+                      </Text>
+                    </HStack>
+                  ))}
+                </VStack>
+              </Box>
+            ))}
+          </VStack>
+        </Box>
+
+        {/* Technical Stack Matrix */}
+        <Box>
+          <HStack spacing={2} color="cyan.400" mb={6}>
+            <Icon as={FiAward} />
+            <Heading as="h3" size="md" color={textColor}>
+              Technical Skills Matrix
+            </Heading>
+          </HStack>
+
+          <SimpleGrid columns={{ base: 1, md: 2 }} spacing={4}>
+            {SKILL_CATEGORIES.map((cat) => (
+              <Box
+                key={cat.title}
+                bg={cardBg}
+                border="1px solid"
+                borderColor={borderColor}
+                borderRadius="2xl"
+                p={5}
+              >
+                <Text fontSize="xs" fontWeight="bold" color="cyan.400" textTransform="uppercase" letterSpacing="wider" mb={3}>
+                  {cat.title}
+                </Text>
+                <Flex wrap="wrap" gap={2}>
+                  {cat.skills.map((skill) => (
+                    <Badge
+                      key={skill}
+                      bg={subtleBg}
+                      color={textColor}
+                      border="1px solid"
+                      borderColor={borderColor}
+                      fontSize="xs"
+                      px={3}
+                      py={1}
+                      borderRadius="md"
+                      fontWeight="medium"
+                    >
+                      {skill}
+                    </Badge>
+                  ))}
+                </Flex>
+              </Box>
+            ))}
+          </SimpleGrid>
+        </Box>
+      </Container>
+    </Box>
+  );
+};
 
 export default About;

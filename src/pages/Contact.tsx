@@ -69,11 +69,11 @@ const Contact: React.FC = () => {
   const buildTransition = (duration = 0.5, delay = 0): Transition => ({ duration, delay });
 
   const handleCopyEmail = () => {
-    navigator.clipboard.writeText('afifshyamsul12@gmail.com');
+    navigator.clipboard.writeText('Afifshyamsul00@gmail.com');
     setCopiedEmail(true);
     toast({
       title: 'Email Copied!',
-      description: 'afifshyamsul12@gmail.com copied to clipboard.',
+      description: 'Afifshyamsul00@gmail.com copied to clipboard.',
       status: 'success',
       duration: 3000,
       isClosable: true,
@@ -176,11 +176,14 @@ const Contact: React.FC = () => {
       <Box bg={sectionBg} py={{ base: 16, md: 24 }}>
         <Container maxW="container.xl">
           <Box mb={10}>
-            <Heading as="h2" size="2xl" fontWeight="extrabold" mb={2} color={textColor}>
-              Let’s Build Something Great Together.
+            <Text fontSize="xs" fontWeight="bold" color="cyan.400" textTransform="uppercase" letterSpacing="wider" mb={1}>
+              Get in Touch
+            </Text>
+            <Heading as="h2" size="xl" fontWeight="extrabold" mb={2} color={textColor}>
+              Let's Connect
             </Heading>
-            <Text color="gray.400" fontSize="md">
-              Looking for a Flutter developer to build or scale your mobile app? Send a message below or connect directly.
+            <Text color="gray.400" fontSize="sm">
+              Looking for a Flutter developer or want to discuss a mobile project? Drop a message or reach out directly.
             </Text>
           </Box>
 
@@ -223,16 +226,22 @@ const Contact: React.FC = () => {
                     </Text>
                   </Box>
 
-                  <Button
-                    onClick={handleCopyEmail}
-                    leftIcon={copiedEmail ? <FiCheck /> : <FiCopy />}
-                    colorScheme="cyan"
-                    variant="solid"
-                    borderRadius="xl"
-                    justifyContent="flex-start"
-                  >
-                    {copiedEmail ? 'Email Copied!' : 'Copy afifshyamsul12@gmail.com'}
-                  </Button>
+                  <VStack align="stretch" spacing={1} w="full">
+                    <Button
+                      onClick={handleCopyEmail}
+                      leftIcon={copiedEmail ? <FiCheck /> : <FiCopy />}
+                      colorScheme="cyan"
+                      variant="solid"
+                      borderRadius="xl"
+                      w="full"
+                      justifyContent="flex-start"
+                    >
+                      {copiedEmail ? 'Email Copied!' : 'Copy Email Address'}
+                    </Button>
+                    <Text fontSize="2xs" color="gray.400" px={1} noOfLines={1}>
+                      Afifshyamsul00@gmail.com
+                    </Text>
+                  </VStack>
                   <Button
                     as={Link}
                     href="https://www.linkedin.com/in/afif-shyamsul-1333bb279/"
@@ -327,6 +336,7 @@ const Contact: React.FC = () => {
                           onChange={handleChange}
                           bg={inputBgColor}
                           color={textColor}
+                          _placeholder={{ color: useColorModeValue('gray.500', 'gray.400') }}
                           borderRadius="xl"
                           border="1px solid"
                           borderColor={borderColor}
@@ -353,6 +363,7 @@ const Contact: React.FC = () => {
                           onChange={handleChange}
                           bg={inputBgColor}
                           color={textColor}
+                          _placeholder={{ color: useColorModeValue('gray.500', 'gray.400') }}
                           borderRadius="xl"
                           border="1px solid"
                           borderColor={borderColor}
@@ -380,6 +391,7 @@ const Contact: React.FC = () => {
                         rows={5}
                         bg={inputBgColor}
                         color={textColor}
+                        _placeholder={{ color: useColorModeValue('gray.500', 'gray.400') }}
                         borderRadius="xl"
                         border="1px solid"
                         borderColor={borderColor}
