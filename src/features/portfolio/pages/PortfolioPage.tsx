@@ -27,8 +27,8 @@ import { motion, type Transition } from 'framer-motion';
 const MotionBox = motion.create(Box);
 const MotionGrid = motion.create(Grid);
 
-const CATEGORIES = ['All', 'Fintech', 'E-commerce', 'Health', 'Machine Learning'];
-const TECH_TAGS = ['Riverpod', 'BLoC', 'Firebase', 'REST API', 'SVM'];
+const CATEGORIES = ['All', 'Fintech', 'E-commerce', 'Enterprise', 'Service', 'Productivity'];
+const TECH_TAGS = ['Riverpod', 'BLoC', 'Clean Architecture', 'RESTful APIs', 'Firebase', 'Figma', 'CI/CD'];
 
 const PortfolioPage: React.FC = () => {
   const { projects, loading, error } = usePortfolio();
@@ -82,14 +82,14 @@ const PortfolioPage: React.FC = () => {
         minH="100vh"
         bg={sectionBg}
         color={textColor}
-        py={{ base: 16, md: 24 }}
-        px={{ base: 4, md: 6 }}
+        py={{ base: 12, md: 24 }}
+        px={{ base: 2, sm: 4, md: 6 }}
         position="relative"
         overflow="hidden"
         initial={{ opacity: 0 }}
         animate={{ opacity: 1, transition: defaultTransition() }}
       >
-        <Container maxW="container.xl" position="relative" zIndex={1}>
+        <Container maxW="container.xl" px={{ base: 1, sm: 4 }} position="relative" zIndex={1}>
           <MotionBox
             bg={panelBg}
             border="1px solid"
@@ -97,18 +97,21 @@ const PortfolioPage: React.FC = () => {
             borderRadius="2xl"
             boxShadow={useColorModeValue('0 24px 60px rgba(15, 23, 42, 0.08)', '0 24px 60px rgba(0, 0, 0, 0.35)')}
             backdropFilter="blur(18px)"
-            px={{ base: 5, md: 8 }}
-            py={{ base: 6, md: 10 }}
+            px={{ base: 3.5, sm: 6, md: 8 }}
+            py={{ base: 5, md: 10 }}
             position="relative"
             overflow="hidden"
           >
             {/* Header */}
             <Box mb={8}>
-              <Heading as="h2" size="2xl" fontWeight="extrabold" mb={2} color={textColor}>
-                Featured Projects Showcase
+              <Text fontSize="xs" fontWeight="bold" color="cyan.400" textTransform="uppercase" letterSpacing="wider" mb={1}>
+                Work & Projects
+              </Text>
+              <Heading as="h2" size="xl" fontWeight="extrabold" mb={2} color={textColor}>
+                Selected Mobile Projects
               </Heading>
-              <Text color="gray.400" fontSize="md">
-                High-impact Flutter mobile applications spanning fintech, e-commerce, healthcare, and machine learning.
+              <Text color="gray.400" fontSize="sm">
+                Production cross-platform mobile applications engineered with Flutter, Dart, Riverpod, and Clean Architecture.
               </Text>
             </Box>
 
@@ -158,6 +161,8 @@ const PortfolioPage: React.FC = () => {
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
                   bg={inputBg}
+                  color={textColor}
+                  _placeholder={{ color: useColorModeValue('gray.500', 'gray.400') }}
                   borderRadius="full"
                   fontSize="sm"
                   borderColor={borderColor}

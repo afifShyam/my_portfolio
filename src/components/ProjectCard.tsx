@@ -1,5 +1,4 @@
 import { useState } from 'react';
-import type { SyntheticEvent } from 'react';
 import {
   Box,
   Image,
@@ -45,7 +44,6 @@ const ProjectCard: React.FC<ProjectCardProps> = ({ project, onSelectProject }) =
   const tagColor = useColorModeValue('neutral.700', 'neutral.100');
   const tagBorder = useColorModeValue('rgba(148, 163, 184, 0.28)', 'whiteAlpha.200');
   const featureBg = useColorModeValue('neutral.50', 'whiteAlpha.100');
-  const previewBg = useColorModeValue('gray.900', 'gray.950');
   const activeImage = images[currentImage];
   const hasCarousel = images.length > 1;
 
@@ -65,7 +63,9 @@ const ProjectCard: React.FC<ProjectCardProps> = ({ project, onSelectProject }) =
       borderRadius="2xl"
       borderWidth="1px"
       borderColor={borderColor}
-      p={5}
+      p={{ base: 4, sm: 5 }}
+      w="100%"
+      maxW="100%"
       transition="transform 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease"
       boxShadow={useColorModeValue('0 14px 32px rgba(15, 23, 42, 0.08)', '0 18px 38px rgba(0, 0, 0, 0.34)')}
       _hover={{
@@ -77,35 +77,30 @@ const ProjectCard: React.FC<ProjectCardProps> = ({ project, onSelectProject }) =
       display="flex"
       flexDirection="column"
       position="relative"
+      overflow="hidden"
     >
-      {/* Featured Ribbon Badge */}
-      {project.featured && (
-        <Box
-          position="absolute"
-          top={-2.5}
-          right={4}
-          zIndex={2}
-        >
-          <HStack
-            bgGradient="linear(to-r, cyan.500, brand.600)"
-            color="white"
-            px={3}
-            py={0.5}
-            borderRadius="full"
-            spacing={1.5}
-            boxShadow="0 4px 12px rgba(6, 182, 212, 0.4)"
-          >
-            <Icon as={FaStar} boxSize={3} />
-            <Text fontSize="2xs" fontWeight="extrabold" letterSpacing="wider" textTransform="uppercase">
-              Featured Lead
-            </Text>
-          </HStack>
-        </Box>
-      )}
-
-      <VStack align="stretch" spacing={4} h="100%">
+      <VStack align="stretch" spacing={3.5} h="100%" w="100%">
         <Flex justify="space-between" align="center" gap={2} wrap="wrap">
-          <HStack spacing={2}>
+          <HStack spacing={1.5} wrap="wrap">
+            {project.featured && (
+              <Badge
+                bgGradient="linear(to-r, cyan.500, brand.600)"
+                color="white"
+                px={2}
+                py={0.5}
+                borderRadius="full"
+                fontWeight="extrabold"
+                fontSize="2xs"
+                letterSpacing="wide"
+                boxShadow="0 2px 6px rgba(6, 182, 212, 0.35)"
+                display="inline-flex"
+                alignItems="center"
+                gap={1}
+              >
+                <Icon as={FaStar} boxSize={2.5} />
+                FEATURED
+              </Badge>
+            )}
             <Badge
               bg={badgeBg}
               color={badgeColor}
@@ -144,11 +139,14 @@ const ProjectCard: React.FC<ProjectCardProps> = ({ project, onSelectProject }) =
             position="relative"
             overflow="hidden"
             borderRadius="xl"
-            minH={{ base: '11rem', md: '12rem' }}
-            aspectRatio={{ base: 4 / 3, md: 16 / 10 }}
-            bg={previewBg}
+            minH={{ base: '12rem', md: '13rem' }}
+            maxH={{ base: '16rem', md: '18rem' }}
+            bg="black"
             cursor={onSelectProject ? 'pointer' : 'default'}
             onClick={() => onSelectProject?.(project)}
+            display="flex"
+            alignItems="center"
+            justifyContent="center"
           >
             <Image
               src={activeImage?.src}
@@ -157,50 +155,53 @@ const ProjectCard: React.FC<ProjectCardProps> = ({ project, onSelectProject }) =
               alt={activeImage?.alt ?? `${project.name} preview`}
               loading="lazy"
               decoding="async"
-              objectFit="cover"
+              objectFit="contain"
               w="full"
               h="100%"
+              maxH={{ base: '16rem', md: '18rem' }}
               transition="transform 0.35s ease"
-              _hover={{ transform: 'scale(1.04)' }}
-              onError={(event: SyntheticEvent<HTMLImageElement>) => {
-                const target = event.currentTarget;
-                target.onerror = null;
-                target.srcset = '';
-                target.src = '/assets/placeholder.png';
-              }}
+              _hover={{ transform: 'scale(1.03)' }}
+              fallback={
+                <Flex h="full" w="full" align="center" justify="center" bgGradient="linear(to-br, cyan.900, gray.900)" p={4} direction="column">
+                  <Text fontWeight="bold" fontSize="sm" color="white" mb={1}>{project.name}</Text>
+                  <Text fontSize="2xs" color="cyan.300">{project.category} App</Text>
+                </Flex>
+              }
             />
 
             {hasCarousel && (
               <>
                 <IconButton
                   aria-label="Previous image"
-                  icon={<FaChevronLeft />}
+                  icon={<FaChevronLeft size={11} />}
                   size="xs"
-                  variant="ghost"
                   position="absolute"
                   top="50%"
                   left={2}
                   transform="translateY(-50%)"
                   onClick={goToPrev}
-                  bg="blackAlpha.700"
-                  color="white"
-                  _hover={{ bg: 'blackAlpha.900' }}
+                  bg="white"
+                  color="gray.900"
+                  _hover={{ bg: 'cyan.400', color: 'gray.900' }}
+                  boxShadow="0 2px 8px rgba(0, 0, 0, 0.5)"
                   borderRadius="full"
+                  zIndex={2}
                 />
                 <IconButton
                   aria-label="Next image"
-                  icon={<FaChevronRight />}
+                  icon={<FaChevronRight size={11} />}
                   size="xs"
-                  variant="ghost"
                   position="absolute"
                   top="50%"
                   right={2}
                   transform="translateY(-50%)"
                   onClick={goToNext}
-                  bg="blackAlpha.700"
-                  color="white"
-                  _hover={{ bg: 'blackAlpha.900' }}
+                  bg="white"
+                  color="gray.900"
+                  _hover={{ bg: 'cyan.400', color: 'gray.900' }}
+                  boxShadow="0 2px 8px rgba(0, 0, 0, 0.5)"
                   borderRadius="full"
+                  zIndex={2}
                 />
                 <HStack
                   spacing={1}
@@ -253,7 +254,7 @@ const ProjectCard: React.FC<ProjectCardProps> = ({ project, onSelectProject }) =
           </Box>
         )}
 
-        <Heading size="md" color={textColor} fontWeight="bold">
+        <Heading size="md" fontSize={{ base: 'md', md: 'lg' }} color={textColor} fontWeight="bold" wordBreak="break-word">
           {project.name}
         </Heading>
 

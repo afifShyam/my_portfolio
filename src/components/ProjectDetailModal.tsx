@@ -68,7 +68,7 @@ const ProjectDetailModal: React.FC<ProjectDetailModalProps> = ({ project, isOpen
             <HStack spacing={2} wrap="wrap">
               {project.featured && (
                 <Badge colorScheme="cyan" variant="solid" fontSize="xs" px={3} py={1} borderRadius="full" textTransform="uppercase" fontWeight="bold">
-                  ★ Featured Lead Role
+                  ★ Featured Project
                 </Badge>
               )}
               <Badge colorScheme="brand" fontSize="xs" px={3} py={1} borderRadius="full" textTransform="uppercase" fontWeight="bold">
@@ -95,7 +95,7 @@ const ProjectDetailModal: React.FC<ProjectDetailModalProps> = ({ project, isOpen
         <ModalBody px={6} py={4}>
           <VStack align="stretch" spacing={6}>
             {/* Gallery Section */}
-            {images.length > 0 && (
+            {images.length > 0 && activeImage?.src && (
               <Box position="relative" borderRadius="xl" overflow="hidden" bg="gray.900" border="1px solid" borderColor={borderColor}>
                 <Image
                   src={activeImage?.src}
@@ -105,32 +105,50 @@ const ProjectDetailModal: React.FC<ProjectDetailModalProps> = ({ project, isOpen
                   objectFit="contain"
                   bg="black"
                   py={2}
+                  fallback={
+                    <Flex h="240px" align="center" justify="center" bgGradient="linear(to-br, cyan.900, gray.900)" p={6} direction="column">
+                      <Heading size="md" color="white" mb={1}>{project.name}</Heading>
+                      <Text fontSize="xs" color="gray.400">{project.category} · Mobile Application</Text>
+                    </Flex>
+                  }
                 />
                 {images.length > 1 && (
                   <>
                     <IconButton
                       aria-label="Previous screenshot"
-                      icon={<FaChevronLeft />}
-                      size="sm"
+                      icon={<FaChevronLeft size={16} />}
+                      size="md"
                       position="absolute"
                       top="50%"
                       left={3}
                       transform="translateY(-50%)"
                       onClick={handlePrevImage}
-                      colorScheme="blackAlpha"
+                      bg="white"
+                      color="gray.900"
+                      _hover={{ bg: 'cyan.400', color: 'gray.900', transform: 'translateY(-50%) scale(1.08)' }}
+                      boxShadow="0 4px 20px rgba(0, 0, 0, 0.6)"
                       borderRadius="full"
+                      border="1px solid"
+                      borderColor="whiteAlpha.600"
+                      zIndex={3}
                     />
                     <IconButton
                       aria-label="Next screenshot"
-                      icon={<FaChevronRight />}
-                      size="sm"
+                      icon={<FaChevronRight size={16} />}
+                      size="md"
                       position="absolute"
                       top="50%"
                       right={3}
                       transform="translateY(-50%)"
                       onClick={handleNextImage}
-                      colorScheme="blackAlpha"
+                      bg="white"
+                      color="gray.900"
+                      _hover={{ bg: 'cyan.400', color: 'gray.900', transform: 'translateY(-50%) scale(1.08)' }}
+                      boxShadow="0 4px 20px rgba(0, 0, 0, 0.6)"
                       borderRadius="full"
+                      border="1px solid"
+                      borderColor="whiteAlpha.600"
+                      zIndex={3}
                     />
                     <HStack
                       spacing={1.5}
