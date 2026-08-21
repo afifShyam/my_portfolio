@@ -26,7 +26,7 @@ const ProjectCard: React.FC<{ project: Project }> = ({ project }) => {
       {hasImage ? (
         <Box mb={6}>
           <Image
-            src={project.image}
+            src={typeof project.image === 'string' ? project.image : project.image?.src}
             alt={`${project.name} preview`}
             borderRadius="lg"
             objectFit="cover"

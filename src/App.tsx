@@ -50,11 +50,13 @@ const App: React.FC = () => {
     return () => window.removeEventListener('scroll', handleScroll);
   }, [navbarHeight]);
 
-  const scrollToSection = (ref: React.RefObject<HTMLDivElement>) => {
-    window.scrollTo({
-      top: ref.current!.offsetTop - navbarHeight,
-      behavior: 'smooth',
-    });
+  const scrollToSection = (ref: React.RefObject<HTMLDivElement | null>) => {
+    if (ref.current) {
+      window.scrollTo({
+        top: ref.current.offsetTop - navbarHeight,
+        behavior: 'smooth',
+      });
+    }
   };
 
   return (

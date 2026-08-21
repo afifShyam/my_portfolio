@@ -1,13 +1,12 @@
-import React from 'react';
+import { useState, useEffect, memo } from 'react';
 import {
   Box,
   Flex,
-  Text,
+  Image,
   IconButton,
   Button,
   Drawer,
   DrawerBody,
-  DrawerFooter,
   DrawerHeader,
   DrawerOverlay,
   DrawerContent,
@@ -15,8 +14,16 @@ import {
   useDisclosure,
   VStack,
   HStack,
+  useColorModeValue,
+  useColorMode,
+  Tooltip
 } from '@chakra-ui/react';
-import { HamburgerIcon } from '@chakra-ui/icons';
+import { HamburgerIcon, MoonIcon, SunIcon } from '@chakra-ui/icons';
+import { motion } from 'framer-motion';
+
+// Motion components
+const MotionBox = motion.create(Box);
+const MotionFlex = motion.create(Flex);
 
 interface NavbarProps {
   scrollToHome: () => void;
@@ -24,163 +31,141 @@ interface NavbarProps {
   scrollToAbout: () => void;
   scrollToContact: () => void;
   activeSection: string;
-  scrolled: boolean;
+  scrolled?: boolean;
 }
 
-const Navbar: React.FC<NavbarProps> = ({
+const Navbar = memo(function Navbar({
   scrollToHome,
   scrollToPortfolio,
   scrollToAbout,
   scrollToContact,
   activeSection,
-  scrolled,
-}) => {
+  scrolled = false
+}: NavbarProps) {
   const { isOpen, onOpen, onClose } = useDisclosure();
+  const [isScrolled, setIsScrolled] = useState(false);
+  const { colorMode, toggleColorMode } = useColorMode();
+
+  // Dynamic color values based on color mode and scroll state
+  const isNavElevated = scrolled || isScrolled;
+  const bgColor = useColorModeValue(
+    isNavElevated ? 'rgba(255, 255, 255, 0.92)' : 'rgba(248, 250, 252, 0.85)',
+    isNavElevated ? 'rgba(15, 23, 42, 0.92)' : 'rgba(15, 23, 42, 0.78)'
+  );
+  const textColor = useColorModeValue('neutral.700', 'whiteAlpha.900');
+  const activeColor = useColorModeValue('brand.600', 'cyan.400');
+  const hoverBg = useColorModeValue('brand.50', 'whiteAlpha.100');
+  const borderColor = useColorModeValue('rgba(148, 163, 184, 0.28)', 'whiteAlpha.200');
+  const [scrollProgress, setScrollProgress] = useState(0);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      setIsScrolled(window.scrollY > 20);
+      const totalScroll = document.documentElement.scrollHeight - window.innerHeight;
+      if (totalScroll > 0) {
+        setScrollProgress((window.scrollY / totalScroll) * 100);
+      }
+    };
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    handleScroll();
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
 
   return (
-    <>
-      {/* Navbar for Desktop */}
-      <Box
-        as="nav"
-        position="fixed"
-        top="0"
-        left="0"
-        w="full"
-        zIndex="50"
-        px={6}
-        py={4}
-        bg={scrolled ? '#0a1e3f' : 'transparent'}
-        boxShadow={scrolled ? 'lg' : 'none'}
-        transition="all 0.3s ease"
-      >
-        <Flex
-          justify="space-between"
-          align="center"
-          maxW="7xl"
-          mx="auto"
-          display={{ base: 'none', md: 'flex' }}
-        >
-          <Text
-            fontSize="3xl"
-            fontWeight="bold"
-            cursor="pointer"
-            onClick={scrollToHome}
-            color="white"
-          >
-            Afif's Portfolio
-          </Text>
-          <HStack spacing={10}>
-            <Button
-              variant="link"
-              onClick={scrollToHome}
-              color={activeSection === 'home' ? 'blue.400' : 'white'}
-            >
-              Home
-            </Button>
-            <Button
-              variant="link"
-              onClick={scrollToPortfolio}
-              color={activeSection === 'portfolio' ? 'blue.400' : 'white'}
-            >
-              My Projects
-            </Button>
-            <Button
-              variant="link"
-              onClick={scrollToAbout}
-              color={activeSection === 'about' ? 'blue.400' : 'white'}
-            >
-              About
-            </Button>
-            <Button
-              variant="link"
-              onClick={scrollToContact}
-              color={activeSection === 'contact' ? 'blue.400' : 'white'}
-            >
-              Contact
-            </Button>
-          </HStack>
-        </Flex>
-
-        {/* Mobile Hamburger Menu */}
-        <Flex justify="space-between" align="center" display={{ base: 'flex', md: 'none' }}>
-          <Text
-            fontSize="2xl"
-            fontWeight="bold"
-            cursor="pointer"
-            onClick={scrollToHome}
-            color="white"
-          >
-            Afif's Portfolio
-          </Text>
-          <IconButton
-            aria-label="Open Menu"
-            icon={<HamburgerIcon />}
-            variant="ghost"
-            colorScheme="whiteAlpha"
-            onClick={onOpen}
-          />
-        </Flex>
+    <MotionBox
+      as="nav"
+      position="fixed"
+      top={0}
+      left={0}
+      right={0}
+      zIndex={100}
+      bg={bgColor}
+      backdropFilter="blur(16px)"
+      borderBottomWidth="1px"
+      borderBottomColor={borderColor}
+      boxShadow={isNavElevated ? '0 4px 20px rgba(0,0,0,0.06)' : 'none'}
+      transitionProperty="all"
+      transitionDuration="0.3s"
+      py={2.5}
+      px={[4, 6, 8]}
+      initial={{ opacity: 0, y: -20 }}
+      animate={{ opacity: 1, y: 0 }}
+    >
+      <Box position="absolute" top={0} left={0} right={0} h="2.5px" bg="transparent">
+        <Box h="100%" w={`${scrollProgress}%`} bgGradient="linear(to-r, cyan.400, brand.500, purple.500)" transition="width 0.1s ease-out" />
       </Box>
 
-      {/* Drawer for Mobile */}
-      <Drawer isOpen={isOpen} placement="right" onClose={onClose}>
-        <DrawerOverlay />
-        <DrawerContent bg="#0a1e3f" color="white">
-          <DrawerCloseButton />
-          <DrawerHeader>Menu</DrawerHeader>
-          <DrawerBody>
-            <VStack spacing={6} align="start">
-              <Button
-                variant="link"
-                onClick={() => {
-                  scrollToHome();
-                  onClose();
-                }}
-                color={activeSection === 'home' ? 'blue.400' : 'white'}
-              >
-                Home
-              </Button>
-              <Button
-                variant="link"
-                onClick={() => {
-                  scrollToPortfolio();
-                  onClose();
-                }}
-                color={activeSection === 'portfolio' ? 'blue.400' : 'white'}
-              >
-                Portfolio
-              </Button>
-              <Button
-                variant="link"
-                onClick={() => {
-                  scrollToAbout();
-                  onClose();
-                }}
-                color={activeSection === 'about' ? 'blue.400' : 'white'}
-              >
-                About
-              </Button>
-              <Button
-                variant="link"
-                onClick={() => {
-                  scrollToContact();
-                  onClose();
-                }}
-                color={activeSection === 'contact' ? 'blue.400' : 'white'}
-              >
-                Contact
-              </Button>
-            </VStack>
-          </DrawerBody>
-          <DrawerFooter>
-            <Text fontSize="sm" color="gray.400">
-              © 2025 Afif's Portfolio
-            </Text>
-          </DrawerFooter>
-        </DrawerContent>
-      </Drawer>
-    </>
+      <Flex justify="space-between" align="center" maxW="1200px" mx="auto">
+        <MotionFlex cursor="pointer" onClick={scrollToHome} align="center" gap={3} whileHover={{ scale: 1.03 }} whileTap={{ scale: 0.97 }}>
+          <Box w="46px" h="46px" borderRadius="xl" overflow="hidden" borderWidth="1px" borderColor={borderColor} p={0.5}>
+            <Image src="/afif-logo.png" alt="Afif logo" w="100%" h="100%" objectFit="contain" />
+          </Box>
+          <Box display={{ base: 'none', sm: 'block' }}>
+            <Flex align="center" gap={2}>
+              <Box as="span" fontWeight="bold" fontSize="sm" color={useColorModeValue('neutral.900', 'white')}>Afif Shyamsul</Box>
+            </Flex>
+          </Box>
+        </MotionFlex>
+
+        <HStack spacing={3} display={{ base: 'none', md: 'flex' }}>
+          <NavButton label="Home" isActive={activeSection === 'home'} onClick={scrollToHome} activeColor={activeColor} textColor={textColor} hoverBg={hoverBg} />
+          <NavButton label="My Projects" isActive={activeSection === 'portfolio'} onClick={scrollToPortfolio} activeColor={activeColor} textColor={textColor} hoverBg={hoverBg} />
+          <NavButton label="About" isActive={activeSection === 'about'} onClick={scrollToAbout} activeColor={activeColor} textColor={textColor} hoverBg={hoverBg} />
+          <NavButton label="Contact" isActive={activeSection === 'contact'} onClick={scrollToContact} activeColor={activeColor} textColor={textColor} hoverBg={hoverBg} />
+
+          <Tooltip label={`Switch to ${colorMode === 'light' ? 'dark' : 'light'} mode`}>
+            <IconButton aria-label="Toggle mode" icon={colorMode === 'light' ? <MoonIcon /> : <SunIcon />} onClick={toggleColorMode} variant="ghost" colorScheme="cyan" size="sm" borderRadius="lg" />
+          </Tooltip>
+        </HStack>
+
+        <HStack spacing={2} display={{ base: 'flex', md: 'none' }}>
+          <IconButton aria-label="Open menu" icon={<HamburgerIcon />} onClick={onOpen} variant="ghost" color={textColor} _hover={{ bg: hoverBg }} size="sm" borderRadius="lg" />
+        </HStack>
+
+        <Drawer isOpen={isOpen} placement="right" onClose={onClose} size="xs">
+          <DrawerOverlay backdropFilter="blur(4px)" />
+          <DrawerContent bg={useColorModeValue('white', 'gray.900')}>
+            <DrawerCloseButton color={textColor} top={4} right={4} />
+            <DrawerHeader borderBottomWidth="1px" borderColor={borderColor} pt={5} pb={4}>Menu</DrawerHeader>
+            <DrawerBody py={6}>
+              <VStack spacing={3} align="stretch">
+                <MobileNavButton label="Home" isActive={activeSection === 'home'} onClick={() => { scrollToHome(); onClose(); }} activeColor={activeColor} textColor={textColor} hoverBg={hoverBg} />
+                <MobileNavButton label="My Projects" isActive={activeSection === 'portfolio'} onClick={() => { scrollToPortfolio(); onClose(); }} activeColor={activeColor} textColor={textColor} hoverBg={hoverBg} />
+                <MobileNavButton label="About" isActive={activeSection === 'about'} onClick={() => { scrollToAbout(); onClose(); }} activeColor={activeColor} textColor={textColor} hoverBg={hoverBg} />
+                <MobileNavButton label="Contact" isActive={activeSection === 'contact'} onClick={() => { scrollToContact(); onClose(); }} activeColor={activeColor} textColor={textColor} hoverBg={hoverBg} />
+              </VStack>
+            </DrawerBody>
+          </DrawerContent>
+        </Drawer>
+      </Flex>
+    </MotionBox>
   );
-};
+});
+
+interface NavButtonProps {
+  label: string;
+  isActive: boolean;
+  onClick: () => void;
+  activeColor: string;
+  textColor: string;
+  hoverBg: string;
+}
+
+const NavButton = memo(function NavButton({ label, isActive, onClick, activeColor, textColor, hoverBg }: NavButtonProps) {
+  return (
+    <Button variant="ghost" color={isActive ? activeColor : textColor} onClick={onClick} _hover={{ bg: hoverBg, color: activeColor }} fontWeight={isActive ? 'semibold' : 'medium'} borderRadius="md">
+      {label}
+      {isActive && <Box position="absolute" bottom="6px" left="16px" right="16px" height="2px" bg={activeColor} borderRadius="full" as={motion.div} layoutId="activeSection" />}
+    </Button>
+  );
+});
+
+const MobileNavButton = memo(function MobileNavButton({ label, isActive, onClick, activeColor, textColor, hoverBg }: NavButtonProps) {
+  return (
+    <Button variant="ghost" color={isActive ? activeColor : textColor} onClick={onClick} _hover={{ bg: hoverBg, color: activeColor }} justifyContent="flex-start" fontWeight={isActive ? 'semibold' : 'medium'} borderLeftWidth={isActive ? '3px' : '0'} borderLeftColor={activeColor} borderRadius="0" pl={5} w="full">
+      {label}
+    </Button>
+  );
+});
 
 export default Navbar;

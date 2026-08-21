@@ -2,42 +2,45 @@ import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react';
 import viteCompression from 'vite-plugin-compression';
 import { visualizer } from 'rollup-plugin-visualizer';
-import cssnano from 'cssnano';
 
 export default defineConfig({
   plugins: [
     react(),
-    // Compression plugin (Brotli/Gzip)
     viteCompression({
       algorithm: 'brotliCompress',
       ext: '.br',
     }),
-    // Bundle analyzer for debugging
+    viteCompression({
+      algorithm: 'gzip',
+      ext: '.gz',
+    }),
     visualizer({
-      open: true,
+      open: false,
       filename: 'bundle-analysis.html',
     }),
   ],
+  server: {
+    port: 3000,
+    open: true,
+    host: true,
+  },
   build: {
     rollupOptions: {
-      // Code splitting for vendor libraries
       output: {
-        manualChunks: {
-          vendor: ['react', 'react-dom'],
+        manualChunks(id) {
+          if (id.includes('node_modules')) {
+            if (id.includes('react') || id.includes('react-dom') || id.includes('react-router-dom')) {
+              return 'vendor-react';
+            }
+            if (id.includes('@chakra-ui') || id.includes('@emotion') || id.includes('framer-motion')) {
+              return 'vendor-ui';
+            }
+          }
         },
       },
     },
-    cssCodeSplit: true, // Splits CSS into separate files
+    cssCodeSplit: true,
     sourcemap: false,
     chunkSizeWarningLimit: 1000,
-  },
-  css: {
-    postcss: {
-      plugins: [
-        cssnano({
-          preset: 'default',
-        }),
-      ],
-    },
   },
 });
