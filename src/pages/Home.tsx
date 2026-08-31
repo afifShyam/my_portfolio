@@ -1,52 +1,26 @@
-import React, { useState } from 'react';
 import {
   Box,
-  Heading,
-  Text,
   Button,
-  VStack,
-  Flex,
   Container,
-  HStack,
-  Badge,
-  SimpleGrid,
-  useColorModeValue,
-  Icon,
+  Flex,
   Grid,
   GridItem,
-  useToast,
+  HStack,
   Image,
   Link,
+  Text,
+  VStack,
 } from '@chakra-ui/react';
-import ResumePreviewModal from '../components/ResumePreviewModal';
 import tuxcPreview from '../assets/tuxc_preview.png';
+import sigmaPreview from '../assets/sigma_home_preview.png';
 import smsPreview from '../assets/sms_tickets_preview.png';
-import {
-  FiArrowRight,
-  FiDownload,
-  FiGithub,
-  FiLinkedin,
-  FiCopy,
-  FiCheck,
-  FiSmartphone,
-} from 'react-icons/fi';
+import { useLocale } from '../localization';
 
-const TECH_PILLS = [
-  'Flutter',
-  'Dart',
-  'Riverpod',
-  'BLoC',
-  'Clean Architecture',
-  'RESTful APIs',
-  'CI/CD Pipelines',
-  'C# (.NET)',
-];
-
-const IMPACT_STATS = [
-  { value: '3+ Years', label: 'Mobile Engineering', sub: 'Enterprise & Fintech' },
-  { value: '20+', label: 'Store Releases', sub: 'App Store & Google Play' },
-  { value: '~90%', label: 'UI Speedup', sub: 'WebView to Native Flutter' },
-  { value: '3.44', label: 'CGPA (UiTM)', sub: 'B.Sc. Computer Science (Hons)' },
+const PROOF = [
+  { value: '03+', label: 'home.proof.1' },
+  { value: '20+', label: 'home.proof.2' },
+  { value: '~90%', label: 'home.proof.3' },
+  { value: 'END–TO–END', label: 'home.proof.4' },
 ];
 
 interface HomeProps {
@@ -54,296 +28,247 @@ interface HomeProps {
 }
 
 export const Home: React.FC<HomeProps> = ({ scrollToPortfolio }) => {
-  const [isResumeOpen, setIsResumeOpen] = useState(false);
-  const [copiedEmail, setCopiedEmail] = useState(false);
-  const [activeShowcase, setActiveShowcase] = useState<'tuxc' | 'sms'>('tuxc');
-  const toast = useToast();
-
-  const textColor = useColorModeValue('neutral.900', 'white');
-  const mutedColor = useColorModeValue('neutral.600', 'gray.400');
-  const cardBg = useColorModeValue('white', 'rgba(15, 23, 42, 0.75)');
-  const borderColor = useColorModeValue('rgba(148, 163, 184, 0.25)', 'whiteAlpha.200');
-  const subtleBg = useColorModeValue('neutral.50', 'whiteAlpha.50');
-
-  const handleCopyEmail = () => {
-    navigator.clipboard.writeText('Afifshyamsul00@gmail.com');
-    setCopiedEmail(true);
-    toast({
-      title: 'Email Copied',
-      description: 'Afifshyamsul00@gmail.com copied to clipboard.',
-      status: 'success',
-      duration: 2500,
-      isClosable: true,
-      position: 'top',
-    });
-    setTimeout(() => setCopiedEmail(false), 2500);
-  };
+  const { t } = useLocale();
 
   return (
-    <Box
-      id="home"
-      position="relative"
-      pt={{ base: 28, md: 36 }}
-      pb={{ base: 16, md: 24 }}
-    >
-      <Container maxW="container.xl">
-        <Grid
-          templateColumns={{ base: '1fr', lg: 'minmax(0, 1.15fr) minmax(340px, 0.85fr)' }}
-          alignItems="center"
-          gap={{ base: 12, lg: 16 }}
-        >
-          {/* Left Column: Hero Introduction */}
-          <GridItem>
-            <VStack align="flex-start" spacing={6}>
-              {/* Status Pill */}
-              <HStack
-                bg={subtleBg}
-                border="1px solid"
-                borderColor={borderColor}
-                px={3.5}
-                py={1.5}
-                borderRadius="full"
-                spacing={2.5}
-              >
-                <Box w={2} h={2} borderRadius="full" bg="emerald.500" />
-                <Text fontSize="xs" fontWeight="semibold" color={mutedColor}>
-                  Available for Mobile Software Engineer roles
-                </Text>
-              </HStack>
+    <Box id="home" pt={{ base: '132px', md: '152px' }} pb={{ base: 16, md: 24 }}>
+    <Container maxW="1440px" px={{ base: 5, md: 8 }}>
+      <Flex
+        justify="space-between"
+        align={{ base: 'flex-start', md: 'center' }}
+        direction={{ base: 'column', md: 'row' }}
+        gap={3}
+        pb={5}
+        borderBottom="1px solid"
+        borderColor="line"
+      >
+        <HStack spacing={3} color="text.muted" fontFamily="mono" fontSize="10px" letterSpacing="0.08em">
+          <Box w="8px" h="8px" bg="accent" />
+          <Text textTransform="uppercase">{t('home.availability')}</Text>
+        </HStack>
+        <Text color="text.muted" fontFamily="mono" fontSize="10px" letterSpacing="0.08em" textTransform="uppercase">
+          {t('home.location')}
+        </Text>
+      </Flex>
 
-              {/* Main Headline */}
-              <Box>
-                <Text fontSize={{ base: 'lg', md: 'xl' }} fontWeight="semibold" color="cyan.400" mb={1}>
-                  Afif Shyamsul Syahiran
-                </Text>
-                <Heading
-                  as="h1"
-                  fontSize={{ base: '3xl', sm: '4xl', md: '5xl', lg: '5xl' }}
-                  fontWeight="900"
-                  lineHeight="1.15"
-                  letterSpacing="-0.03em"
-                  color={textColor}
-                >
-                  Building clean, scalable mobile apps with Flutter.
-                </Heading>
-              </Box>
-
-              {/* Bio Paragraph */}
-              <Text
-                fontSize={{ base: 'md', md: 'lg' }}
-                color={mutedColor}
-                lineHeight="tall"
-                maxW="2xl"
-              >
-                Mobile Software Engineer with <strong>3+ years of experience</strong> across enterprise B2B procurement, cryptocurrency wallets, and e-commerce platforms. Specialized in Flutter, Dart, Riverpod, Clean Architecture, and automated store deployments.
-              </Text>
-
-              {/* Tech Stack Pills */}
-              <Flex wrap="wrap" gap={2} pt={1}>
-                {TECH_PILLS.map((tech) => (
-                  <Badge
-                    key={tech}
-                    bg={subtleBg}
-                    color={textColor}
-                    border="1px solid"
-                    borderColor={borderColor}
-                    fontSize="xs"
-                    px={3}
-                    py={1}
-                    borderRadius="md"
-                    fontWeight="medium"
-                  >
-                    {tech}
-                  </Badge>
-                ))}
-              </Flex>
-
-              {/* Call-to-Action Buttons */}
-              <Flex wrap="wrap" gap={3} pt={2} w="full">
-                <Button
-                  onClick={scrollToPortfolio}
-                  colorScheme="cyan"
-                  size="lg"
-                  rightIcon={<FiArrowRight />}
-                  px={6}
-                  borderRadius="xl"
-                  fontWeight="bold"
-                >
-                  View Projects
-                </Button>
-                <Button
-                  onClick={() => setIsResumeOpen(true)}
-                  variant="outline"
-                  colorScheme="gray"
-                  size="lg"
-                  leftIcon={<FiDownload />}
-                  px={5}
-                  borderRadius="xl"
-                >
-                  Resume PDF
-                </Button>
-                <Button
-                  onClick={handleCopyEmail}
-                  variant="ghost"
-                  colorScheme="cyan"
-                  size="lg"
-                  leftIcon={copiedEmail ? <FiCheck /> : <FiCopy />}
-                  px={4}
-                  borderRadius="xl"
-                >
-                  {copiedEmail ? 'Copied' : 'Copy Email'}
-                </Button>
-                <HStack spacing={2} pl={{ base: 0, sm: 2 }}>
-                  <Button
-                    as={Link}
-                    href="https://github.com/afifShyam"
-                    isExternal
-                    variant="outline"
-                    size="lg"
-                    px={3.5}
-                    borderRadius="xl"
-                    aria-label="GitHub"
-                  >
-                    <Icon as={FiGithub} />
-                  </Button>
-                  <Button
-                    as={Link}
-                    href="https://www.linkedin.com/in/afif-shyamsul-1333bb279/"
-                    isExternal
-                    variant="outline"
-                    size="lg"
-                    px={3.5}
-                    borderRadius="xl"
-                    aria-label="LinkedIn"
-                  >
-                    <Icon as={FiLinkedin} />
-                  </Button>
-                </HStack>
-              </Flex>
-
-              {/* Impact Highlights Grid */}
-              <SimpleGrid columns={{ base: 2, sm: 4 }} spacing={3} w="full" pt={4}>
-                {IMPACT_STATS.map((stat) => (
-                  <Box
-                    key={stat.label}
-                    bg={cardBg}
-                    border="1px solid"
-                    borderColor={borderColor}
-                    borderRadius="xl"
-                    p={3.5}
-                  >
-                    <Text fontSize="xs" color="gray.400" fontWeight="medium">
-                      {stat.label}
-                    </Text>
-                    <Text fontSize="lg" fontWeight="extrabold" color="cyan.400" mt={0.5}>
-                      {stat.value}
-                    </Text>
-                    <Text fontSize="2xs" color={mutedColor} mt={0.5} noOfLines={1}>
-                      {stat.sub}
-                    </Text>
-                  </Box>
-                ))}
-              </SimpleGrid>
-            </VStack>
-          </GridItem>
-
-          {/* Right Column: Clean App Preview Showcase */}
-          <GridItem>
-            <Box
-              bg={cardBg}
-              border="1px solid"
-              borderColor={borderColor}
-              borderRadius="3xl"
-              p={{ base: 5, sm: 6 }}
-              boxShadow={useColorModeValue('0 20px 40px rgba(0,0,0,0.06)', '0 20px 40px rgba(0,0,0,0.4)')}
-            >
-              {/* Switcher Header */}
-              <Flex justify="space-between" align="center" mb={4}>
-                <HStack spacing={2}>
-                  <Icon as={FiSmartphone} color="cyan.400" />
-                  <Text fontSize="xs" fontWeight="bold" textTransform="uppercase" letterSpacing="wider" color={mutedColor}>
-                    Production Apps
-                  </Text>
-                </HStack>
-
-                <HStack spacing={1.5} bg={subtleBg} p={1} borderRadius="lg" border="1px solid" borderColor={borderColor}>
-                  <Button
-                    size="xs"
-                    variant={activeShowcase === 'tuxc' ? 'solid' : 'ghost'}
-                    colorScheme={activeShowcase === 'tuxc' ? 'cyan' : 'gray'}
-                    onClick={() => setActiveShowcase('tuxc')}
-                    borderRadius="md"
-                  >
-                    TuxC Wallet
-                  </Button>
-                  <Button
-                    size="xs"
-                    variant={activeShowcase === 'sms' ? 'solid' : 'ghost'}
-                    colorScheme={activeShowcase === 'sms' ? 'cyan' : 'gray'}
-                    onClick={() => setActiveShowcase('sms')}
-                    borderRadius="md"
-                  >
-                    SMS System
-                  </Button>
-                </HStack>
-              </Flex>
-
-              {/* Phone Frame with Real App Store Screenshot */}
-              <Box
-                position="relative"
-                borderRadius="2xl"
-                overflow="hidden"
-                bg="black"
-                border="1px solid"
-                borderColor={borderColor}
-                maxH="440px"
-                display="flex"
-                alignItems="center"
-                justifyContent="center"
-              >
-                <Image
-                  src={activeShowcase === 'tuxc' ? tuxcPreview : smsPreview}
-                  alt={activeShowcase === 'tuxc' ? 'TuxC Wallet Production App' : 'SMS Facilities Management App'}
-                  maxH="440px"
-                  w="full"
-                  objectFit="contain"
-                />
-              </Box>
-
-              {/* Showcase Meta Footer */}
-              <Box mt={4} pt={3} borderTop="1px solid" borderColor={borderColor}>
-                <Flex justify="space-between" align="center">
-                  <Box>
-                    <Text fontSize="sm" fontWeight="bold" color={textColor}>
-                      {activeShowcase === 'tuxc' ? 'TuxC Wallet (Coinyex)' : 'Service Management System (Radiant)'}
-                    </Text>
-                    <Text fontSize="xs" color={mutedColor}>
-                      {activeShowcase === 'tuxc' ? 'Cryptocurrency Wallet · Riverpod · 20+ Releases' : 'Enterprise Field Ticketing · C# Backend'}
-                    </Text>
-                  </Box>
-                  <Button
-                    size="xs"
-                    variant="outline"
-                    colorScheme="cyan"
-                    onClick={scrollToPortfolio}
-                    rightIcon={<FiArrowRight />}
-                  >
-                    Details
-                  </Button>
-                </Flex>
-              </Box>
+      <Grid
+        templateColumns={{ base: '1fr', lg: 'minmax(0, 1.05fr) minmax(420px, 0.95fr)' }}
+        gap={{ base: 14, lg: 10, xl: 16 }}
+        alignItems="center"
+        py={{ base: 12, md: 18, lg: 20 }}
+      >
+        <GridItem minW={0}>
+          <Text color="accent" fontFamily="mono" fontSize="11px" letterSpacing="0.12em" mb={5} textTransform="uppercase">
+            {t('home.eyebrow')}
+          </Text>
+          <Box
+            as="h1"
+            m={0}
+            color="text.primary"
+            fontFamily="heading"
+            fontSize={{ base: '64px', sm: '82px', md: '112px', lg: '100px', xl: '128px' }}
+            fontWeight="800"
+            lineHeight="0.78"
+            letterSpacing="-0.035em"
+            textTransform="uppercase"
+          >
+            {t('home.heading.1')}
+            <br />
+            {t('home.heading.2')}
+            <br />
+            <Box as="span" color="accent">
+              {t('home.heading.3')}
             </Box>
-          </GridItem>
-        </Grid>
-      </Container>
+          </Box>
 
-      {/* Resume Preview Modal */}
-      <ResumePreviewModal
-        isOpen={isResumeOpen}
-        onClose={() => setIsResumeOpen(false)}
-        resumeUrl="/Afif_Shyamsul_Syahiran_bin_Suhaimi_Resume.pdf"
-      />
-    </Box>
+          <Text
+            color="text.secondary"
+            fontSize={{ base: '17px', md: '19px' }}
+            lineHeight="1.65"
+            maxW="620px"
+            mt={{ base: 8, md: 10 }}
+          >
+            {t('home.description')}
+          </Text>
+
+          <Flex wrap="wrap" gap={{ base: 4, md: 6 }} mt={8} align="center">
+            <Button
+              onClick={scrollToPortfolio}
+              bg="accent"
+              color="accent.contrast"
+              borderRadius={0}
+              h="52px"
+              px={6}
+              fontFamily="mono"
+              fontSize="11px"
+              letterSpacing="0.06em"
+              _hover={{ bg: 'accent.soft', color: 'ink.900' }}
+            >
+              {t('home.viewWork').toUpperCase()}
+            </Button>
+            <Button
+              as="a"
+              href="/Afif_Shyamsul_Syahiran_bin_Suhaimi_Resume.pdf"
+              target="_blank"
+              rel="noreferrer"
+              variant="outline"
+              borderColor="line"
+              borderRadius={0}
+              h="52px"
+              px={6}
+              color="text.primary"
+              fontFamily="mono"
+              fontSize="11px"
+              letterSpacing="0.06em"
+              _hover={{ borderColor: 'accent', color: 'accent' }}
+            >
+              {t('nav.resume').toUpperCase()} ↗
+            </Button>
+          </Flex>
+
+          <HStack spacing={6} mt={8} color="text.muted" fontFamily="mono" fontSize="10px" letterSpacing="0.06em">
+            <Link href="https://github.com/afifShyam" isExternal _hover={{ color: 'accent' }}>
+              {t('home.github').toUpperCase()}
+            </Link>
+            <Link href="https://www.linkedin.com/in/afif-shyamsul-1333bb279/" isExternal _hover={{ color: 'accent' }}>
+              {t('home.linkedin').toUpperCase()}
+            </Link>
+          </HStack>
+        </GridItem>
+
+        <GridItem minW={0}>
+          <Box
+            position="relative"
+            h={{ base: '530px', sm: '620px', lg: '680px' }}
+            bg="accent.strong"
+            overflow="hidden"
+            border="1px solid"
+            borderColor="accent.soft"
+          >
+            <Text
+              position="absolute"
+              top={5}
+              left={5}
+              zIndex={4}
+              color="accent.contrast"
+              fontFamily="mono"
+              fontSize="10px"
+              letterSpacing="0.1em"
+            >
+              {t('home.production').toUpperCase()}
+            </Text>
+            <Text
+              position="absolute"
+              left={{ base: '4%', sm: '4%' }}
+              bottom="-18px"
+              color="rgba(241, 239, 233, 0.12)"
+              fontFamily="heading"
+              fontSize={{ base: '64px', sm: '120px' }}
+              fontWeight="900"
+              lineHeight="0.78"
+              letterSpacing="-0.04em"
+              textTransform="uppercase"
+              whiteSpace="nowrap"
+            >
+              {t('home.shipped').toUpperCase()}
+            </Text>
+
+            <Image
+              src={tuxcPreview}
+              alt="TuxC Wallet production application"
+              position="absolute"
+              zIndex={3}
+              left={{ base: '3%', sm: '4%' }}
+              top={{ base: '10%', sm: '8%' }}
+              w={{ base: '52%', sm: '50%' }}
+              maxH="74%"
+              objectFit="contain"
+              bg="ink.900"
+              border="1px solid"
+              borderColor="rgba(241,239,233,0.35)"
+              boxShadow="24px 28px 60px rgba(0,0,0,0.38)"
+              animation="editorial-float 6.4s ease-in-out infinite"
+              willChange="transform"
+              transition="filter 180ms ease"
+              _hover={{ filter: 'brightness(1.08)' }}
+            />
+            <Image
+              src={smsPreview}
+              alt="Service Management System mobile application"
+              position="absolute"
+              zIndex={2}
+              right={{ base: '3%', sm: '5%' }}
+              top={{ base: '13%', sm: '12%' }}
+              w={{ base: '43%', sm: '42%' }}
+              maxH="52%"
+              objectFit="contain"
+              bg="paper.50"
+              border="1px solid"
+              borderColor="rgba(241,239,233,0.45)"
+              boxShadow="18px 24px 48px rgba(0,0,0,0.32)"
+              animation="editorial-float-soft 7.2s ease-in-out -1.4s infinite"
+              willChange="transform"
+              transition="filter 180ms ease"
+              _hover={{ filter: 'brightness(1.08)' }}
+            />
+            <Image
+              src={sigmaPreview}
+              alt="Sigma enterprise procurement application"
+              position="absolute"
+              zIndex={1}
+              right={{ base: '6%', sm: '9%' }}
+              bottom={{ base: '5%', sm: '6%' }}
+              w={{ base: '34%', sm: '32%' }}
+              maxH="29%"
+              objectFit="contain"
+              bg="ink.800"
+              border="1px solid"
+              borderColor="rgba(241,239,233,0.3)"
+              boxShadow="14px 20px 40px rgba(0,0,0,0.3)"
+              animation="editorial-float 5.8s ease-in-out -2.2s infinite"
+              willChange="transform"
+              transition="filter 180ms ease"
+              _hover={{ filter: 'brightness(1.08)' }}
+            />
+          </Box>
+        </GridItem>
+      </Grid>
+
+      <Grid
+        templateColumns={{ base: 'repeat(2, 1fr)', lg: 'repeat(4, 1fr)' }}
+        borderTop="1px solid"
+        borderBottom="1px solid"
+        borderColor="line"
+      >
+        {PROOF.map((item, index) => (
+          <VStack
+            key={item.label}
+            align="flex-start"
+            spacing={2}
+            py={{ base: 6, md: 8 }}
+            px={{ base: 0, md: 6 }}
+            pr={{ base: index % 2 === 0 ? 4 : 0, md: 6 }}
+            borderRight={{ base: index % 2 === 0 ? '1px solid' : 'none', lg: index < 3 ? '1px solid' : 'none' }}
+            borderBottom={{ base: index < 2 ? '1px solid' : 'none', lg: 'none' }}
+            borderColor="line"
+          >
+            <Text
+              color={index === 3 ? 'text.primary' : 'accent'}
+              fontFamily="heading"
+              fontSize={{ base: '28px', md: '38px' }}
+              fontWeight="700"
+              lineHeight="1"
+            >
+              {item.value}
+            </Text>
+            <Text color="text.muted" fontFamily="mono" fontSize="9px" letterSpacing="0.06em" textTransform="uppercase">
+              {t(item.label)}
+            </Text>
+          </VStack>
+        ))}
+      </Grid>
+    </Container>
+  </Box>
   );
 };
 
