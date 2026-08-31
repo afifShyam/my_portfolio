@@ -38,29 +38,6 @@ export const mockProjects: Project[] = [
     techStack: ['Flutter', 'Dart', 'Riverpod', 'Clean Architecture', 'RESTful APIs', 'CI/CD'],
   },
   {
-    id: 2,
-    name: 'Sigma (B2B Procurement Platform)',
-    description:
-      'Centralized B2B procurement mobile application for multi-vendor purchasing and order tracking. Migrated legacy WebView modules to native Flutter, improving UI responsiveness by ~90%.',
-    category: 'Enterprise',
-    role: 'Mobile Developer (Radiant GlobalTech)',
-    featured: true,
-    metrics: 'Sole Mobile Dev · ~90% UI Boost',
-    features: [
-      'B2B centralized procurement & order workflows',
-      'Legacy WebView to native Flutter migration',
-      'Automated TestFlight & Firebase App Distribution CI/CD pipelines',
-      'UI/UX redesign implemented directly from Figma designs',
-    ],
-    impact: 'Sole mobile developer responsible for end-to-end Flutter development, performance optimization, and deployment workflows.',
-    image: sigmaHomeImage,
-    images: [
-      { src: sigmaHomeImage, alt: 'Sigma B2B Procurement Dashboard & Workflow Counts' },
-      { src: sigmaFinanceImage, alt: 'Sigma Multi-Vendor Invoicing & Statements' },
-    ],
-    techStack: ['Flutter', 'Dart', 'BLoC', 'CI/CD', 'RESTful APIs', 'Figma'],
-  },
-  {
     id: 3,
     name: 'Service Management System (SMS)',
     description:
@@ -83,6 +60,29 @@ export const mockProjects: Project[] = [
       { src: smsDetailImage, alt: 'SMS Ticket Details & Actions' },
     ],
     techStack: ['Flutter', 'Dart', 'RESTful APIs', 'C# (.NET)', 'Push Notifications', 'Figma'],
+  },
+  {
+    id: 2,
+    name: 'Sigma (B2B Procurement Platform)',
+    description:
+      'Centralized B2B procurement mobile application for multi-vendor purchasing and order tracking. Migrated legacy WebView modules to native Flutter, improving UI responsiveness by ~90%.',
+    category: 'Enterprise',
+    role: 'Mobile Developer (Radiant GlobalTech)',
+    featured: true,
+    metrics: 'Sole Mobile Dev · ~90% UI Boost',
+    features: [
+      'B2B centralized procurement & order workflows',
+      'Legacy WebView to native Flutter migration',
+      'Automated TestFlight & Firebase App Distribution CI/CD pipelines',
+      'UI/UX redesign implemented directly from Figma designs',
+    ],
+    impact: 'Sole mobile developer responsible for end-to-end Flutter development, performance optimization, and deployment workflows.',
+    image: sigmaHomeImage,
+    images: [
+      { src: sigmaHomeImage, alt: 'Sigma B2B Procurement Dashboard & Workflow Counts' },
+      { src: sigmaFinanceImage, alt: 'Sigma Multi-Vendor Invoicing & Statements' },
+    ],
+    techStack: ['Flutter', 'Dart', 'BLoC', 'CI/CD', 'RESTful APIs', 'Figma'],
   },
   {
     id: 4,
