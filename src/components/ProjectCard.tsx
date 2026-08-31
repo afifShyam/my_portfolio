@@ -1,376 +1,236 @@
-import { useState } from 'react';
 import {
   Box,
-  Image,
-  Heading,
-  Text,
-  Tag,
-  Flex,
   Button,
-  Icon,
-  IconButton,
-  Link,
-  Badge,
+  Flex,
+  Grid,
+  GridItem,
   HStack,
-  useColorModeValue,
+  Image,
+  Link,
+  Text,
   VStack,
-  Divider,
-  Stack,
 } from '@chakra-ui/react';
-import { FaGithub, FaExternalLinkAlt, FaChevronLeft, FaChevronRight, FaInfoCircle, FaStar, FaMobileAlt } from 'react-icons/fa';
 import { Project } from '../types/projectTypes';
+import { useLocale } from '../localization';
 
 interface ProjectCardProps {
   project: Project;
-  onSelectProject?: (project: Project) => void;
+  index: number;
 }
 
-const ProjectCard: React.FC<ProjectCardProps> = ({ project, onSelectProject }) => {
-  const imageSources = project.images ?? (project.image ? [project.image] : []);
-  const images = imageSources
-    .map((source) => (typeof source === 'string' ? { src: source } : source))
-    .filter((img) => Boolean(img?.src));
-  const [currentImage, setCurrentImage] = useState(0);
+const PROJECT_TONES = [
+  { background: '#151515', foreground: '#f1efe9', accent: '#c4b5fd', frame: 'rgba(241,239,233,0.24)', stage: '#090909' },
+  { background: '#6d28d9', foreground: '#f1efe9', accent: '#ddd6fe', frame: 'rgba(241,239,233,0.32)', stage: '#ffffff' },
+  { background: '#ddd6fe', foreground: '#090909', accent: '#6d28d9', frame: 'rgba(9,9,9,0.2)', stage: '#ffffff' },
+];
 
-  const hasGithub = !!project.githubLink;
-  const hasPlayStore = !!project.playStoreLink;
-  const hasAppStore = !!project.appStoreLink;
-  const containerBg = useColorModeValue('rgba(255, 255, 255, 0.94)', 'rgba(15, 23, 42, 0.88)');
-  const borderColor = useColorModeValue(project.featured ? 'rgba(6, 182, 212, 0.4)' : 'rgba(148, 163, 184, 0.28)', project.featured ? 'rgba(6, 182, 212, 0.4)' : 'whiteAlpha.200');
-  const textColor = useColorModeValue('neutral.900', 'white');
-  const descriptionColor = useColorModeValue('neutral.600', 'neutral.200');
-  const badgeBg = useColorModeValue('cyan.50', 'whiteAlpha.200');
-  const badgeColor = useColorModeValue('cyan.700', 'cyan.300');
-  const tagColor = useColorModeValue('neutral.700', 'neutral.100');
-  const tagBorder = useColorModeValue('rgba(148, 163, 184, 0.28)', 'whiteAlpha.200');
-  const featureBg = useColorModeValue('neutral.50', 'whiteAlpha.100');
-  const activeImage = images[currentImage];
-  const hasCarousel = images.length > 1;
-
-  const goToPrev = (e: React.MouseEvent) => {
-    e.stopPropagation();
-    setCurrentImage((prev) => (prev - 1 + images.length) % images.length);
-  };
-
-  const goToNext = (e: React.MouseEvent) => {
-    e.stopPropagation();
-    setCurrentImage((prev) => (prev + 1) % images.length);
-  };
+const ProjectCard: React.FC<ProjectCardProps> = ({ project, index }) => {
+  const { t, list } = useLocale();
+  const sources = project.images ?? (project.image ? [project.image] : []);
+  const images = sources
+    .map((source) => (typeof source === 'string' ? { src: source, alt: `${project.name} application screen` } : source))
+    .filter((image) => Boolean(image.src))
+    .slice(0, 3);
+  const tone = PROJECT_TONES[index % PROJECT_TONES.length];
+  const projectNumber = String(index + 1).padStart(2, '0');
+  const features = list(`projects.${project.id}.features`, project.features ?? []);
 
   return (
-    <Box
-      bg={containerBg}
-      borderRadius="2xl"
-      borderWidth="1px"
-      borderColor={borderColor}
-      p={{ base: 4, sm: 5 }}
-      w="100%"
-      maxW="100%"
-      transition="transform 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease"
-      boxShadow={useColorModeValue('0 14px 32px rgba(15, 23, 42, 0.08)', '0 18px 38px rgba(0, 0, 0, 0.34)')}
-      _hover={{
-        transform: 'translateY(-6px)',
-        boxShadow: useColorModeValue('0 24px 48px rgba(6, 182, 212, 0.18)', '0 24px 48px rgba(6, 182, 212, 0.25)'),
-        borderColor: 'cyan.400',
-      }}
-      h="100%"
-      display="flex"
-      flexDirection="column"
-      position="relative"
-      overflow="hidden"
-    >
-      <VStack align="stretch" spacing={3.5} h="100%" w="100%">
-        <Flex justify="space-between" align="center" gap={2} wrap="wrap">
-          <HStack spacing={1.5} wrap="wrap">
-            {project.featured && (
-              <Badge
-                bgGradient="linear(to-r, cyan.500, brand.600)"
-                color="white"
-                px={2}
-                py={0.5}
-                borderRadius="full"
-                fontWeight="extrabold"
-                fontSize="2xs"
-                letterSpacing="wide"
-                boxShadow="0 2px 6px rgba(6, 182, 212, 0.35)"
-                display="inline-flex"
-                alignItems="center"
-                gap={1}
-              >
-                <Icon as={FaStar} boxSize={2.5} />
-                FEATURED
-              </Badge>
-            )}
-            <Badge
-              bg={badgeBg}
-              color={badgeColor}
-              px={2.5}
-              py={0.5}
-              borderRadius="full"
-              fontWeight="bold"
-              fontSize="2xs"
-              letterSpacing="wide"
-            >
-              {project.category}
-            </Badge>
-            {project.metrics && (
-              <Badge
-                colorScheme="purple"
-                variant="subtle"
-                px={2}
-                py={0.5}
-                borderRadius="md"
-                fontSize="2xs"
-                fontWeight="medium"
-              >
-                {project.metrics}
-              </Badge>
-            )}
-          </HStack>
-          {project.role && (
-            <Text fontSize="xs" fontWeight="bold" color="cyan.400">
-              {project.role}
-            </Text>
-          )}
-        </Flex>
+    <Box borderTop="1px solid" borderColor="line" py={{ base: 14, md: 20, lg: 24 }}>
+      <Flex justify="space-between" align="center" mb={{ base: 8, md: 12 }}>
+        <Text color="accent" fontFamily="mono" fontSize="11px" letterSpacing="0.1em">
+          {projectNumber} / {t(`projects.${project.id}.category`, project.category).toUpperCase()}
+        </Text>
+        <Text color="text.muted" fontFamily="mono" fontSize="10px" letterSpacing="0.08em" textTransform="uppercase">
+          {t('portfolio.production')}
+        </Text>
+      </Flex>
 
-        {images.length ? (
+      <Grid templateColumns={{ base: '1fr', lg: 'minmax(320px, 0.72fr) minmax(0, 1.28fr)' }} gap={{ base: 10, lg: 14, xl: 20 }}>
+        <GridItem minW={0}>
+          <Box
+            as="h3"
+            m={0}
+            color="text.primary"
+            fontFamily="heading"
+            fontSize={{ base: '58px', md: '78px', lg: '84px' }}
+            fontWeight="800"
+            letterSpacing="-0.025em"
+            lineHeight="0.88"
+            textTransform="uppercase"
+          >
+            {project.name}
+          </Box>
+
+          <Text color="accent" fontFamily="mono" fontSize="10px" letterSpacing="0.07em" mt={6} textTransform="uppercase">
+            {t(`projects.${project.id}.role`, project.role ?? '')}
+          </Text>
+          <Text color="text.secondary" fontSize={{ base: '16px', md: '18px' }} lineHeight="1.65" mt={5}>
+            {t(`projects.${project.id}.description`, project.description)}
+          </Text>
+
+          <Grid templateColumns={{ base: '1fr', sm: '112px 1fr' }} gap={{ base: 3, sm: 6 }} mt={9} pt={7} borderTop="1px solid" borderColor="line">
+            <Text color="text.muted" fontFamily="mono" fontSize="9px" letterSpacing="0.08em" textTransform="uppercase">
+              {t('project.ownership')}
+            </Text>
+            <Text color="text.primary" fontSize="14px" lineHeight="1.6">
+              {t(`projects.${project.id}.impact`, project.impact ?? '')}
+            </Text>
+          </Grid>
+
+          {features.length ? (
+            <Grid templateColumns={{ base: '1fr', sm: '112px 1fr' }} gap={{ base: 3, sm: 6 }} mt={7}>
+              <Text color="text.muted" fontFamily="mono" fontSize="9px" letterSpacing="0.08em" textTransform="uppercase">
+                {t('project.engineering')}
+              </Text>
+              <VStack align="stretch" spacing={2}>
+                {features.slice(0, 3).map((feature) => (
+                  <Text key={feature} color="text.secondary" fontSize="13px" lineHeight="1.5">
+                    — {feature}
+                  </Text>
+                ))}
+              </VStack>
+            </Grid>
+          ) : null}
+
+          <Box mt={9} pt={7} borderTop="1px solid" borderColor="line">
+            <Text color="text.muted" fontFamily="mono" fontSize="9px" letterSpacing="0.08em" mb={3} textTransform="uppercase">
+              {t('project.stack')}
+            </Text>
+            <Text color="text.primary" fontFamily="mono" fontSize="10px" lineHeight="1.8" letterSpacing="0.03em">
+              {project.techStack?.join(' / ')}
+            </Text>
+          </Box>
+
+          <HStack spacing={5} mt={8} flexWrap="wrap">
+            {project.playStoreLink ? (
+              <Button
+                as={Link}
+                href={project.playStoreLink}
+                isExternal
+                variant="unstyled"
+                h="auto"
+                color="text.primary"
+                fontFamily="mono"
+                fontSize="10px"
+                borderBottom="1px solid"
+                borderColor="accent"
+                borderRadius={0}
+                pb={1}
+                _hover={{ color: 'accent', textDecoration: 'none' }}
+              >
+                {t('project.googlePlay').toUpperCase()}
+              </Button>
+            ) : null}
+            {project.appStoreLink ? (
+              <Button
+                as={Link}
+                href={project.appStoreLink}
+                isExternal
+                variant="unstyled"
+                h="auto"
+                color="text.primary"
+                fontFamily="mono"
+                fontSize="10px"
+                borderBottom="1px solid"
+                borderColor="accent"
+                borderRadius={0}
+                pb={1}
+                _hover={{ color: 'accent', textDecoration: 'none' }}
+              >
+                {t('project.appStore').toUpperCase()}
+              </Button>
+            ) : null}
+            {project.githubLink ? (
+              <Button
+                as={Link}
+                href={project.githubLink}
+                isExternal
+                variant="unstyled"
+                h="auto"
+                color="text.primary"
+                fontFamily="mono"
+                fontSize="10px"
+                borderBottom="1px solid"
+                borderColor="accent"
+                borderRadius={0}
+                pb={1}
+                _hover={{ color: 'accent', textDecoration: 'none' }}
+              >
+                {t('project.github').toUpperCase()}
+              </Button>
+            ) : null}
+          </HStack>
+        </GridItem>
+
+        <GridItem minW={0}>
           <Box
             position="relative"
+            h={{ base: '520px', md: '680px', lg: '760px' }}
+            bg={tone.background}
+            color={tone.foreground}
             overflow="hidden"
-            borderRadius="xl"
-            minH={{ base: '12rem', md: '13rem' }}
-            maxH={{ base: '16rem', md: '18rem' }}
-            bg="black"
-            cursor={onSelectProject ? 'pointer' : 'default'}
-            onClick={() => onSelectProject?.(project)}
-            display="flex"
-            alignItems="center"
-            justifyContent="center"
+            border="1px solid"
+            borderColor={index === 1 ? 'accent.soft' : 'line'}
           >
-            <Image
-              src={activeImage?.src}
-              srcSet={activeImage?.srcSet}
-              sizes={activeImage?.sizes}
-              alt={activeImage?.alt ?? `${project.name} preview`}
-              loading="lazy"
-              decoding="async"
-              objectFit="contain"
-              w="full"
-              h="100%"
-              maxH={{ base: '16rem', md: '18rem' }}
-              transition="transform 0.35s ease"
-              _hover={{ transform: 'scale(1.03)' }}
-              fallback={
-                <Flex h="full" w="full" align="center" justify="center" bgGradient="linear(to-br, cyan.900, gray.900)" p={4} direction="column">
-                  <Text fontWeight="bold" fontSize="sm" color="white" mb={1}>{project.name}</Text>
-                  <Text fontSize="2xs" color="cyan.300">{project.category} App</Text>
-                </Flex>
-              }
-            />
-
-            {hasCarousel && (
-              <>
-                <IconButton
-                  aria-label="Previous image"
-                  icon={<FaChevronLeft size={11} />}
-                  size="xs"
-                  position="absolute"
-                  top="50%"
-                  left={2}
-                  transform="translateY(-50%)"
-                  onClick={goToPrev}
-                  bg="white"
-                  color="gray.900"
-                  _hover={{ bg: 'cyan.400', color: 'gray.900' }}
-                  boxShadow="0 2px 8px rgba(0, 0, 0, 0.5)"
-                  borderRadius="full"
-                  zIndex={2}
-                />
-                <IconButton
-                  aria-label="Next image"
-                  icon={<FaChevronRight size={11} />}
-                  size="xs"
-                  position="absolute"
-                  top="50%"
-                  right={2}
-                  transform="translateY(-50%)"
-                  onClick={goToNext}
-                  bg="white"
-                  color="gray.900"
-                  _hover={{ bg: 'cyan.400', color: 'gray.900' }}
-                  boxShadow="0 2px 8px rgba(0, 0, 0, 0.5)"
-                  borderRadius="full"
-                  zIndex={2}
-                />
-                <HStack
-                  spacing={1}
-                  position="absolute"
-                  bottom={2}
-                  left="50%"
-                  transform="translateX(-50%)"
-                  bg="blackAlpha.700"
-                  borderRadius="full"
-                  px={2.5}
-                  py={1}
-                  backdropFilter="blur(6px)"
-                >
-                  {images.map((_, idx) => (
-                    <Box
-                      key={idx}
-                      w={idx === currentImage ? 2.5 : 1.5}
-                      h={idx === currentImage ? 2.5 : 1.5}
-                      borderRadius="full"
-                      bg={idx === currentImage ? 'cyan.400' : 'whiteAlpha.600'}
-                    />
-                  ))}
-                </HStack>
-              </>
-            )}
-          </Box>
-        ) : (
-          <Box
-            borderRadius="xl"
-            minH={{ base: '11rem', md: '12rem' }}
-            bgGradient="linear(to-br, #0f172a, #1e293b)"
-            borderWidth="1px"
-            borderColor={tagBorder}
-            display="flex"
-            flexDirection="column"
-            alignItems="center"
-            justifyContent="center"
-            p={4}
-            textAlign="center"
-            cursor={onSelectProject ? 'pointer' : 'default'}
-            onClick={() => onSelectProject?.(project)}
-          >
-            <Icon as={FaMobileAlt} boxSize={8} color="cyan.400" mb={2} />
-            <Text fontSize="sm" fontWeight="bold" color="white">
-              {project.name}
+            <Text
+              position="absolute"
+              top={5}
+              left={5}
+              zIndex={3}
+              color={tone.foreground}
+              fontFamily="mono"
+              fontSize="9px"
+              letterSpacing="0.09em"
+            >
+              {project.metrics?.toUpperCase()}
             </Text>
-            <Text fontSize="xs" color="gray.400" mt={1}>
-              Flutter Mobile Application
+            <Text
+              position="absolute"
+              right="-8px"
+              bottom="-26px"
+              color={tone.accent}
+              opacity={index === 2 ? 0.32 : 0.16}
+              fontFamily="heading"
+              fontSize={{ base: '160px', md: '230px' }}
+              fontWeight="900"
+              letterSpacing="-0.05em"
+              lineHeight="0.72"
+            >
+              {projectNumber}
             </Text>
-          </Box>
-        )}
 
-        <Heading size="md" fontSize={{ base: 'md', md: 'lg' }} color={textColor} fontWeight="bold" wordBreak="break-word">
-          {project.name}
-        </Heading>
-
-        <Text color={descriptionColor} fontSize="sm" lineHeight="tall" noOfLines={3}>
-          {project.description}
-        </Text>
-
-        <Stack spacing={3}>
-          {project.features?.length ? (
-            <Box>
-              <Text
-                color={descriptionColor}
-                fontSize="xs"
-                mb={2}
-                fontWeight="semibold"
-                textTransform="uppercase"
-                letterSpacing="wide"
-              >
-                Key features
-              </Text>
-              <Stack spacing={1.5}>
-                {project.features.slice(0, 3).map((feature) => (
-                  <HStack
-                    key={feature}
-                    spacing={2}
-                    align="center"
-                    bg={featureBg}
-                    borderRadius="md"
-                    px={2.5}
-                    py={1.5}
-                  >
-                    <Box w="5px" h="5px" borderRadius="full" bg={badgeColor} flexShrink={0} />
-                    <Text color={descriptionColor} fontSize="xs" noOfLines={1}>
-                      {feature}
-                    </Text>
-                  </HStack>
-                ))}
-              </Stack>
-            </Box>
-          ) : null}
-        </Stack>
-
-        <Box>
-          <Text
-            color={descriptionColor}
-            fontSize="xs"
-            mb={2}
-            fontWeight="semibold"
-            textTransform="uppercase"
-            letterSpacing="wide"
-          >
-            Tech stack
-          </Text>
-          {project.techStack?.length ? (
-            <Flex flexWrap="wrap" gap={1.5}>
-              {project.techStack.map((tech) => (
-                <Tag
-                  key={tech}
-                  size="sm"
-                  borderRadius="md"
-                  px={2}
-                  py={0.5}
-                  borderWidth="1px"
-                  borderColor={tagBorder}
-                  bg="transparent"
-                  color={tagColor}
-                  fontSize="xs"
-                >
-                  {tech}
-                </Tag>
+            <Flex
+              position="absolute"
+              inset={{ base: '62px 18px 30px', md: '76px 42px 42px' }}
+              align="center"
+              justify="center"
+              gap={{ base: 3, md: 5 }}
+            >
+              {images.map((image, imageIndex) => (
+                <Image
+                  key={`${image.src}-${imageIndex}`}
+                  src={image.src}
+                  srcSet={image.srcSet}
+                  sizes={image.sizes}
+                  alt={image.alt ?? `${project.name} mobile interface`}
+                  w={images.length === 1 ? '72%' : images.length === 2 ? '46%' : '31%'}
+                  maxH={imageIndex === 0 ? '92%' : '82%'}
+                  objectFit="contain"
+                  bg={tone.stage}
+                  border="1px solid"
+                  borderColor={tone.frame}
+                  boxShadow="18px 24px 52px rgba(0,0,0,0.32)"
+                  animation={`editorial-float ${6.2 + imageIndex * 0.8}s ease-in-out ${imageIndex * -1.1}s infinite`}
+                  willChange="transform"
+                  transition="filter 180ms ease"
+                  _hover={{ filter: 'brightness(1.06)' }}
+                />
               ))}
             </Flex>
-          ) : null}
-        </Box>
-
-        <Box flex="1" />
-
-        <Divider borderColor={borderColor} />
-
-        <HStack spacing={2} justifyContent="space-between" flexWrap="wrap" pt={1}>
-          {onSelectProject && (
-            <Button
-              leftIcon={<Icon as={FaInfoCircle} />}
-              size="sm"
-              colorScheme="cyan"
-              variant="solid"
-              borderRadius="xl"
-              onClick={() => onSelectProject(project)}
-            >
-              Details
-            </Button>
-          )}
-
-          <HStack spacing={2}>
-            {hasGithub && (
-              <Link href={project.githubLink} isExternal aria-label="GitHub Repository" onClick={(e) => e.stopPropagation()}>
-                <IconButton aria-label="GitHub" icon={<Icon as={FaGithub} />} size="sm" variant="outline" colorScheme="gray" borderRadius="xl" />
-              </Link>
-            )}
-
-            {hasPlayStore && (
-              <Link href={project.playStoreLink} isExternal aria-label="Play Store Link" onClick={(e) => e.stopPropagation()}>
-                <Button size="sm" colorScheme="brand" variant="outline" borderRadius="xl">
-                  Play Store
-                </Button>
-              </Link>
-            )}
-
-            {hasAppStore && (
-              <Link href={project.appStoreLink} isExternal aria-label="App Store Link" onClick={(e) => e.stopPropagation()}>
-                <IconButton aria-label="App Store" icon={<Icon as={FaExternalLinkAlt} />} size="sm" variant="outline" colorScheme="purple" borderRadius="xl" />
-              </Link>
-            )}
-          </HStack>
-        </HStack>
-      </VStack>
+          </Box>
+        </GridItem>
+      </Grid>
     </Box>
   );
 };

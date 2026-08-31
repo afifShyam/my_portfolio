@@ -1,316 +1,118 @@
-import { memo, useState, useMemo } from 'react';
+import { memo } from 'react';
+import { Box, Container, Flex, Grid, Link, Text } from '@chakra-ui/react';
 import { usePortfolio } from '../hooks/usePortfolio';
 import ProjectCard from '../../../components/ProjectCard';
-import ProjectDetailModal from '../../../components/ProjectDetailModal';
-import { Project } from '../../../types/projectTypes';
-import {
-  Box,
-  Heading,
-  Grid,
-  Skeleton,
-  Container,
-  Text,
-  useColorModeValue,
-  Flex,
-  Button,
-  InputGroup,
-  InputLeftElement,
-  Input,
-  Icon,
-  HStack,
-  Badge,
-} from '@chakra-ui/react';
-import { FiSearch, FiLayers, FiCheck } from 'react-icons/fi';
-import { motion, type Transition } from 'framer-motion';
-
-// Motion components
-const MotionBox = motion.create(Box);
-const MotionGrid = motion.create(Grid);
-
-const CATEGORIES = ['All', 'Fintech', 'E-commerce', 'Enterprise', 'Service', 'Productivity'];
-const TECH_TAGS = ['Riverpod', 'BLoC', 'Clean Architecture', 'RESTful APIs', 'Firebase', 'Figma', 'CI/CD'];
+import { useLocale } from '../../../localization';
 
 const PortfolioPage: React.FC = () => {
   const { projects, loading, error } = usePortfolio();
-  const [selectedCategory, setSelectedCategory] = useState('All');
-  const [searchQuery, setSearchQuery] = useState('');
-  const [activeProjectModal, setActiveProjectModal] = useState<Project | null>(null);
-
-  // Dynamic colors based on color mode
-  const sectionBg = useColorModeValue(
-    'linear-gradient(180deg, #f8fafc 0%, #eef6ff 100%)',
-    'linear-gradient(180deg, #090d16 0%, #0f172a 100%)'
-  );
-  const textColor = useColorModeValue('neutral.900', 'whiteAlpha.900');
-  const skeletonStartColor = useColorModeValue('gray.100', 'whiteAlpha.200');
-  const skeletonEndColor = useColorModeValue('gray.200', 'whiteAlpha.300');
-  const borderColor = useColorModeValue('rgba(148, 163, 184, 0.28)', 'whiteAlpha.200');
-  const errorBg = useColorModeValue('red.50', 'rgba(244, 63, 94, 0.12)');
-  const errorColor = useColorModeValue('red.600', 'red.300');
-  const panelBg = useColorModeValue('rgba(255, 255, 255, 0.88)', 'rgba(15, 23, 42, 0.82)');
-  const inputBg = useColorModeValue('white', 'rgba(15, 23, 42, 0.6)');
-  const activeTabBg = useColorModeValue('brand.600', 'cyan.500');
-  const activeTabColor = 'white';
-  const inactiveTabBg = useColorModeValue('gray.100', 'whiteAlpha.100');
-  const inactiveTabHoverBg = useColorModeValue('gray.200', 'whiteAlpha.200');
-  const emptyStateBg = useColorModeValue('gray.50', 'whiteAlpha.50');
-
-  const defaultTransition = (duration = 0.5, delay = 0): Transition => ({ duration, delay });
-
-  // Filter projects based on category & search query
-  const filteredProjects = useMemo(() => {
-    return projects.filter((project) => {
-      const matchesCategory =
-        selectedCategory === 'All' ||
-        project.category.toLowerCase().includes(selectedCategory.toLowerCase());
-
-      const query = searchQuery.toLowerCase().trim();
-      const matchesSearch =
-        !query ||
-        project.name.toLowerCase().includes(query) ||
-        project.description.toLowerCase().includes(query) ||
-        project.techStack?.some((t) => t.toLowerCase().includes(query)) ||
-        project.features?.some((f) => f.toLowerCase().includes(query));
-
-      return matchesCategory && matchesSearch;
-    });
-  }, [projects, selectedCategory, searchQuery]);
+  const { t } = useLocale();
+  const selectedProjects = projects.slice(0, 3);
+  const additionalProjects = projects.slice(3);
 
   return (
-    <>
-      <MotionBox
-        minH="100vh"
-        bg={sectionBg}
-        color={textColor}
-        py={{ base: 12, md: 24 }}
-        px={{ base: 2, sm: 4, md: 6 }}
-        position="relative"
-        overflow="hidden"
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1, transition: defaultTransition() }}
-      >
-        <Container maxW="container.xl" px={{ base: 1, sm: 4 }} position="relative" zIndex={1}>
-          <MotionBox
-            bg={panelBg}
-            border="1px solid"
-            borderColor={borderColor}
-            borderRadius="2xl"
-            boxShadow={useColorModeValue('0 24px 60px rgba(15, 23, 42, 0.08)', '0 24px 60px rgba(0, 0, 0, 0.35)')}
-            backdropFilter="blur(18px)"
-            px={{ base: 3.5, sm: 6, md: 8 }}
-            py={{ base: 5, md: 10 }}
-            position="relative"
-            overflow="hidden"
-          >
-            {/* Header */}
-            <Box mb={8}>
-              <Text fontSize="xs" fontWeight="bold" color="cyan.400" textTransform="uppercase" letterSpacing="wider" mb={1}>
-                Work & Projects
-              </Text>
-              <Heading as="h2" size="xl" fontWeight="extrabold" mb={2} color={textColor}>
-                Selected Mobile Projects
-              </Heading>
-              <Text color="gray.400" fontSize="sm">
-                Production cross-platform mobile applications engineered with Flutter, Dart, Riverpod, and Clean Architecture.
-              </Text>
-            </Box>
-
-            {/* Category Filter & Search Bar Controls */}
-            <Flex
-              direction={{ base: 'column', md: 'row' }}
-              justify="space-between"
-              align={{ base: 'stretch', md: 'center' }}
-              gap={4}
-              mb={6}
+    <Box bg="canvas" color="text.primary" py={{ base: 16, md: 24 }}>
+      <Container maxW="1440px" px={{ base: 5, md: 8 }}>
+        <Grid templateColumns={{ base: '1fr', md: '0.45fr 1fr' }} gap={{ base: 6, md: 16 }} pb={{ base: 14, md: 20 }}>
+          <Text color="accent" fontFamily="mono" fontSize="11px" letterSpacing="0.1em" textTransform="uppercase">
+            {t('portfolio.label')}
+          </Text>
+          <Box>
+            <Box
+              as="h2"
+              m={0}
+              color="text.primary"
+              fontFamily="heading"
+              fontSize={{ base: '64px', md: '92px', lg: '116px' }}
+              fontWeight="800"
+              letterSpacing="-0.035em"
+              lineHeight="0.82"
+              textTransform="uppercase"
             >
-              {/* Filter Pills */}
-              <Flex wrap="wrap" gap={2}>
-                {CATEGORIES.map((cat) => {
-                  const isActive = selectedCategory === cat;
-                  return (
-                    <Button
-                      key={cat}
-                      size="sm"
-                      borderRadius="full"
-                      px={4}
-                      py={1.5}
-                      bg={isActive ? activeTabBg : inactiveTabBg}
-                      color={isActive ? activeTabColor : textColor}
-                      _hover={{
-                        bg: isActive ? activeTabBg : inactiveTabHoverBg,
-                        transform: 'translateY(-1px)',
-                      }}
-                      onClick={() => setSelectedCategory(cat)}
-                      leftIcon={isActive ? <Icon as={FiCheck} /> : undefined}
-                      fontWeight="semibold"
-                      transition="all 0.2s ease"
-                    >
-                      {cat}
-                    </Button>
-                  );
-                })}
-              </Flex>
-
-              {/* Search Bar */}
-              <InputGroup maxW={{ base: 'full', md: '300px' }}>
-                <InputLeftElement pointerEvents="none">
-                  <Icon as={FiSearch} color="gray.400" />
-                </InputLeftElement>
-                <Input
-                  placeholder="Search project or tech stack..."
-                  value={searchQuery}
-                  onChange={(e) => setSearchQuery(e.target.value)}
-                  bg={inputBg}
-                  color={textColor}
-                  _placeholder={{ color: useColorModeValue('gray.500', 'gray.400') }}
-                  borderRadius="full"
-                  fontSize="sm"
-                  borderColor={borderColor}
-                  _focus={{
-                    borderColor: 'cyan.400',
-                    boxShadow: '0 0 0 1px cyan.400',
-                  }}
-                />
-              </InputGroup>
-            </Flex>
-
-            {/* Tech Stack Quick Filter Chips */}
-            <Flex align="center" gap={2} mb={8} wrap="wrap">
-              <Text fontSize="xs" fontWeight="bold" color="gray.400" textTransform="uppercase" letterSpacing="wider">
-                Filter by Tech:
-              </Text>
-              {TECH_TAGS.map((tag) => {
-                const isSelected = searchQuery.toLowerCase() === tag.toLowerCase();
-                return (
-                  <Badge
-                    key={tag}
-                    as="button"
-                    type="button"
-                    onClick={() => setSearchQuery(isSelected ? '' : tag)}
-                    px={3}
-                    py={1}
-                    borderRadius="full"
-                    variant={isSelected ? 'solid' : 'subtle'}
-                    colorScheme="cyan"
-                    fontSize="xs"
-                    cursor="pointer"
-                    _hover={{ transform: 'scale(1.04)' }}
-                    transition="all 0.15s ease"
-                  >
-                    {tag} {isSelected && '✕'}
-                  </Badge>
-                );
-              })}
-              {searchQuery && (
-                <Button size="xs" variant="ghost" colorScheme="red" onClick={() => setSearchQuery('')}>
-                  Clear search
-                </Button>
-              )}
-            </Flex>
-
-            {/* Results count pill */}
-            <HStack mb={6} spacing={2} wrap="wrap">
-              <Icon as={FiLayers} color="cyan.400" />
-              <Text fontSize="sm" color="gray.400">
-                Showing{' '}
-                <Text as="span" fontWeight="bold" color={textColor}>
-                  {filteredProjects.length}
-                </Text>{' '}
-                {filteredProjects.length === 1 ? 'project' : 'projects'}
-              </Text>
-              {selectedCategory !== 'All' && (
-                <Badge colorScheme="cyan" borderRadius="full" px={2} py={0.5}>
-                  Category: {selectedCategory}
-                </Badge>
-              )}
-              {searchQuery && (
-                <Badge colorScheme="purple" borderRadius="full" px={2} py={0.5}>
-                  Filter: "{searchQuery}"
-                </Badge>
-              )}
-            </HStack>
-
-            {error ? (
-              <MotionBox
-                textAlign="center"
-                p={8}
-                bg={errorBg}
-                color={errorColor}
-                borderRadius="xl"
-                borderWidth="1px"
-                borderColor={borderColor}
-                initial={{ opacity: 0, scale: 0.9 }}
-                animate={{ opacity: 1, scale: 1, transition: defaultTransition(0.3) }}
-              >
-                <Text fontSize="lg">Failed to load projects. Please try again later.</Text>
-              </MotionBox>
-            ) : loading ? (
-              <MotionGrid
-                templateColumns={{ base: '1fr', md: 'repeat(2, 1fr)', lg: 'repeat(3, 1fr)' }}
-                gap={8}
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1, transition: defaultTransition(0.3) }}
-              >
-                {[1, 2, 3, 4, 5, 6].map((_, index) => (
-                  <Skeleton
-                    key={index}
-                    height="380px"
-                    borderRadius="2xl"
-                    borderWidth="1px"
-                    borderColor={borderColor}
-                    startColor={skeletonStartColor}
-                    endColor={skeletonEndColor}
-                  />
-                ))}
-              </MotionGrid>
-            ) : filteredProjects.length === 0 ? (
-              <Box textAlign="center" py={12} bg={emptyStateBg} borderRadius="2xl">
-                <Text fontSize="lg" fontWeight="semibold" mb={2}>
-                  No projects match your filter.
-                </Text>
-                <Text fontSize="sm" color="gray.400" mb={4}>
-                  Try clearing your search query or selecting a different category.
-                </Text>
-                <Button
-                  size="sm"
-                  colorScheme="brand"
-                  onClick={() => {
-                    setSelectedCategory('All');
-                    setSearchQuery('');
-                  }}
-                >
-                  Reset Filters
-                </Button>
+              {t('portfolio.heading.1')}
+              <br />
+              <Box as="span" color="accent">
+                {t('portfolio.heading.2')}
               </Box>
-            ) : (
-              <MotionGrid
-                templateColumns={{ base: '1fr', md: 'repeat(2, 1fr)', lg: 'repeat(3, 1fr)' }}
-                gap={8}
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1, transition: defaultTransition(0.5, 0.2) }}
-              >
-                {filteredProjects.map((project, index) => (
-                  <MotionBox
-                    key={project.id}
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0, transition: defaultTransition(0.4, 0.08 * (index % 3)) }}
-                  >
-                    <ProjectCard project={project} onSelectProject={(p) => setActiveProjectModal(p)} />
-                  </MotionBox>
-                ))}
-              </MotionGrid>
-            )}
-          </MotionBox>
-        </Container>
-      </MotionBox>
+            </Box>
+            <Text color="text.secondary" fontSize={{ base: '16px', md: '18px' }} lineHeight="1.7" maxW="660px" mt={8}>
+              {t('portfolio.description')}
+            </Text>
+          </Box>
+        </Grid>
 
-      {/* Project Detail Modal */}
-      <ProjectDetailModal
-        project={activeProjectModal}
-        isOpen={Boolean(activeProjectModal)}
-        onClose={() => setActiveProjectModal(null)}
-      />
-    </>
+        {error ? (
+          <Box borderTop="1px solid" borderColor="line" py={16}>
+            <Text color="text.muted">{t('portfolio.error')}</Text>
+          </Box>
+        ) : loading ? (
+          <Box borderTop="1px solid" borderColor="line" py={16}>
+            <Text color="text.muted" fontFamily="mono" fontSize="11px" letterSpacing="0.08em" textTransform="uppercase">
+              {t('portfolio.loading')}
+            </Text>
+          </Box>
+        ) : (
+          selectedProjects.map((project, index) => <ProjectCard key={project.id} project={project} index={index} />)
+        )}
+
+        {!loading && !error && additionalProjects.length ? (
+          <Box borderTop="1px solid" borderColor="line" pt={{ base: 12, md: 16 }}>
+            <Flex justify="space-between" align={{ base: 'flex-start', md: 'flex-end' }} direction={{ base: 'column', md: 'row' }} gap={5} mb={8}>
+              <Box>
+                <Text color="accent" fontFamily="mono" fontSize="10px" letterSpacing="0.1em" mb={3} textTransform="uppercase">
+                  {t('portfolio.other')}
+                </Text>
+                <Text color="text.primary" fontFamily="heading" fontSize={{ base: '44px', md: '58px' }} fontWeight="700" lineHeight="1">
+                  {t('portfolio.additional')}
+                </Text>
+              </Box>
+              <Text color="text.muted" fontSize="14px" maxW="420px" lineHeight="1.6">
+                {t('portfolio.additionalDescription')}
+              </Text>
+            </Flex>
+
+            {additionalProjects.map((project, index) => (
+              <Grid
+                key={project.id}
+                templateColumns={{ base: '48px 1fr', md: '80px minmax(220px, 0.8fr) minmax(260px, 1.2fr) auto' }}
+                gap={{ base: 4, md: 8 }}
+                alignItems="center"
+                py={{ base: 6, md: 7 }}
+                borderTop="1px solid"
+                borderColor="line"
+              >
+                <Text color="text.muted" fontFamily="mono" fontSize="10px">
+                  {String(index + 4).padStart(2, '0')}
+                </Text>
+                <Text color="text.primary" fontFamily="heading" fontSize={{ base: '25px', md: '32px' }} fontWeight="700" lineHeight="1">
+                  {project.name}
+                </Text>
+                <Text display={{ base: 'none', md: 'block' }} color="text.muted" fontSize="13px" lineHeight="1.5">
+                  {t(`projects.${project.id}.impact`, project.impact ?? '')}
+                </Text>
+                <Flex display={{ base: 'none', md: 'flex' }} gap={4} justify="flex-end">
+                  {project.playStoreLink ? (
+                    <Link href={project.playStoreLink} isExternal color="text.secondary" fontFamily="mono" fontSize="9px" _hover={{ color: 'accent' }}>
+                      PLAY ↗
+                    </Link>
+                  ) : null}
+                  {project.appStoreLink ? (
+                    <Link href={project.appStoreLink} isExternal color="text.secondary" fontFamily="mono" fontSize="9px" _hover={{ color: 'accent' }}>
+                      APP STORE ↗
+                    </Link>
+                  ) : null}
+                  {project.githubLink ? (
+                    <Link href={project.githubLink} isExternal color="text.secondary" fontFamily="mono" fontSize="9px" _hover={{ color: 'accent' }}>
+                      GITHUB ↗
+                    </Link>
+                  ) : null}
+                </Flex>
+              </Grid>
+            ))}
+          </Box>
+        ) : null}
+      </Container>
+    </Box>
   );
 };
 
