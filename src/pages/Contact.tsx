@@ -1,452 +1,105 @@
-import { useState, memo, useCallback } from 'react';
-import emailService, { EmailData } from '../services/emailService';
-import {
-  Box,
-  Heading,
-  Button,
-  Container,
-  Flex,
-  FormControl,
-  FormLabel,
-  FormErrorMessage,
-  Input,
-  Text,
-  Textarea,
-  Alert,
-  AlertIcon,
-  useToast,
-  useColorModeValue,
-  VStack,
-  Icon,
-  SimpleGrid,
-  Link,
-  Badge,
-  HStack,
-} from '@chakra-ui/react';
-import { FiSend, FiMail, FiUser, FiMessageSquare, FiLinkedin, FiGithub, FiDownload, FiZap, FiCopy, FiCheck } from 'react-icons/fi';
-import { motion, type Transition } from 'framer-motion';
-import ResumePreviewModal from '../components/ResumePreviewModal';
+import { Box, Container, Flex, Grid, Link, Text } from '@chakra-ui/react';
+import { useLocale } from '../localization';
 
-const MotionBox = motion.create(Box);
-
-interface FormErrors {
-  name?: string;
-  email?: string;
-  message?: string;
-}
-
-const QUICK_PROMPTS = [
-  { label: '💼 Job Opportunity', text: 'Hi Afif! We are looking for a Flutter developer for an exciting role.' },
-  { label: '🚀 Flutter App Project', text: 'Hi Afif! I have a mobile app project I would like to consult with you on.' },
-  { label: '💬 General Inquiry', text: 'Hi Afif! Reaching out to connect and discuss mobile development.' },
+const CONTACT_LINKS = [
+  { index: '01', key: 'contact.email', detail: 'contact.emailDetail', href: 'mailto:Afifshyamsul00@gmail.com' },
+  { index: '02', key: 'contact.linkedin', detail: 'contact.linkedinDetail', href: 'https://www.linkedin.com/in/afif-shyamsul-1333bb279/' },
+  { index: '03', key: 'contact.github', detail: 'contact.githubDetail', href: 'https://github.com/afifShyam' },
+  { index: '04', key: 'contact.resume', detail: 'contact.resumeDetail', href: '/Afif_Shyamsul_Syahiran_bin_Suhaimi_Resume.pdf' },
 ];
 
 const Contact: React.FC = () => {
-  const [formData, setFormData] = useState<EmailData>({
-    name: '',
-    email: '',
-    message: '',
-  });
-  const [errors, setErrors] = useState<FormErrors>({});
-  const [loading, setLoading] = useState(false);
-  const [success, setSuccess] = useState<string | null>(null);
-  const [isResumeOpen, setIsResumeOpen] = useState(false);
-  const [copiedEmail, setCopiedEmail] = useState(false);
-  const toast = useToast();
-
-  const borderColor = useColorModeValue('rgba(148, 163, 184, 0.28)', 'whiteAlpha.200');
-  const inputBgColor = useColorModeValue('rgba(255, 255, 255, 0.95)', 'rgba(15, 23, 42, 0.7)');
-  const textColor = useColorModeValue('neutral.900', 'whiteAlpha.900');
-  const labelColor = useColorModeValue('neutral.600', 'neutral.200');
-  const accentColor = useColorModeValue('brand.600', 'cyan.400');
-  const cardBg = useColorModeValue('rgba(255, 255, 255, 0.9)', 'rgba(15, 23, 42, 0.84)');
-  const mutedPanelBg = useColorModeValue('neutral.50', 'rgba(15, 23, 42, 0.6)');
-  const sectionBg = useColorModeValue(
-    'linear-gradient(180deg, #f8fafc 0%, #eef6ff 100%)',
-    'linear-gradient(180deg, #090d16 0%, #0f172a 100%)'
-  );
-
-  const buildTransition = (duration = 0.5, delay = 0): Transition => ({ duration, delay });
-
-  const handleCopyEmail = () => {
-    navigator.clipboard.writeText('Afifshyamsul00@gmail.com');
-    setCopiedEmail(true);
-    toast({
-      title: 'Email Copied!',
-      description: 'Afifshyamsul00@gmail.com copied to clipboard.',
-      status: 'success',
-      duration: 3000,
-      isClosable: true,
-      position: 'top',
-    });
-    setTimeout(() => setCopiedEmail(false), 2500);
-  };
-
-  const handleQuickPrompt = (promptText: string) => {
-    setFormData((prev: EmailData) => ({ ...prev, message: promptText }));
-    if (errors.message) {
-      setErrors((prev: FormErrors) => ({ ...prev, message: undefined }));
-    }
-  };
-
-  const validateForm = useCallback((): boolean => {
-    const newErrors: FormErrors = {};
-    let isValid = true;
-
-    if (!formData.name.trim()) {
-      newErrors.name = 'Name is required';
-      isValid = false;
-    }
-
-    if (!formData.email.trim()) {
-      newErrors.email = 'Email is required';
-      isValid = false;
-    } else if (!/^\S+@\S+\.\S+$/.test(formData.email)) {
-      newErrors.email = 'Email is invalid';
-      isValid = false;
-    }
-
-    if (!formData.message.trim()) {
-      newErrors.message = 'Message is required';
-      isValid = false;
-    } else if (formData.message.trim().length < 10) {
-      newErrors.message = 'Message must be at least 10 characters';
-      isValid = false;
-    }
-
-    setErrors(newErrors);
-    return isValid;
-  }, [formData]);
-
-  const handleChange = useCallback(
-    (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-      const { name, value } = e.target;
-      setFormData((prev: EmailData) => ({ ...prev, [name]: value }));
-
-      if (errors[name as keyof FormErrors]) {
-        setErrors((prev: FormErrors) => ({ ...prev, [name]: undefined }));
-      }
-    },
-    [errors]
-  );
-
-  const handleSubmit = useCallback(
-    async (e: React.FormEvent) => {
-      e.preventDefault();
-
-      if (!validateForm()) {
-        return;
-      }
-
-      setLoading(true);
-      setSuccess(null);
-
-      try {
-        await emailService.sendEmail(formData);
-        setSuccess('Your message was sent successfully.');
-        toast({
-          title: 'Message Sent!',
-          description: 'Thank you for reaching out. I will get back to you shortly.',
-          status: 'success',
-          duration: 5000,
-          isClosable: true,
-          position: 'top',
-        });
-        setFormData({ name: '', email: '', message: '' });
-      } catch (err) {
-        console.error('Failed to send contact form message', err);
-        setSuccess('Failed to send your message. Please try again later.');
-        toast({
-          title: 'Submission Error',
-          description: 'Failed to send message. Please try again later.',
-          status: 'error',
-          duration: 5000,
-          isClosable: true,
-          position: 'top',
-        });
-      } finally {
-        setLoading(false);
-      }
-    },
-    [formData, toast, validateForm]
-  );
+  const { t } = useLocale();
 
   return (
-    <>
-      <Box bg={sectionBg} py={{ base: 16, md: 24 }}>
-        <Container maxW="container.xl">
-          <Box mb={10}>
-            <Text fontSize="xs" fontWeight="bold" color="cyan.400" textTransform="uppercase" letterSpacing="wider" mb={1}>
-              Get in Touch
-            </Text>
-            <Heading as="h2" size="xl" fontWeight="extrabold" mb={2} color={textColor}>
-              Let's Connect
-            </Heading>
-            <Text color="gray.400" fontSize="sm">
-              Looking for a Flutter developer or want to discuss a mobile project? Drop a message or reach out directly.
+    <Box bg="accent.strong" color="#f1efe9" py={{ base: 16, md: 24 }}>
+      <Container maxW="1440px" px={{ base: 5, md: 8 }}>
+        <Flex justify="space-between" align="center" pb={5} borderBottom="1px solid" borderColor="rgba(241,239,233,0.36)">
+          <Text fontFamily="mono" fontSize="11px" letterSpacing="0.1em" textTransform="uppercase">
+            {t('contact.label')}
+          </Text>
+          <Text fontFamily="mono" fontSize="10px" letterSpacing="0.08em" textTransform="uppercase">
+            {t('contact.availability')}
+          </Text>
+        </Flex>
+
+        <Grid templateColumns={{ base: '1fr', lg: '1.18fr 0.82fr' }} gap={{ base: 14, lg: 20 }} py={{ base: 12, md: 18 }}>
+          <Box>
+            <Box
+              as="h2"
+              m={0}
+              fontFamily="heading"
+              fontSize={{ base: '64px', sm: '80px', md: '106px', xl: '126px' }}
+              fontWeight="800"
+              letterSpacing="-0.04em"
+              lineHeight="0.78"
+              textTransform="uppercase"
+            >
+              {t('contact.heading.1')}
+              <br />
+              {t('contact.heading.2')}
+              <br />
+              {t('contact.heading.3')}
+            </Box>
+            <Text fontSize={{ base: '16px', md: '19px' }} lineHeight="1.7" maxW="620px" mt={9} color="rgba(241,239,233,0.82)">
+              {t('contact.description')}
             </Text>
           </Box>
 
-          <MotionBox
-            maxW="5xl"
-            mx="auto"
-            bg={cardBg}
-            border="1px solid"
-            borderColor={borderColor}
-            p={{ base: 6, md: 10 }}
-            borderRadius="2xl"
-            shadow={useColorModeValue('0 24px 60px rgba(15, 23, 42, 0.08)', '0 24px 60px rgba(0, 0, 0, 0.35)')}
-            backdropFilter="blur(18px)"
-            initial={{ opacity: 0, y: 16 }}
-            animate={{ opacity: 1, y: 0, transition: buildTransition(0.5, 0.2) }}
-          >
-            {success && (
-              <Alert
-                status={success.includes('successfully') ? 'success' : 'error'}
-                borderRadius="xl"
-                size="sm"
-                mb={6}
-                variant="left-accent"
+          <Box alignSelf="end">
+            {CONTACT_LINKS.map((item) => (
+              <Link
+                key={item.index}
+                href={item.href}
+                isExternal={item.href.startsWith('http') || item.href.endsWith('.pdf')}
+                display="grid"
+                gridTemplateColumns={{ base: '42px 1fr auto', md: '56px 1fr auto' }}
+                gap={4}
+                alignItems="center"
+                py={5}
+                borderTop="1px solid"
+                borderColor="rgba(241,239,233,0.36)"
+                _hover={{ color: '#0d0d0d', textDecoration: 'none', borderColor: '#0d0d0d' }}
               >
-                <AlertIcon />
-                {success}
-              </Alert>
-            )}
-
-            <SimpleGrid columns={{ base: 1, lg: 3 }} spacing={{ base: 8, lg: 10 }}>
-              {/* Direct Links Panel */}
-              <Box bg={mutedPanelBg} borderRadius="xl" p={6} borderWidth="1px" borderColor={borderColor}>
-                <VStack align="stretch" spacing={5}>
-                  <Box>
-                    <Text fontSize="xs" color={labelColor} textTransform="uppercase" fontWeight="bold" letterSpacing="wider" mb={2}>
-                      Direct Connect
-                    </Text>
-                    <Text fontSize="sm" color="gray.400">
-                      Reach out via social profiles or preview my resume.
-                    </Text>
-                  </Box>
-
-                  <VStack align="stretch" spacing={1} w="full">
-                    <Button
-                      onClick={handleCopyEmail}
-                      leftIcon={copiedEmail ? <FiCheck /> : <FiCopy />}
-                      colorScheme="cyan"
-                      variant="solid"
-                      borderRadius="xl"
-                      w="full"
-                      justifyContent="flex-start"
-                    >
-                      {copiedEmail ? 'Email Copied!' : 'Copy Email Address'}
-                    </Button>
-                    <Text fontSize="2xs" color="gray.400" px={1} noOfLines={1}>
-                      Afifshyamsul00@gmail.com
-                    </Text>
-                  </VStack>
-                  <Button
-                    as={Link}
-                    href="https://www.linkedin.com/in/afif-shyamsul-1333bb279/"
-                    isExternal
-                    leftIcon={<FiLinkedin />}
-                    colorScheme="cyan"
-                    variant="outline"
-                    borderRadius="xl"
-                    justifyContent="flex-start"
-                    style={{ textDecoration: 'none' }}
-                  >
-                    LinkedIn Profile
-                  </Button>
-                  <Button
-                    as={Link}
-                    href="https://github.com/afifShyam"
-                    isExternal
-                    leftIcon={<FiGithub />}
-                    colorScheme="gray"
-                    variant="outline"
-                    borderRadius="xl"
-                    justifyContent="flex-start"
-                    style={{ textDecoration: 'none' }}
-                  >
-                    GitHub Portfolio
-                  </Button>
-                  <Button
-                    onClick={() => setIsResumeOpen(true)}
-                    leftIcon={<FiDownload />}
-                    colorScheme="gray"
-                    variant="outline"
-                    borderRadius="xl"
-                    justifyContent="flex-start"
-                  >
-                    Preview Resume PDF
-                  </Button>
-                </VStack>
-              </Box>
-
-              {/* Contact Form */}
-              <Box gridColumn={{ base: 'auto', lg: 'span 2' }}>
-                {/* Quick Prompts */}
-                <Box mb={6}>
-                  <HStack spacing={2} mb={2.5}>
-                    <Icon as={FiZap} color="cyan.400" />
-                    <Text fontSize="xs" fontWeight="bold" textTransform="uppercase" letterSpacing="wider" color={labelColor}>
-                      Quick Message Prompts
-                    </Text>
-                  </HStack>
-                  <Flex wrap="wrap" gap={2}>
-                    {QUICK_PROMPTS.map((prompt) => (
-                      <Badge
-                        key={prompt.label}
-                        as="button"
-                        type="button"
-                        onClick={() => handleQuickPrompt(prompt.text)}
-                        px={3}
-                        py={1.5}
-                        borderRadius="full"
-                        colorScheme="cyan"
-                        variant="subtle"
-                        fontSize="xs"
-                        fontWeight="medium"
-                        cursor="pointer"
-                        _hover={{
-                          transform: 'scale(1.03)',
-                          bg: 'cyan.500',
-                          color: 'white',
-                        }}
-                        transition="all 0.2s ease"
-                      >
-                        {prompt.label}
-                      </Badge>
-                    ))}
-                  </Flex>
+                <Text fontFamily="mono" fontSize="9px">
+                  {item.index}
+                </Text>
+                <Box>
+                  <Text fontFamily="heading" fontSize={{ base: '26px', md: '32px' }} fontWeight="700" lineHeight="1">
+                    {t(item.key)}
+                  </Text>
+                  <Text fontSize="12px" mt={1} opacity={0.82}>
+                    {t(item.detail)}
+                  </Text>
                 </Box>
+                <Text fontFamily="mono" fontSize="16px">
+                  ↗
+                </Text>
+              </Link>
+            ))}
+            <Box borderTop="1px solid" borderColor="rgba(241,239,233,0.36)" />
+          </Box>
+        </Grid>
 
-                <form onSubmit={handleSubmit}>
-                  <VStack spacing={5}>
-                    <Flex direction={{ base: 'column', md: 'row' }} gap={5} w="full">
-                      <FormControl isInvalid={!!errors.name}>
-                        <FormLabel color={labelColor} fontSize="sm" fontWeight="semibold">
-                          <Flex align="center" gap={2}>
-                            <Icon as={FiUser} color={accentColor} />
-                            <Text>Name</Text>
-                          </Flex>
-                        </FormLabel>
-                        <Input
-                          type="text"
-                          name="name"
-                          value={formData.name}
-                          onChange={handleChange}
-                          bg={inputBgColor}
-                          color={textColor}
-                          _placeholder={{ color: useColorModeValue('gray.500', 'gray.400') }}
-                          borderRadius="xl"
-                          border="1px solid"
-                          borderColor={borderColor}
-                          _focus={{
-                            borderColor: accentColor,
-                            boxShadow: `0 0 0 1px ${accentColor}`,
-                          }}
-                          placeholder="Your name"
-                        />
-                        <FormErrorMessage>{errors.name}</FormErrorMessage>
-                      </FormControl>
-
-                      <FormControl isInvalid={!!errors.email}>
-                        <FormLabel color={labelColor} fontSize="sm" fontWeight="semibold">
-                          <Flex align="center" gap={2}>
-                            <Icon as={FiMail} color={accentColor} />
-                            <Text>Email</Text>
-                          </Flex>
-                        </FormLabel>
-                        <Input
-                          type="email"
-                          name="email"
-                          value={formData.email}
-                          onChange={handleChange}
-                          bg={inputBgColor}
-                          color={textColor}
-                          _placeholder={{ color: useColorModeValue('gray.500', 'gray.400') }}
-                          borderRadius="xl"
-                          border="1px solid"
-                          borderColor={borderColor}
-                          _focus={{
-                            borderColor: accentColor,
-                            boxShadow: `0 0 0 1px ${accentColor}`,
-                          }}
-                          placeholder="your.email@example.com"
-                        />
-                        <FormErrorMessage>{errors.email}</FormErrorMessage>
-                      </FormControl>
-                    </Flex>
-
-                    <FormControl isInvalid={!!errors.message}>
-                      <FormLabel color={labelColor} fontSize="sm" fontWeight="semibold">
-                        <Flex align="center" gap={2}>
-                          <Icon as={FiMessageSquare} color={accentColor} />
-                          <Text>Message</Text>
-                        </Flex>
-                      </FormLabel>
-                      <Textarea
-                        name="message"
-                        value={formData.message}
-                        onChange={handleChange}
-                        rows={5}
-                        bg={inputBgColor}
-                        color={textColor}
-                        _placeholder={{ color: useColorModeValue('gray.500', 'gray.400') }}
-                        borderRadius="xl"
-                        border="1px solid"
-                        borderColor={borderColor}
-                        _focus={{
-                          borderColor: accentColor,
-                          boxShadow: `0 0 0 1px ${accentColor}`,
-                        }}
-                        placeholder="Tell me about your mobile app project or team role."
-                      />
-                      <FormErrorMessage>{errors.message}</FormErrorMessage>
-                    </FormControl>
-
-                    <MotionBox
-                      initial={{ opacity: 0 }}
-                      animate={{ opacity: 1, transition: buildTransition(0.5, 0.3) }}
-                      w="full"
-                    >
-                      <Button
-                        type="submit"
-                        isLoading={loading}
-                        colorScheme="cyan"
-                        bgGradient="linear(to-r, cyan.500, blue.600)"
-                        color="white"
-                        _hover={{
-                          bgGradient: "linear(to-r, cyan.400, blue.500)",
-                          transform: 'translateY(-2px)',
-                          boxShadow: '0 10px 25px -5px rgba(6, 182, 212, 0.5)',
-                        }}
-                        _active={{ transform: 'translateY(-1px)' }}
-                        isDisabled={loading}
-                        fontWeight="semibold"
-                        size="lg"
-                        borderRadius="xl"
-                        py={6}
-                        rightIcon={<FiSend />}
-                        w={{ base: 'full', md: 'auto' }}
-                        alignSelf="flex-end"
-                      >
-                        {loading ? 'Sending Message...' : 'Send Message'}
-                      </Button>
-                    </MotionBox>
-                  </VStack>
-                </form>
-              </Box>
-            </SimpleGrid>
-          </MotionBox>
-        </Container>
-        <ResumePreviewModal
-          isOpen={isResumeOpen}
-          onClose={() => setIsResumeOpen(false)}
-          resumeUrl="/Afif_Shyamsul_Syahiran_bin_Suhaimi_Resume.pdf"
-        />
-      </Box>
-    </>
+        <Flex
+          justify="space-between"
+          align={{ base: 'flex-start', md: 'center' }}
+          direction={{ base: 'column', md: 'row' }}
+          gap={3}
+          pt={5}
+          borderTop="1px solid"
+          borderColor="rgba(241,239,233,0.36)"
+          fontFamily="mono"
+          fontSize="9px"
+          letterSpacing="0.07em"
+          textTransform="uppercase"
+        >
+          <Text>© {new Date().getFullYear()} Afif Shyamsul Syahiran</Text>
+          <Text>{t('contact.footer')}</Text>
+        </Flex>
+      </Container>
+    </Box>
   );
 };
 
-export default memo(Contact);
+export default Contact;
