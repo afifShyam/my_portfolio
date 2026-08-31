@@ -81,6 +81,34 @@ a {
   }
 }
 
+@keyframes radar-ping {
+  0% {
+    transform: scale(0.95);
+    opacity: 0.85;
+  }
+  70%,
+  100% {
+    transform: scale(2.6);
+    opacity: 0;
+  }
+}
+
+/* Tactile mobile button spring interactions */
+button,
+a,
+[role="button"] {
+  transition: transform 160ms cubic-bezier(0.34, 1.56, 0.64, 1),
+    background-color 180ms ease,
+    border-color 180ms ease,
+    color 180ms ease,
+    box-shadow 180ms ease;
+}
+
+button:active,
+a:active,
+[role="button"]:active {
+  transform: scale(0.97);
+}
 @media (prefers-reduced-motion: reduce) {
   html {
     scroll-behavior: auto;
