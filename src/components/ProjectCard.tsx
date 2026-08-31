@@ -217,14 +217,11 @@ const ProjectCard: React.FC<ProjectCardProps> = ({ project, index }) => {
                   w={images.length === 1 ? '72%' : images.length === 2 ? '46%' : '31%'}
                   maxH={imageIndex === 0 ? '92%' : '82%'}
                   objectFit="contain"
-                  bg={tone.stage}
-                  border="1px solid"
-                  borderColor={tone.frame}
-                  boxShadow="18px 24px 52px rgba(0,0,0,0.32)"
+                  filter="drop-shadow(0 20px 36px rgba(0, 0, 0, 0.42))"
                   animation={`editorial-float ${6.2 + imageIndex * 0.8}s ease-in-out ${imageIndex * -1.1}s infinite`}
-                  willChange="transform"
+                  willChange="transform, filter"
                   transition="filter 180ms ease"
-                  _hover={{ filter: 'brightness(1.06)' }}
+                  _hover={{ filter: 'drop-shadow(0 26px 44px rgba(0, 0, 0, 0.52)) brightness(1.06)' }}
                 />
               ))}
             </Flex>
