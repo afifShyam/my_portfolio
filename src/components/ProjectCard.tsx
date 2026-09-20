@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import {
   Box,
   Button,
@@ -26,6 +27,7 @@ const PROJECT_TONES = [
 
 const ProjectCard: React.FC<ProjectCardProps> = ({ project, index }) => {
   const { t, list } = useLocale();
+  const [activeScreen, setActiveScreen] = useState<number | null>(null);
   const sources = project.images ?? (project.image ? [project.image] : []);
   const images = sources
     .map((source) => (typeof source === 'string' ? { src: source, alt: `${project.name} application screen` } : source))
@@ -206,24 +208,51 @@ const ProjectCard: React.FC<ProjectCardProps> = ({ project, index }) => {
               align="center"
               justify="center"
               gap={{ base: 3, md: 5 }}
+              onMouseLeave={() => setActiveScreen(null)}
             >
-              {images.map((image, imageIndex) => (
-                <Image
-                  key={`${image.src}-${imageIndex}`}
-                  src={image.src}
-                  srcSet={image.srcSet}
-                  sizes={image.sizes}
-                  alt={image.alt ?? `${project.name} mobile interface`}
-                  w={images.length === 1 ? '72%' : images.length === 2 ? '46%' : '31%'}
-                  maxH={imageIndex === 0 ? '92%' : '82%'}
-                  objectFit="contain"
-                  filter="drop-shadow(0 20px 36px rgba(0, 0, 0, 0.42))"
-                  animation={`editorial-float ${6.2 + imageIndex * 0.8}s ease-in-out ${imageIndex * -1.1}s infinite`}
-                  willChange="transform, filter"
-                  transition="filter 180ms ease"
-                  _hover={{ filter: 'drop-shadow(0 26px 44px rgba(0, 0, 0, 0.52)) brightness(1.06)' }}
-                />
-              ))}
+              {images.map((image, imageIndex) => {
+                const isHovered = activeScreen === imageIndex;
+                const isSiblingHovered = activeScreen !== null && !isHovered;
+
+                return (
+                  <Image
+                    key={`${image.src}-${imageIndex}`}
+                    src={image.src}
+                    srcSet={image.srcSet}
+                    sizes={image.sizes}
+                    alt={image.alt ?? `${project.name} mobile interface`}
+                    w={images.length === 1 ? '72%' : images.length === 2 ? '46%' : '31%'}
+                    maxH={imageIndex === 0 ? '92%' : '82%'}
+                    objectFit="contain"
+                    zIndex={isHovered ? 4 : 1}
+                    opacity={isSiblingHovered ? 0.55 : 1}
+                    filter={
+                      isHovered
+                        ? 'drop-shadow(0 28px 48px rgba(0, 0, 0, 0.65)) brightness(1.08)'
+                        : isSiblingHovered
+                        ? 'drop-shadow(0 12px 20px rgba(0, 0, 0, 0.25)) brightness(0.85)'
+                        : 'drop-shadow(0 20px 36px rgba(0, 0, 0, 0.42))'
+                    }
+                    animation={
+                      activeScreen !== null
+                        ? 'none'
+                        : `editorial-float ${6.2 + imageIndex * 0.8}s ease-in-out ${imageIndex * -1.1}s infinite`
+                    }
+                    style={{
+                      transform: isHovered
+                        ? 'scale(1.05) translate3d(0, -8px, 0)'
+                        : isSiblingHovered
+                        ? 'scale(0.97)'
+                        : undefined,
+                      transition:
+                        'transform 260ms cubic-bezier(0.16, 1, 0.3, 1), opacity 240ms ease, filter 240ms ease',
+                    }}
+                    willChange="transform, filter, opacity"
+                    cursor="default"
+                    onMouseEnter={() => setActiveScreen(imageIndex)}
+                  />
+                );
+              })}
             </Flex>
           </Box>
         </GridItem>
@@ -231,5 +260,4 @@ const ProjectCard: React.FC<ProjectCardProps> = ({ project, index }) => {
     </Box>
   );
 };
-
 export default ProjectCard;

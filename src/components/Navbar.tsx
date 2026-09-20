@@ -1,6 +1,7 @@
-import { memo } from 'react';
+import { memo, useState, useEffect } from 'react';
 import { Box, Button, Container, Flex, HStack, Text, useColorMode, useColorModeValue } from '@chakra-ui/react';
 import { useLocale } from '../localization';
+import RollingLabel from './RollingLabel';
 
 interface NavbarProps {
   scrollToHome: () => void;
@@ -35,7 +36,7 @@ const NavLink = ({ index, label, active, onClick }: NavLinkProps) => (
     <Box as="span" color={active ? 'accent' : 'text.muted'} mr={{ base: 1.5, md: 2 }}>
       {index}
     </Box>
-    {label}
+    <RollingLabel>{label}</RollingLabel>
   </Button>
 );
 
@@ -49,6 +50,23 @@ const Navbar = memo(function Navbar({
 }: NavbarProps) {
   const { locale, toggleLocale, t } = useLocale();
   const { colorMode, toggleColorMode } = useColorMode();
+  const [scrollProgress, setScrollProgress] = useState(() => {
+    if (typeof window === 'undefined') return 0;
+    const maxScroll = document.documentElement.scrollHeight - window.innerHeight;
+    return maxScroll > 0 ? Math.min(Math.max(window.scrollY / maxScroll, 0), 1) : 0;
+  });
+
+  useEffect(() => {
+    const handleScroll = () => {
+      const maxScroll = document.documentElement.scrollHeight - window.innerHeight;
+      if (maxScroll > 0) {
+        setScrollProgress(Math.min(Math.max(window.scrollY / maxScroll, 0), 1));
+      }
+    };
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
+
   const navBackground = useColorModeValue(
     scrolled ? 'rgba(244, 241, 234, 0.94)' : '#f4f1ea',
     scrolled ? 'rgba(9, 9, 9, 0.94)' : '#090909',
@@ -157,11 +175,10 @@ const Navbar = memo(function Navbar({
               pb={1}
               _hover={{ color: 'accent' }}
             >
-              {t('nav.resume').toUpperCase()} ↗
+              <RollingLabel>{t('nav.resume').toUpperCase()}</RollingLabel> ↗
             </Button>
           </HStack>
         </Flex>
-
         <Flex
           display={{ base: 'flex', md: 'none' }}
           justify="space-between"
@@ -173,6 +190,23 @@ const Navbar = memo(function Navbar({
           {sectionLinks}
         </Flex>
       </Container>
+
+      {/* Precision Scroll Progress Hairline */}
+      <Box
+        position="absolute"
+        bottom="-1px"
+        left={0}
+        right={0}
+        h="1.5px"
+        bg="accent"
+        pointerEvents="none"
+        style={{
+          transform: `scaleX(${scrollProgress})`,
+          transformOrigin: 'left',
+          transition: 'transform 80ms linear',
+        }}
+        aria-hidden="true"
+      />
     </Box>
   );
 });

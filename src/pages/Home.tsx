@@ -21,7 +21,8 @@ import tuxcPreview from '../assets/tuxc_preview.png';
 import sigmaPreview from '../assets/sigma_home_preview.png';
 import smsPreview from '../assets/sms_tickets_preview.png';
 import { useLocale } from '../localization';
-
+import MaskedTextReveal from '../components/MaskedTextReveal';
+import RollingLabel from '../components/RollingLabel';
 const PROOF = [
   { value: '03+', label: 'home.proof.1' },
   { value: '20+', label: 'home.proof.2' },
@@ -164,15 +165,12 @@ export const Home: React.FC<HomeProps> = ({ scrollToPortfolio }) => {
               letterSpacing="-0.035em"
               textTransform="uppercase"
             >
-              {t('home.heading.1')}
-              <br />
-              {t('home.heading.2')}
-              <br />
-              <Box as="span" color="accent">
-                {t('home.heading.3')}
-              </Box>
+              <MaskedTextReveal
+                lines={[t('home.heading.1'), t('home.heading.2'), t('home.heading.3')]}
+                accentLineIndex={2}
+                accessibleHeading={`${t('home.heading.1')} ${t('home.heading.2')} ${t('home.heading.3')}`}
+              />
             </Box>
-
             <Text
               color="text.secondary"
               fontSize={{ base: '17px', md: '19px' }}
@@ -196,7 +194,7 @@ export const Home: React.FC<HomeProps> = ({ scrollToPortfolio }) => {
                 letterSpacing="0.06em"
                 _hover={{ bg: 'accent.soft', color: 'ink.900' }}
               >
-                {t('home.viewWork').toUpperCase()}
+                <RollingLabel>{t('home.viewWork').toUpperCase()}</RollingLabel>
               </Button>
               <Button
                 as="a"
@@ -214,20 +212,19 @@ export const Home: React.FC<HomeProps> = ({ scrollToPortfolio }) => {
                 letterSpacing="0.06em"
                 _hover={{ borderColor: 'accent', color: 'accent' }}
               >
-                {t('nav.resume').toUpperCase()} ↗
+                <RollingLabel>{t('nav.resume').toUpperCase()}</RollingLabel> ↗
               </Button>
             </Flex>
 
             <HStack spacing={6} mt={8} color="text.muted" fontFamily="mono" fontSize="10px" letterSpacing="0.06em">
               <Link href="https://github.com/afifShyam" isExternal _hover={{ color: 'accent' }}>
-                {t('home.github').toUpperCase()}
+                <RollingLabel>{t('home.github').toUpperCase()}</RollingLabel>
               </Link>
               <Link href="https://www.linkedin.com/in/afif-shyamsul-1333bb279/" isExternal _hover={{ color: 'accent' }}>
-                {t('home.linkedin').toUpperCase()}
+                <RollingLabel>{t('home.linkedin').toUpperCase()}</RollingLabel>
               </Link>
             </HStack>
           </GridItem>
-
           {/* Interactive 3D Parallax Hardware Stage */}
           <GridItem minW={0}>
             <Box
