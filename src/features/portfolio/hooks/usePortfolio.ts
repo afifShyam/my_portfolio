@@ -184,7 +184,6 @@ export const mockProjects: Project[] = [
     ],
     impact:
       'Engineered a local-first cognitive memory engine delivering source-grounded context packets with deterministic recall guarantees.',
-    githubLink: 'https://github.com/afifShyam',
     techStack: ['Python', 'GraphRAG', 'ONNX', 'BM25', 'Knowledge Graph', 'CLI'],
   },
 ];
