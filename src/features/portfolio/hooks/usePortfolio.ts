@@ -4,12 +4,19 @@ import pcariImage from '../../../assets/pcari_preview.png';
 import ihsanmadaniImage from '../../../assets/ihsanmadani_preview.png';
 import todoKotlinImage from '../../../assets/todo_kotlin_preview.png';
 import tuxcAppStore from '../../../assets/tuxc_preview.png';
-import tuxcPlayStore from '../../../assets/tuxc_play_4.png';
+import tuxcPreview1 from '../../../assets/tuxc_preview_1.png';
+import tuxcPreview2 from '../../../assets/tuxc_preview_2.png';
+import tuxcPreview3 from '../../../assets/tuxc_preview_3.png';
 import smsTicketsImage from '../../../assets/sms_tickets_preview.png';
 import smsHomeImage from '../../../assets/sms_home_preview.png';
 import smsDetailImage from '../../../assets/sms_detail_preview.png';
 import sigmaHomeImage from '../../../assets/sigma_home_preview.png';
 import sigmaFinanceImage from '../../../assets/sigma_finance_preview.png';
+import rgSmsCommercialDashboard from '../../../assets/rg_sms/01_real-time_dashboard_1290x2796.png';
+import rgSmsCommercialSla from '../../../assets/rg_sms/02_sla_due_dates_and_tracking_1290x2796.png';
+import rgSmsCommercialTimeline from '../../../assets/rg_sms/03_activity_and_notes_timeline_1290x2796.png';
+import rgSmsCommercialDocuments from '../../../assets/rg_sms/04_inspection_and_document_previews_1290x2796.png';
+import rgSmsCommercialAlerts from '../../../assets/rg_sms/05_real-time_push_alerts_1290x2796.png';
 
 export const mockProjects: Project[] = [
   {
@@ -30,8 +37,10 @@ export const mockProjects: Project[] = [
     impact: 'Optimized UI rendering and transaction flows, improving performance and user experience by 10–20%.',
     image: tuxcAppStore,
     images: [
-      { src: tuxcAppStore, alt: 'TuxC Wallet Apple App Store Screenshot' },
-      { src: tuxcPlayStore, alt: 'TuxC Wallet Google Play Store Screenshot' },
+      { src: tuxcAppStore, alt: 'TuxC Wallet Overview' },
+      { src: tuxcPreview1, alt: 'TuxC Multi-Token Portfolio & Balance' },
+      { src: tuxcPreview2, alt: 'TuxC P2P Token Send & Receive' },
+      { src: tuxcPreview3, alt: 'TuxC Token Swap & Transaction Ledger' },
     ],
     playStoreLink: 'https://play.google.com/store/apps/details?id=io.tux.wallet&hl=en',
     appStoreLink: 'https://apps.apple.com/ly/app/tux-wallet/id1495945761',
@@ -42,9 +51,9 @@ export const mockProjects: Project[] = [
     name: 'Service Management System (SMS)',
     description:
       'Enterprise ticketing and hardware dispatch mobile application for field service engineers. Features real-time ticket lifecycle tracking, push notifications, and backend integration.',
+    featured: true,
     category: 'Enterprise',
     role: 'Mobile Developer (Radiant GlobalTech)',
-    featured: false,
     metrics: 'Field Ticketing · C# Backend',
     features: [
       'Field engineer service ticketing & lifecycle tracking',
@@ -59,6 +68,7 @@ export const mockProjects: Project[] = [
       { src: smsHomeImage, alt: 'SMS Home & Multi-Store Dashboard' },
       { src: smsDetailImage, alt: 'SMS Ticket Details & Actions' },
     ],
+    playStoreLink: 'https://play.google.com/store/apps/details?id=my.com.rgtech.fmsms.v2&hl=en',
     techStack: ['Flutter', 'Dart', 'RESTful APIs', 'C# (.NET)', 'Push Notifications', 'Figma'],
   },
   {
@@ -83,6 +93,33 @@ export const mockProjects: Project[] = [
       { src: sigmaFinanceImage, alt: 'Sigma Multi-Vendor Invoicing & Statements' },
     ],
     techStack: ['Flutter', 'Dart', 'BLoC', 'CI/CD', 'RESTful APIs', 'Figma'],
+  },
+  {
+    id: 7,
+    name: 'RG SMS (Incident Management)',
+    description:
+      'Internal enterprise incident management mobile application for Retail Group. Designed for store staff, support engineers, and PICs to log, triage, monitor, and resolve incidents with real-time SLA visibility.',
+    category: 'Enterprise',
+    role: 'Mobile Developer (Radiant GlobalTech)',
+    featured: true,
+    metrics: 'Real-Time SLA · Clean Architecture & BLoC',
+    features: [
+      'Role-aware multi-tenant access control and biometric keychain token persistence',
+      'Infinite scroll incident lazy grid with debounced search and DevExtreme multi-facet filters',
+      'Comprehensive ticket details with SLA tracking, activity timeline, and comments',
+      'In-app spreadsheet preview (.xlsx, .csv) and photo lightbox with native document fallback',
+    ],
+    impact:
+      'Engineered an offline-resilient, role-aware incident lifecycle app with real-time SLA tracking, multi-facet DevExtreme filtering, and secure multi-tenant access control for retail store operations.',
+    image: rgSmsCommercialDashboard,
+    images: [
+      { src: rgSmsCommercialDashboard, alt: 'RG SMS Real-Time Incident Dashboard & KPIs' },
+      { src: rgSmsCommercialSla, alt: 'RG SMS SLA Due Dates & Tracking' },
+      { src: rgSmsCommercialTimeline, alt: 'RG SMS Activity & Notes Timeline' },
+      { src: rgSmsCommercialDocuments, alt: 'RG SMS Inspection & Document Previews' },
+      { src: rgSmsCommercialAlerts, alt: 'RG SMS Real-Time Push Alerts' },
+    ],
+    techStack: ['Flutter', 'Dart', 'BLoC', 'Dio', 'Clean Architecture', 'DevExtreme API', 'Secure Storage'],
   },
   {
     id: 4,
@@ -130,6 +167,25 @@ export const mockProjects: Project[] = [
     image: todoKotlinImage,
     githubLink: 'https://github.com/afifShyam',
     techStack: ['Kotlin', 'Jetpack Compose', 'Room DB', 'Coroutines', 'MVVM'],
+  },
+  {
+    id: 8,
+    name: 'ai-memorycore (mcore)',
+    description:
+      'Deterministic GraphRAG and Cognitive Memory-Augmented Generation (MAG) engine for AI coding assistants. Features multi-tier retrieval, hybrid BM25 + ONNX dense embeddings, and automated knowledge graph synchronization.',
+    category: 'AI Systems',
+    role: 'Creator & Lead Architect',
+    featured: false,
+    metrics: 'Deterministic GraphRAG · Hybrid BM25 & ONNX',
+    features: [
+      'Multi-tier retrieval combining BM25 sparse and MiniLM ONNX dense embeddings',
+      'Cognitive memory architecture: working, episodic, procedural, and semantic layers',
+      '17 automated production release verification gates',
+    ],
+    impact:
+      'Engineered a local-first cognitive memory engine delivering source-grounded context packets with deterministic recall guarantees.',
+    githubLink: 'https://github.com/afifShyam',
+    techStack: ['Python', 'GraphRAG', 'ONNX', 'BM25', 'Knowledge Graph', 'CLI'],
   },
 ];
 
