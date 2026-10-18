@@ -1,6 +1,7 @@
 import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react';
 import { visualizer } from 'rollup-plugin-visualizer';
+import compression from 'vite-plugin-compression';
 
 export default defineConfig({
   base: './',
@@ -10,6 +11,7 @@ export default defineConfig({
       open: false,
       filename: 'bundle-analysis.html',
     }),
+    compression({ algorithm: 'gzip', ext: '.gz' }),
   ],
   server: {
     port: 3000,
