@@ -7,8 +7,8 @@ import { useLocale } from '../../../localization';
 const PortfolioPage: React.FC = () => {
   const { projects, loading, error } = usePortfolio();
   const { t } = useLocale();
-  const selectedProjects = projects.slice(0, 3);
-  const additionalProjects = projects.slice(3);
+  const selectedProjects = projects.filter((project) => project.featured);
+  const additionalProjects = projects.filter((project) => !project.featured);
 
   return (
     <Box bg="canvas" color="text.primary" py={{ base: 16, md: 24 }}>
@@ -23,10 +23,10 @@ const PortfolioPage: React.FC = () => {
               m={0}
               color="text.primary"
               fontFamily="heading"
-              fontSize={{ base: '64px', md: '92px', lg: '116px' }}
+              fontSize={{ base: '42px', sm: '58px', md: '92px', lg: '116px' }}
               fontWeight="800"
-              letterSpacing="-0.035em"
-              lineHeight="0.82"
+              letterSpacing="-0.03em"
+              lineHeight={{ base: '1.04', md: '0.84' }}
               textTransform="uppercase"
             >
               {t('portfolio.heading.1')}
@@ -62,7 +62,7 @@ const PortfolioPage: React.FC = () => {
                 <Text color="accent" fontFamily="mono" fontSize="10px" letterSpacing="0.1em" mb={3} textTransform="uppercase">
                   {t('portfolio.other')}
                 </Text>
-                <Text color="text.primary" fontFamily="heading" fontSize={{ base: '44px', md: '58px' }} fontWeight="700" lineHeight="1">
+                <Text color="text.primary" fontFamily="heading" fontSize={{ base: '32px', sm: '42px', md: '58px' }} fontWeight="700" lineHeight={{ base: '1.05', md: '1' }}>
                   {t('portfolio.additional')}
                 </Text>
               </Box>
@@ -73,24 +73,96 @@ const PortfolioPage: React.FC = () => {
 
             {additionalProjects.map((project, index) => (
               <Grid
-                key={project.id}
-                templateColumns={{ base: '48px 1fr', md: '80px minmax(220px, 0.8fr) minmax(260px, 1.2fr) auto' }}
-                gap={{ base: 4, md: 8 }}
-                alignItems="center"
-                py={{ base: 6, md: 7 }}
+                templateColumns={{ base: '36px 1fr', md: '80px minmax(220px, 0.8fr) minmax(260px, 1.2fr) auto' }}
+                gap={{ base: 3, md: 8 }}
+                alignItems="start"
+                py={{ base: 5, md: 7 }}
                 borderTop="1px solid"
                 borderColor="line"
               >
-                <Text color="text.muted" fontFamily="mono" fontSize="10px">
-                  {String(index + 4).padStart(2, '0')}
+                <Text color="text.muted" fontFamily="mono" fontSize="10px" pt={1}>
+                  {String(index + selectedProjects.length + 1).padStart(2, '0')}
                 </Text>
-                <Text color="text.primary" fontFamily="heading" fontSize={{ base: '25px', md: '32px' }} fontWeight="700" lineHeight="1">
-                  {project.name}
-                </Text>
+                <Box minW={0}>
+                  <Text color="text.primary" fontFamily="heading" fontSize={{ base: '24px', md: '32px' }} fontWeight="700" lineHeight="1.05">
+                    {project.name}
+                  </Text>
+                  <Text display={{ base: 'block', md: 'none' }} color="text.muted" fontSize="12px" lineHeight="1.5" mt={2}>
+                    {t(`projects.${project.id}.impact`, project.impact ?? '')}
+                  </Text>
+                  <Flex display={{ base: 'flex', md: 'none' }} gap={2.5} mt={3.5} wrap="wrap">
+                    {project.playStoreLink ? (
+                      <Link
+                        href={project.playStoreLink}
+                        isExternal
+                        display="inline-flex"
+                        alignItems="center"
+                        minH="40px"
+                        px={3.5}
+                        py={2}
+                        color="accent"
+                        fontFamily="mono"
+                        fontSize="10px"
+                        letterSpacing="0.06em"
+                        border="1px solid"
+                        borderColor="line"
+                        borderRadius="md"
+                        bg="rgba(255, 255, 255, 0.03)"
+                        _hover={{ borderColor: 'accent', textDecoration: 'none' }}
+                      >
+                        PLAY ↗
+                      </Link>
+                    ) : null}
+                    {project.appStoreLink ? (
+                      <Link
+                        href={project.appStoreLink}
+                        isExternal
+                        display="inline-flex"
+                        alignItems="center"
+                        minH="40px"
+                        px={3.5}
+                        py={2}
+                        color="accent"
+                        fontFamily="mono"
+                        fontSize="10px"
+                        letterSpacing="0.06em"
+                        border="1px solid"
+                        borderColor="line"
+                        borderRadius="md"
+                        bg="rgba(255, 255, 255, 0.03)"
+                        _hover={{ borderColor: 'accent', textDecoration: 'none' }}
+                      >
+                        APP STORE ↗
+                      </Link>
+                    ) : null}
+                    {project.githubLink ? (
+                      <Link
+                        href={project.githubLink}
+                        isExternal
+                        display="inline-flex"
+                        alignItems="center"
+                        minH="40px"
+                        px={3.5}
+                        py={2}
+                        color="accent"
+                        fontFamily="mono"
+                        fontSize="10px"
+                        letterSpacing="0.06em"
+                        border="1px solid"
+                        borderColor="line"
+                        borderRadius="md"
+                        bg="rgba(255, 255, 255, 0.03)"
+                        _hover={{ borderColor: 'accent', textDecoration: 'none' }}
+                      >
+                        GITHUB ↗
+                      </Link>
+                    ) : null}
+                  </Flex>
+                </Box>
                 <Text display={{ base: 'none', md: 'block' }} color="text.muted" fontSize="13px" lineHeight="1.5">
                   {t(`projects.${project.id}.impact`, project.impact ?? '')}
                 </Text>
-                <Flex display={{ base: 'none', md: 'flex' }} gap={4} justify="flex-end">
+                <Flex display={{ base: 'none', md: 'flex' }} gap={4} justify="flex-end" pt={1}>
                   {project.playStoreLink ? (
                     <Link href={project.playStoreLink} isExternal color="text.secondary" fontFamily="mono" fontSize="9px" _hover={{ color: 'accent' }}>
                       PLAY ↗

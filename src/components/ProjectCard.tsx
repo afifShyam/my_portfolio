@@ -1,4 +1,5 @@
-import { useState } from 'react';
+import { useState, useEffect, useCallback, useRef } from 'react';
+import { motion, PanInfo } from 'framer-motion';
 import {
   Box,
   Button,
@@ -6,11 +7,15 @@ import {
   Grid,
   GridItem,
   HStack,
+  IconButton,
   Image,
   Link,
+  Portal,
   Text,
   VStack,
 } from '@chakra-ui/react';
+import { FaGooglePlay, FaApple, FaGithub } from 'react-icons/fa6';
+import { FiMaximize2, FiX, FiChevronLeft, FiChevronRight } from 'react-icons/fi';
 import { Project } from '../types/projectTypes';
 import { useLocale } from '../localization';
 
@@ -20,25 +25,79 @@ interface ProjectCardProps {
 }
 
 const PROJECT_TONES = [
-  { background: '#151515', foreground: '#f1efe9', accent: '#c4b5fd', frame: 'rgba(241,239,233,0.24)', stage: '#090909' },
-  { background: '#6d28d9', foreground: '#f1efe9', accent: '#ddd6fe', frame: 'rgba(241,239,233,0.32)', stage: '#ffffff' },
-  { background: '#ddd6fe', foreground: '#090909', accent: '#6d28d9', frame: 'rgba(9,9,9,0.2)', stage: '#ffffff' },
+  { background: '#111111', foreground: '#f1efe9', accent: '#a78bfa', stage: '#0a0a0a', border: 'rgba(167,139,250,0.22)' },
+  { background: '#171424', foreground: '#f1efe9', accent: '#c4b5fd', stage: '#0f0c18', border: 'rgba(196,181,253,0.24)' },
+  { background: '#0e1916', foreground: '#f1efe9', accent: '#34d399', stage: '#091210', border: 'rgba(52,211,153,0.24)' },
+  { background: '#0d1822', foreground: '#f1efe9', accent: '#38bdf8', stage: '#091118', border: 'rgba(56,189,248,0.24)' },
 ];
 
 const ProjectCard: React.FC<ProjectCardProps> = ({ project, index }) => {
   const { t, list } = useLocale();
-  const [activeScreen, setActiveScreen] = useState<number | null>(null);
+  const [activeScreenIndex, setActiveScreenIndex] = useState(0);
+  const [isLightboxOpen, setIsLightboxOpen] = useState(false);
+
   const sources = project.images ?? (project.image ? [project.image] : []);
   const images = sources
     .map((source) => (typeof source === 'string' ? { src: source, alt: `${project.name} application screen` } : source))
-    .filter((image) => Boolean(image.src))
-    .slice(0, 3);
+    .filter((image) => Boolean(image.src));
+
   const tone = PROJECT_TONES[index % PROJECT_TONES.length];
   const projectNumber = String(index + 1).padStart(2, '0');
   const features = list(`projects.${project.id}.features`, project.features ?? []);
+  const currentImage = images[activeScreenIndex] ?? images[0];
+  const isDraggingRef = useRef(false);
+
+  const handleDragStart = () => {
+    isDraggingRef.current = false;
+  };
+
+  const handleDrag = (_: unknown, info: PanInfo) => {
+    if (Math.abs(info.offset.x) > 6 || Math.abs(info.offset.y) > 6) {
+      isDraggingRef.current = true;
+    }
+  };
+
+  const handleDragEnd = (_: unknown, info: PanInfo) => {
+    const threshold = 45;
+    const velocity = 300;
+    if (info.offset.x < -threshold || info.velocity.x < -velocity) {
+      handleNextScreen();
+    } else if (info.offset.x > threshold || info.velocity.x > velocity) {
+      handlePrevScreen();
+    }
+    setTimeout(() => {
+      isDraggingRef.current = false;
+    }, 60);
+  };
+
+  const handlePreviewClick = () => {
+    if (!isDraggingRef.current) {
+      setIsLightboxOpen(true);
+    }
+  };
+
+  const handleNextScreen = useCallback(() => {
+    setActiveScreenIndex((prev) => (prev + 1) % images.length);
+  }, [images.length]);
+
+  const handlePrevScreen = useCallback(() => {
+    setActiveScreenIndex((prev) => (prev - 1 + images.length) % images.length);
+  }, [images.length]);
+
+  useEffect(() => {
+    if (!isLightboxOpen) return;
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') setIsLightboxOpen(false);
+      if (e.key === 'ArrowRight') handleNextScreen();
+      if (e.key === 'ArrowLeft') handlePrevScreen();
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [isLightboxOpen, handleNextScreen, handlePrevScreen]);
 
   return (
     <Box borderTop="1px solid" borderColor="line" py={{ base: 14, md: 20, lg: 24 }}>
+      {/* Eyebrow strip */}
       <Flex justify="space-between" align="center" mb={{ base: 8, md: 12 }}>
         <Text color="accent" fontFamily="mono" fontSize="11px" letterSpacing="0.1em">
           {projectNumber} / {t(`projects.${project.id}.category`, project.category).toUpperCase()}
@@ -48,30 +107,34 @@ const ProjectCard: React.FC<ProjectCardProps> = ({ project, index }) => {
         </Text>
       </Flex>
 
-      <Grid templateColumns={{ base: '1fr', lg: 'minmax(320px, 0.72fr) minmax(0, 1.28fr)' }} gap={{ base: 10, lg: 14, xl: 20 }}>
+      {/* Main Grid: Left Case Study vs Right Interactive Device Stage */}
+      <Grid templateColumns={{ base: '1fr', lg: 'minmax(320px, 0.76fr) minmax(0, 1.24fr)' }} gap={{ base: 10, lg: 14, xl: 20 }}>
+        {/* Left Column: Engineering Narrative */}
         <GridItem minW={0}>
           <Box
             as="h3"
             m={0}
             color="text.primary"
             fontFamily="heading"
-            fontSize={{ base: '58px', md: '78px', lg: '84px' }}
+            fontSize={{ base: '34px', sm: '46px', md: '74px', lg: '82px' }}
             fontWeight="800"
             letterSpacing="-0.025em"
-            lineHeight="0.88"
+            lineHeight={{ base: '1.04', md: '0.88' }}
+            wordBreak="break-word"
             textTransform="uppercase"
           >
             {project.name}
           </Box>
 
-          <Text color="accent" fontFamily="mono" fontSize="10px" letterSpacing="0.07em" mt={6} textTransform="uppercase">
+          <Text color="accent" fontFamily="mono" fontSize="11px" letterSpacing="0.08em" mt={5} textTransform="uppercase">
             {t(`projects.${project.id}.role`, project.role ?? '')}
           </Text>
           <Text color="text.secondary" fontSize={{ base: '16px', md: '18px' }} lineHeight="1.65" mt={5}>
             {t(`projects.${project.id}.description`, project.description)}
           </Text>
 
-          <Grid templateColumns={{ base: '1fr', sm: '112px 1fr' }} gap={{ base: 3, sm: 6 }} mt={9} pt={7} borderTop="1px solid" borderColor="line">
+          {/* Ownership & Impact Card */}
+          <Grid templateColumns={{ base: '1fr', sm: '112px 1fr' }} gap={{ base: 3, sm: 6 }} mt={8} pt={7} borderTop="1px solid" borderColor="line">
             <Text color="text.muted" fontFamily="mono" fontSize="9px" letterSpacing="0.08em" textTransform="uppercase">
               {t('project.ownership')}
             </Text>
@@ -80,13 +143,14 @@ const ProjectCard: React.FC<ProjectCardProps> = ({ project, index }) => {
             </Text>
           </Grid>
 
+          {/* Engineering Highlights */}
           {features.length ? (
             <Grid templateColumns={{ base: '1fr', sm: '112px 1fr' }} gap={{ base: 3, sm: 6 }} mt={7}>
               <Text color="text.muted" fontFamily="mono" fontSize="9px" letterSpacing="0.08em" textTransform="uppercase">
                 {t('project.engineering')}
               </Text>
-              <VStack align="stretch" spacing={2}>
-                {features.slice(0, 3).map((feature) => (
+              <VStack align="stretch" spacing={2.5}>
+                {features.map((feature) => (
                   <Text key={feature} color="text.secondary" fontSize="13px" lineHeight="1.5">
                     — {feature}
                   </Text>
@@ -95,33 +159,58 @@ const ProjectCard: React.FC<ProjectCardProps> = ({ project, index }) => {
             </Grid>
           ) : null}
 
-          <Box mt={9} pt={7} borderTop="1px solid" borderColor="line">
+          {/* Architecture & Tech Stack */}
+          <Box mt={8} pt={7} borderTop="1px solid" borderColor="line">
             <Text color="text.muted" fontFamily="mono" fontSize="9px" letterSpacing="0.08em" mb={3} textTransform="uppercase">
               {t('project.stack')}
             </Text>
-            <Text color="text.primary" fontFamily="mono" fontSize="10px" lineHeight="1.8" letterSpacing="0.03em">
-              {project.techStack?.join(' / ')}
-            </Text>
+            <Flex wrap="wrap" gap={2}>
+              {project.techStack?.map((tech) => (
+                <Box
+                  key={tech}
+                  px={2.5}
+                  py={1}
+                  bg="rgba(255, 255, 255, 0.04)"
+                  border="1px solid"
+                  borderColor="line"
+                  borderRadius="sm"
+                  fontFamily="mono"
+                  fontSize="10px"
+                  letterSpacing="0.03em"
+                  color="text.primary"
+                >
+                  {tech}
+                </Box>
+              ))}
+            </Flex>
           </Box>
 
-          <HStack spacing={5} mt={8} flexWrap="wrap">
+          {/* Store & Repository Badges */}
+          <HStack spacing={3} mt={8} flexWrap="wrap">
             {project.playStoreLink ? (
               <Button
                 as={Link}
                 href={project.playStoreLink}
                 isExternal
-                variant="unstyled"
-                h="auto"
+                h="40px"
+                px={4}
+                bg="transparent"
+                border="1px solid"
+                borderColor="line"
+                borderRadius="md"
                 color="text.primary"
                 fontFamily="mono"
-                fontSize="10px"
-                borderBottom="1px solid"
-                borderColor="accent"
-                borderRadius={0}
-                pb={1}
-                _hover={{ color: 'accent', textDecoration: 'none' }}
+                fontSize="11px"
+                letterSpacing="0.04em"
+                leftIcon={<FaGooglePlay size={13} color="#4ade80" />}
+                _hover={{
+                  borderColor: 'accent',
+                  color: 'accent',
+                  textDecoration: 'none',
+                  bg: 'rgba(255, 255, 255, 0.03)',
+                }}
               >
-                {t('project.googlePlay').toUpperCase()}
+                GOOGLE PLAY
               </Button>
             ) : null}
             {project.appStoreLink ? (
@@ -129,18 +218,25 @@ const ProjectCard: React.FC<ProjectCardProps> = ({ project, index }) => {
                 as={Link}
                 href={project.appStoreLink}
                 isExternal
-                variant="unstyled"
-                h="auto"
+                h="40px"
+                px={4}
+                bg="transparent"
+                border="1px solid"
+                borderColor="line"
+                borderRadius="md"
                 color="text.primary"
                 fontFamily="mono"
-                fontSize="10px"
-                borderBottom="1px solid"
-                borderColor="accent"
-                borderRadius={0}
-                pb={1}
-                _hover={{ color: 'accent', textDecoration: 'none' }}
+                fontSize="11px"
+                letterSpacing="0.04em"
+                leftIcon={<FaApple size={15} />}
+                _hover={{
+                  borderColor: 'accent',
+                  color: 'accent',
+                  textDecoration: 'none',
+                  bg: 'rgba(255, 255, 255, 0.03)',
+                }}
               >
-                {t('project.appStore').toUpperCase()}
+                APP STORE
               </Button>
             ) : null}
             {project.githubLink ? (
@@ -148,116 +244,358 @@ const ProjectCard: React.FC<ProjectCardProps> = ({ project, index }) => {
                 as={Link}
                 href={project.githubLink}
                 isExternal
-                variant="unstyled"
-                h="auto"
+                h="40px"
+                px={4}
+                bg="transparent"
+                border="1px solid"
+                borderColor="line"
+                borderRadius="md"
                 color="text.primary"
                 fontFamily="mono"
-                fontSize="10px"
-                borderBottom="1px solid"
-                borderColor="accent"
-                borderRadius={0}
-                pb={1}
-                _hover={{ color: 'accent', textDecoration: 'none' }}
+                fontSize="11px"
+                letterSpacing="0.04em"
+                leftIcon={<FaGithub size={14} />}
+                _hover={{
+                  borderColor: 'accent',
+                  color: 'accent',
+                  textDecoration: 'none',
+                  bg: 'rgba(255, 255, 255, 0.03)',
+                }}
               >
-                {t('project.github').toUpperCase()}
+                SOURCE CODE
               </Button>
             ) : null}
           </HStack>
         </GridItem>
 
+        {/* Right Column: Interactive Mobile Device Stage */}
         <GridItem minW={0}>
           <Box
             position="relative"
-            h={{ base: '520px', md: '680px', lg: '760px' }}
+            h={{ base: '580px', sm: '640px', md: '720px', lg: '780px' }}
             bg={tone.background}
             color={tone.foreground}
             overflow="hidden"
             border="1px solid"
-            borderColor={index === 1 ? 'accent.soft' : 'line'}
+            borderColor={tone.border}
+            borderRadius="sm"
+            display="flex"
+            flexDirection="column"
+            justifyContent="space-between"
+            p={{ base: 4, sm: 6, md: 8 }}
           >
+            {/* Top Stage Bar: Telemetry & Inspect CTA */}
+            <Flex justify="space-between" align="center" zIndex={4} w="full">
+              <Text
+                color={tone.accent}
+                fontFamily="mono"
+                fontSize="9px"
+                letterSpacing="0.1em"
+                textTransform="uppercase"
+                fontWeight="500"
+              >
+                {project.metrics?.toUpperCase()}
+              </Text>
+              <Button
+                size="xs"
+                variant="unstyled"
+                display="inline-flex"
+                alignItems="center"
+                gap={1.5}
+                color="text.muted"
+                fontFamily="mono"
+                fontSize="9px"
+                letterSpacing="0.08em"
+                px={2.5}
+                py={1}
+                border="1px solid"
+                borderColor="rgba(255, 255, 255, 0.12)"
+                borderRadius="full"
+                _hover={{ color: tone.accent, borderColor: tone.accent, bg: 'rgba(255, 255, 255, 0.04)' }}
+                onClick={() => setIsLightboxOpen(true)}
+              >
+                <FiMaximize2 size={11} />
+                <span>INSPECT</span>
+              </Button>
+            </Flex>
+
+            {/* Giant Background Watermark Number */}
             <Text
               position="absolute"
-              top={5}
-              left={5}
-              zIndex={3}
-              color={tone.foreground}
-              fontFamily="mono"
-              fontSize="9px"
-              letterSpacing="0.09em"
-            >
-              {project.metrics?.toUpperCase()}
-            </Text>
-            <Text
-              position="absolute"
-              right="-8px"
-              bottom="-26px"
+              right="-10px"
+              bottom="-30px"
               color={tone.accent}
-              opacity={index === 2 ? 0.32 : 0.16}
+              opacity={0.12}
               fontFamily="heading"
-              fontSize={{ base: '160px', md: '230px' }}
+              fontSize={{ base: '120px', sm: '160px', md: '230px' }}
               fontWeight="900"
               letterSpacing="-0.05em"
-              lineHeight="0.72"
+              lineHeight="0.8"
+              pointerEvents="none"
+              userSelect="none"
+              zIndex={1}
             >
               {projectNumber}
             </Text>
 
-            <Flex
-              position="absolute"
-              inset={{ base: '62px 18px 30px', md: '76px 42px 42px' }}
-              align="center"
-              justify="center"
-              gap={{ base: 3, md: 5 }}
-              onMouseLeave={() => setActiveScreen(null)}
-            >
-              {images.map((image, imageIndex) => {
-                const isHovered = activeScreen === imageIndex;
-                const isSiblingHovered = activeScreen !== null && !isHovered;
-
-                return (
-                  <Image
-                    key={`${image.src}-${imageIndex}`}
-                    src={image.src}
-                    srcSet={image.srcSet}
-                    sizes={image.sizes}
-                    alt={image.alt ?? `${project.name} mobile interface`}
-                    w={images.length === 1 ? '72%' : images.length === 2 ? '46%' : '31%'}
-                    maxH={imageIndex === 0 ? '92%' : '82%'}
-                    objectFit="contain"
-                    zIndex={isHovered ? 4 : 1}
-                    opacity={isSiblingHovered ? 0.55 : 1}
-                    filter={
-                      isHovered
-                        ? 'drop-shadow(0 28px 48px rgba(0, 0, 0, 0.65)) brightness(1.08)'
-                        : isSiblingHovered
-                        ? 'drop-shadow(0 12px 20px rgba(0, 0, 0, 0.25)) brightness(0.85)'
-                        : 'drop-shadow(0 20px 36px rgba(0, 0, 0, 0.42))'
-                    }
-                    animation={
-                      activeScreen !== null
-                        ? 'none'
-                        : `editorial-float ${6.2 + imageIndex * 0.8}s ease-in-out ${imageIndex * -1.1}s infinite`
-                    }
-                    style={{
-                      transform: isHovered
-                        ? 'scale(1.05) translate3d(0, -8px, 0)'
-                        : isSiblingHovered
-                        ? 'scale(0.97)'
-                        : undefined,
-                      transition:
-                        'transform 260ms cubic-bezier(0.16, 1, 0.3, 1), opacity 240ms ease, filter 240ms ease',
-                    }}
-                    willChange="transform, filter, opacity"
-                    cursor="default"
-                    onMouseEnter={() => setActiveScreen(imageIndex)}
-                  />
-                );
-              })}
+            {/* Centered Showcase Viewport (Contain display with scoped touch swipe) */}
+            <Flex flex="1" align="center" justify="center" position="relative" zIndex={2} my={2} minH={0}>
+              <motion.div
+                drag={images.length > 1 ? 'x' : false}
+                dragConstraints={{ left: 0, right: 0 }}
+                dragElastic={0.16}
+                onDragStart={handleDragStart}
+                onDrag={handleDrag}
+                onDragEnd={handleDragEnd}
+                onClick={handlePreviewClick}
+                style={{
+                  touchAction: 'pan-y',
+                  cursor: images.length > 1 ? 'grab' : 'pointer',
+                  height: '100%',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                }}
+                whileTap={{ cursor: images.length > 1 ? 'grabbing' : 'pointer' }}
+                role="button"
+                tabIndex={0}
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter' || e.key === ' ') {
+                    e.preventDefault();
+                    setIsLightboxOpen(true);
+                  }
+                }}
+                aria-label={`Inspect ${currentImage?.alt ?? project.name} in fullscreen lightbox, or swipe horizontally to change screen`}
+              >
+                <Box
+                  position="relative"
+                  maxH="full"
+                  h={{ base: '420px', sm: '470px', md: '520px', lg: '570px' }}
+                  aspectRatio="1290 / 2796"
+                  borderRadius={{ base: '18px', md: '24px' }}
+                  overflow="hidden"
+                  boxShadow="0 24px 60px -12px rgba(0, 0, 0, 0.85), 0 0 0 1px rgba(255, 255, 255, 0.12)"
+                  transition="transform 280ms cubic-bezier(0.16, 1, 0.3, 1), box-shadow 280ms ease"
+                  _hover={{
+                    transform: 'translateY(-6px)',
+                    boxShadow: `0 36px 72px -12px rgba(0, 0, 0, 0.95), 0 0 0 1px ${tone.accent}`,
+                  }}
+                >
+                  {currentImage ? (
+                    <Image
+                      key={currentImage.src}
+                      src={currentImage.src}
+                      srcSet={currentImage.srcSet}
+                      sizes={currentImage.sizes}
+                      alt={currentImage.alt ?? `${project.name} screen ${activeScreenIndex + 1}`}
+                      w="full"
+                      h="full"
+                      objectFit="contain"
+                      objectPosition="center"
+                      loading="lazy"
+                      draggable={false}
+                      userSelect="none"
+                      pointerEvents="none"
+                    />
+                  ) : null}
+                </Box>
+              </motion.div>
             </Flex>
+
+            {/* Bottom Flow Stepper Bar */}
+            {images.length > 1 ? (
+              <Flex
+                position="relative"
+                zIndex={4}
+                align="center"
+                justify="center"
+                gap={2}
+                py={2}
+                flexWrap="wrap"
+              >
+                <IconButton
+                  aria-label="Previous screen"
+                  icon={<FiChevronLeft size={14} />}
+                  size="xs"
+                  variant="unstyled"
+                  display="inline-flex"
+                  alignItems="center"
+                  justifyContent="center"
+                  w="28px"
+                  h="28px"
+                  color="text.muted"
+                  border="1px solid"
+                  borderColor="rgba(255, 255, 255, 0.12)"
+                  borderRadius="full"
+                  _hover={{ color: tone.accent, borderColor: tone.accent, bg: 'rgba(255, 255, 255, 0.05)' }}
+                  onClick={handlePrevScreen}
+                />
+                <HStack spacing={1.5}>
+                  {images.map((_, i) => (
+                    <Button
+                      key={i}
+                      size="xs"
+                      variant="unstyled"
+                      display="inline-flex"
+                      alignItems="center"
+                      justifyContent="center"
+                      px={2.5}
+                      h="26px"
+                      fontFamily="mono"
+                      fontSize="9px"
+                      letterSpacing="0.06em"
+                      borderRadius="full"
+                      bg={activeScreenIndex === i ? tone.accent : 'rgba(255, 255, 255, 0.06)'}
+                      color={activeScreenIndex === i ? '#000000' : 'text.muted'}
+                      fontWeight={activeScreenIndex === i ? '700' : '400'}
+                      _hover={{
+                        bg: activeScreenIndex === i ? tone.accent : 'rgba(255, 255, 255, 0.12)',
+                        color: activeScreenIndex === i ? '#000000' : 'text.primary',
+                      }}
+                      onClick={() => setActiveScreenIndex(i)}
+                    >
+                      {String(i + 1).padStart(2, '0')}
+                    </Button>
+                  ))}
+                </HStack>
+                <IconButton
+                  aria-label="Next screen"
+                  icon={<FiChevronRight size={14} />}
+                  size="xs"
+                  variant="unstyled"
+                  display="inline-flex"
+                  alignItems="center"
+                  justifyContent="center"
+                  w="28px"
+                  h="28px"
+                  color="text.muted"
+                  border="1px solid"
+                  borderColor="rgba(255, 255, 255, 0.12)"
+                  borderRadius="full"
+                  _hover={{ color: tone.accent, borderColor: tone.accent, bg: 'rgba(255, 255, 255, 0.05)' }}
+                  onClick={handleNextScreen}
+                />
+              </Flex>
+            ) : (
+              <Box h="28px" />
+            )}
           </Box>
         </GridItem>
       </Grid>
+
+      {/* Fullscreen Lightbox Modal */}
+      {isLightboxOpen && currentImage ? (
+        <Portal>
+          <Box
+            position="fixed"
+            inset={0}
+            zIndex={2000}
+            bg="rgba(0, 0, 0, 0.94)"
+            backdropFilter="blur(18px)"
+            display="flex"
+            flexDirection="column"
+            justifyContent="space-between"
+            p={{ base: 4, md: 8 }}
+            onClick={() => setIsLightboxOpen(false)}
+          >
+            {/* Lightbox Header */}
+            <Flex justify="space-between" align="center" w="full" onClick={(e) => e.stopPropagation()}>
+              <HStack spacing={3}>
+                <Text color="accent" fontFamily="mono" fontSize="12px" letterSpacing="0.08em" textTransform="uppercase">
+                  {project.name}
+                </Text>
+                <Text color="text.muted" fontFamily="mono" fontSize="11px">
+                  / Screen {activeScreenIndex + 1} of {images.length}
+                </Text>
+              </HStack>
+              <IconButton
+                aria-label="Close Lightbox"
+                icon={<FiX size={20} />}
+                variant="unstyled"
+                color="text.primary"
+                display="inline-flex"
+                alignItems="center"
+                justifyContent="center"
+                w="40px"
+                h="40px"
+                borderRadius="full"
+                border="1px solid"
+                borderColor="rgba(255, 255, 255, 0.16)"
+                _hover={{ color: 'accent', borderColor: 'accent', bg: 'rgba(255, 255, 255, 0.05)' }}
+                onClick={() => setIsLightboxOpen(false)}
+              />
+            </Flex>
+
+            {/* Lightbox Main Stage with Chevrons */}
+            <Flex flex="1" align="center" justify="center" position="relative" my={4} onClick={(e) => e.stopPropagation()}>
+              {images.length > 1 ? (
+                <IconButton
+                  aria-label="Previous screen"
+                  icon={<FiChevronLeft size={24} />}
+                  position="absolute"
+                  left={{ base: 0, md: 4 }}
+                  zIndex={10}
+                  variant="unstyled"
+                  display="inline-flex"
+                  alignItems="center"
+                  justifyContent="center"
+                  w="48px"
+                  h="48px"
+                  color="text.primary"
+                  border="1px solid"
+                  borderColor="rgba(255, 255, 255, 0.18)"
+                  borderRadius="full"
+                  bg="rgba(0, 0, 0, 0.6)"
+                  _hover={{ color: 'accent', borderColor: 'accent', bg: 'rgba(0, 0, 0, 0.85)' }}
+                  onClick={handlePrevScreen}
+                />
+              ) : null}
+
+              <Image
+                src={currentImage.src}
+                alt={currentImage.alt ?? `${project.name} full screenshot`}
+                maxH="82vh"
+                maxW="88vw"
+                objectFit="contain"
+                borderRadius="lg"
+                boxShadow="0 32px 80px rgba(0, 0, 0, 0.95)"
+              />
+
+              {images.length > 1 ? (
+                <IconButton
+                  aria-label="Next screen"
+                  icon={<FiChevronRight size={24} />}
+                  position="absolute"
+                  right={{ base: 0, md: 4 }}
+                  zIndex={10}
+                  variant="unstyled"
+                  display="inline-flex"
+                  alignItems="center"
+                  justifyContent="center"
+                  w="48px"
+                  h="48px"
+                  color="text.primary"
+                  border="1px solid"
+                  borderColor="rgba(255, 255, 255, 0.18)"
+                  borderRadius="full"
+                  bg="rgba(0, 0, 0, 0.6)"
+                  _hover={{ color: 'accent', borderColor: 'accent', bg: 'rgba(0, 0, 0, 0.85)' }}
+                  onClick={handleNextScreen}
+                />
+              ) : null}
+            </Flex>
+
+            {/* Lightbox Caption */}
+            <Box textAlign="center" onClick={(e) => e.stopPropagation()}>
+              <Text color="text.secondary" fontFamily="mono" fontSize="12px" letterSpacing="0.04em">
+                {currentImage.alt}
+              </Text>
+            </Box>
+          </Box>
+        </Portal>
+      ) : null}
     </Box>
   );
 };
+
 export default ProjectCard;
