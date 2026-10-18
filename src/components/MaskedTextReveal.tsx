@@ -60,7 +60,7 @@ export const MaskedTextReveal: React.FC<MaskedTextRevealProps> = ({
       {/* Visual Staggered Lines */}
       <Box as="span" display="block" aria-hidden="true">
         {lines.map((line, idx) => (
-          <Box as="span" key={line} overflow="hidden" display="block" lineHeight="0.82" py="1px">
+          <Box as="span" key={line} overflow="hidden" display="block" lineHeight={{ base: '1.02', md: '0.84' }} py={{ base: '3px', md: '1px' }}>
             <Box
               as="span"
               display="block"

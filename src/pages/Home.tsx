@@ -159,9 +159,9 @@ export const Home: React.FC<HomeProps> = ({ scrollToPortfolio }) => {
               m={0}
               color="text.primary"
               fontFamily="heading"
-              fontSize={{ base: '64px', sm: '82px', md: '112px', lg: '100px', xl: '128px' }}
+              fontSize={{ base: '44px', sm: '60px', md: '92px', lg: '104px', xl: '128px' }}
               fontWeight="800"
-              lineHeight="0.78"
+              lineHeight={{ base: '1.02', md: '0.84', xl: '0.78' }}
               letterSpacing="-0.035em"
               textTransform="uppercase"
             >
@@ -254,12 +254,12 @@ export const Home: React.FC<HomeProps> = ({ scrollToPortfolio }) => {
               <Text
                 position="absolute"
                 left={{ base: '4%', sm: '4%' }}
-                bottom="-18px"
+                bottom={{ base: '-6px', sm: '-18px' }}
                 color="rgba(241, 239, 233, 0.12)"
                 fontFamily="heading"
-                fontSize={{ base: '64px', sm: '120px' }}
+                fontSize={{ base: '48px', sm: '96px', md: '120px' }}
                 fontWeight="900"
-                lineHeight="0.78"
+                lineHeight="1"
                 letterSpacing="-0.04em"
                 textTransform="uppercase"
                 whiteSpace="nowrap"
@@ -363,9 +363,10 @@ export const Home: React.FC<HomeProps> = ({ scrollToPortfolio }) => {
               <Text
                 color={index === 3 ? 'text.primary' : 'accent'}
                 fontFamily="heading"
-                fontSize={{ base: '28px', md: '38px' }}
+                fontSize={{ base: '22px', sm: '28px', md: '38px' }}
                 fontWeight="700"
-                lineHeight="1"
+                lineHeight="1.1"
+                whiteSpace="nowrap"
               >
                 <MetricCounter value={item.value} isVisible={proofVisible} />
               </Text>

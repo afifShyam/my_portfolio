@@ -1,10 +1,22 @@
-import { Box, Container, Grid, GridItem, Text, VStack } from '@chakra-ui/react';
+import { Box, Container, Flex, Grid, GridItem, Text, VStack } from '@chakra-ui/react';
 import { useLocale } from '../localization';
 
 const EXPERIENCE = [
-  { key: 'experience.1', company: 'Radiant GlobalTech Sdn. Bhd.' },
-  { key: 'experience.2', company: 'Coinyex Co. Ltd.' },
-  { key: 'experience.3', company: 'RF Infinite Sdn. Bhd.' },
+  {
+    key: 'experience.1',
+    company: 'Radiant GlobalTech Sdn. Bhd.',
+    stack: ['Flutter', 'Dart', 'BLoC', 'Clean Architecture', 'C# (.NET)', 'Azure DevOps'],
+  },
+  {
+    key: 'experience.2',
+    company: 'Coinyex Co. Ltd.',
+    stack: ['Flutter', 'Riverpod', 'Clean Architecture', 'REST APIs', '20+ Releases'],
+  },
+  {
+    key: 'experience.3',
+    company: 'RF Infinite Sdn. Bhd.',
+    stack: ['Flutter', 'Dart', 'BLoC', 'Figma Delivery', 'RESTful APIs'],
+  },
 ];
 
 const CAPABILITIES = ['capability.1', 'capability.2', 'capability.3', 'capability.4'];
@@ -24,10 +36,10 @@ export const About: React.FC = () => {
               as="h2"
               m={0}
               fontFamily="heading"
-              fontSize={{ base: '58px', md: '82px', lg: '104px' }}
+              fontSize={{ base: '38px', sm: '52px', md: '82px', lg: '104px' }}
               fontWeight="800"
-              letterSpacing="-0.035em"
-              lineHeight="0.86"
+              letterSpacing="-0.03em"
+              lineHeight={{ base: '1.04', md: '0.86' }}
               textTransform="uppercase"
             >
               {t('about.heading.1')}
@@ -64,6 +76,27 @@ export const About: React.FC = () => {
                 <Text color="band.muted" fontSize="13px" mt={2}>
                   {item.company}
                 </Text>
+                {item.stack ? (
+                  <Flex wrap="wrap" gap={1.5} mt={3}>
+                    {item.stack.map((tech) => (
+                      <Box
+                        key={tech}
+                        px={2}
+                        py={0.5}
+                        bg="rgba(255, 255, 255, 0.05)"
+                        border="1px solid"
+                        borderColor="band.line"
+                        borderRadius="sm"
+                        fontFamily="mono"
+                        fontSize="9px"
+                        letterSpacing="0.04em"
+                        color="band.accent"
+                      >
+                        {tech}
+                      </Box>
+                    ))}
+                  </Flex>
+                ) : null}
               </GridItem>
               <GridItem>
                 <VStack align="stretch" spacing={4}>

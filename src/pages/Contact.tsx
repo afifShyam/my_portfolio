@@ -138,10 +138,10 @@ export const Contact: React.FC = () => {
                 as="h2"
                 m={0}
                 fontFamily="heading"
-                fontSize={{ base: '56px', sm: '76px', md: '96px', xl: '116px' }}
+                fontSize={{ base: '38px', sm: '54px', md: '82px', xl: '116px' }}
                 fontWeight="800"
-                letterSpacing="-0.04em"
-                lineHeight="0.82"
+                letterSpacing="-0.03em"
+                lineHeight={{ base: '1.04', md: '0.84' }}
                 textTransform="uppercase"
               >
                 {t('contact.heading.1')}
