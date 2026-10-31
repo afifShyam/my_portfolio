@@ -25,7 +25,13 @@ export const RollingLabel: React.FC<RollingLabelProps> = ({ children, className 
       lineHeight="1.15"
       verticalAlign="middle"
       sx={{
-        '@media (hover: hover)': {
+        '& .rolling-primary': {
+          display: 'block',
+        },
+        '& .rolling-clone': {
+          display: 'none',
+        },
+        '@media (hover: hover) and (pointer: fine)': {
           '& .rolling-primary': {
             display: 'block',
             transition: 'transform 220ms cubic-bezier(0.16, 1, 0.3, 1), opacity 180ms ease',
@@ -40,7 +46,7 @@ export const RollingLabel: React.FC<RollingLabelProps> = ({ children, className 
             opacity: 0.85,
             transition: 'transform 220ms cubic-bezier(0.16, 1, 0.3, 1), opacity 180ms ease',
           },
-          '*:hover > &, *:focus-visible > &': {
+          '*:hover > &, *:focus-visible > &, &:hover': {
             '& .rolling-primary': {
               transform: 'translate3d(0, -100%, 0)',
               opacity: 0,
