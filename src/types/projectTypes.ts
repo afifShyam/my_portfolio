@@ -17,6 +17,10 @@ export interface Project {
   metrics?: string;
   features?: string[];
   impact?: string;
+  architecture?: string;
+  stateManagement?: string;
+  delivery?: string;
+  screenLabels?: string[];
   demoUrl?: string;
   repoUrl?: string;
   image?: ProjectImageSource;

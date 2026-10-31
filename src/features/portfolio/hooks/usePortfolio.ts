@@ -35,6 +35,10 @@ export const mockProjects: Project[] = [
       '20+ Google Play & Apple App Store releases',
     ],
     impact: 'Optimized UI rendering and transaction flows, improving performance and user experience by 10–20%.',
+    architecture: 'Clean Architecture',
+    stateManagement: 'Riverpod (Migrated from Provider)',
+    delivery: '20+ Google Play & Apple App Store releases',
+    screenLabels: ['Overview', 'Multi-Token', 'P2P Transfer', 'Token Swap'],
     image: tuxcAppStore,
     images: [
       { src: tuxcAppStore, alt: 'TuxC Wallet Overview' },
@@ -62,6 +66,8 @@ export const mockProjects: Project[] = [
       'Contributed to notification-related backend functionality in C# (.NET)',
     ],
     impact: 'Enhanced field technician operational speed with reliable real-time ticketing workflows and push alerts.',
+    delivery: 'Google Play & Apple App Store releases',
+    screenLabels: ['Tickets & Priority', 'Multi-Store Home', 'Ticket Details'],
     image: smsTicketsImage,
     images: [
       { src: smsTicketsImage, alt: 'SMS Ticket Management & Priority Screen' },
@@ -88,6 +94,10 @@ export const mockProjects: Project[] = [
       'UI/UX redesign implemented directly from Figma designs',
     ],
     impact: 'Sole mobile developer responsible for end-to-end Flutter development, performance optimization, and deployment workflows.',
+    architecture: 'Clean Architecture (Native Flutter migration)',
+    stateManagement: 'BLoC',
+    delivery: 'Automated TestFlight & Firebase App Distribution CI/CD',
+    screenLabels: ['B2B Dashboard', 'Multi-Vendor Invoicing'],
     image: sigmaHomeImage,
     images: [
       { src: sigmaHomeImage, alt: 'Sigma B2B Procurement Dashboard & Workflow Counts' },
@@ -112,6 +122,10 @@ export const mockProjects: Project[] = [
     ],
     impact:
       'Engineered an offline-resilient, role-aware incident lifecycle app with real-time SLA tracking, multi-facet DevExtreme filtering, and secure multi-tenant access control for retail store operations.',
+    architecture: 'Clean Architecture',
+    stateManagement: 'BLoC',
+    delivery: 'Google Play Store release',
+    screenLabels: ['Incident KPIs', 'SLA Tracking', 'Activity Timeline', 'Document Previews', 'Real-Time Alerts'],
     image: rgSmsCommercialDashboard,
     images: [
       { src: rgSmsCommercialDashboard, alt: 'RG SMS Real-Time Incident Dashboard & KPIs' },
