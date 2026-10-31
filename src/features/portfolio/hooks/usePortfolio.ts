@@ -69,6 +69,7 @@ export const mockProjects: Project[] = [
       { src: smsDetailImage, alt: 'SMS Ticket Details & Actions' },
     ],
     playStoreLink: 'https://play.google.com/store/apps/details?id=my.com.rgtech.fmsms.v2&hl=en',
+    appStoreLink: 'https://apps.apple.com/my/app/fm-sms-v2/id6805704140',
     techStack: ['Flutter', 'Dart', 'RESTful APIs', 'C# (.NET)', 'Push Notifications', 'Figma'],
   },
   {
@@ -119,6 +120,7 @@ export const mockProjects: Project[] = [
       { src: rgSmsCommercialDocuments, alt: 'RG SMS Inspection & Document Previews' },
       { src: rgSmsCommercialAlerts, alt: 'RG SMS Real-Time Push Alerts' },
     ],
+    playStoreLink: 'https://play.google.com/store/apps/details?id=com.rgtech.sms&hl=en',
     techStack: ['Flutter', 'Dart', 'BLoC', 'Dio', 'Clean Architecture', 'DevExtreme API', 'Secure Storage'],
   },
   {
