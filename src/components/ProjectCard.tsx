@@ -133,20 +133,74 @@ const ProjectCard: React.FC<ProjectCardProps> = ({ project, index }) => {
             {t(`projects.${project.id}.description`, project.description)}
           </Text>
 
-          {/* Ownership & Impact Card */}
-          <Grid templateColumns={{ base: '1fr', sm: '112px 1fr' }} gap={{ base: 3, sm: 6 }} mt={8} pt={7} borderTop="1px solid" borderColor="line">
-            <Text color="text.muted" fontFamily="mono" fontSize="9px" letterSpacing="0.08em" textTransform="uppercase">
-              {t('project.ownership')}
+          {/* Engineering Specification Grid */}
+          <Box mt={7} pt={6} borderTop="1px solid" borderColor="line">
+            <Text color="accent" fontFamily="mono" fontSize="10px" letterSpacing="0.1em" mb={4} textTransform="uppercase" fontWeight="600">
+              // {t('project.spec')}
             </Text>
-            <Text color="text.primary" fontSize="14px" lineHeight="1.6">
-              {t(`projects.${project.id}.impact`, project.impact ?? '')}
-            </Text>
-          </Grid>
+
+            <VStack align="stretch" spacing={3}>
+              {project.role ? (
+                <Grid templateColumns={{ base: '1fr', sm: '124px 1fr' }} gap={2} alignItems="baseline">
+                  <Text color="text.muted" fontFamily="mono" fontSize="9px" letterSpacing="0.08em" textTransform="uppercase">
+                    {t('project.roleLabel')}
+                  </Text>
+                  <Text color="text.primary" fontFamily="mono" fontSize="11px" fontWeight="600">
+                    {t(`projects.${project.id}.role`, project.role)}
+                  </Text>
+                </Grid>
+              ) : null}
+
+              {project.architecture ? (
+                <Grid templateColumns={{ base: '1fr', sm: '124px 1fr' }} gap={2} alignItems="baseline">
+                  <Text color="text.muted" fontFamily="mono" fontSize="9px" letterSpacing="0.08em" textTransform="uppercase">
+                    {t('project.architectureLabel')}
+                  </Text>
+                  <Text color="text.primary" fontFamily="mono" fontSize="11px">
+                    {project.architecture}
+                  </Text>
+                </Grid>
+              ) : null}
+
+              {project.stateManagement ? (
+                <Grid templateColumns={{ base: '1fr', sm: '124px 1fr' }} gap={2} alignItems="baseline">
+                  <Text color="text.muted" fontFamily="mono" fontSize="9px" letterSpacing="0.08em" textTransform="uppercase">
+                    {t('project.stateLabel')}
+                  </Text>
+                  <Text color="text.primary" fontFamily="mono" fontSize="11px">
+                    {project.stateManagement}
+                  </Text>
+                </Grid>
+              ) : null}
+
+              {project.impact ? (
+                <Grid templateColumns={{ base: '1fr', sm: '124px 1fr' }} gap={2} alignItems="baseline">
+                  <Text color="text.muted" fontFamily="mono" fontSize="9px" letterSpacing="0.08em" textTransform="uppercase">
+                    {t('project.impactLabel')}
+                  </Text>
+                  <Text color="text.primary" fontSize="13px" lineHeight="1.5">
+                    {t(`projects.${project.id}.impact`, project.impact)}
+                  </Text>
+                </Grid>
+              ) : null}
+
+              {project.delivery ? (
+                <Grid templateColumns={{ base: '1fr', sm: '124px 1fr' }} gap={2} alignItems="baseline">
+                  <Text color="text.muted" fontFamily="mono" fontSize="9px" letterSpacing="0.08em" textTransform="uppercase">
+                    {t('project.deliveryLabel')}
+                  </Text>
+                  <Text color="text.primary" fontFamily="mono" fontSize="11px">
+                    {project.delivery}
+                  </Text>
+                </Grid>
+              ) : null}
+            </VStack>
+          </Box>
 
           {/* Engineering Highlights */}
           {features.length ? (
-            <Grid templateColumns={{ base: '1fr', sm: '112px 1fr' }} gap={{ base: 3, sm: 6 }} mt={7}>
-              <Text color="text.muted" fontFamily="mono" fontSize="9px" letterSpacing="0.08em" textTransform="uppercase">
+            <Box mt={7} pt={6} borderTop="1px solid" borderColor="line">
+              <Text color="text.muted" fontFamily="mono" fontSize="9px" letterSpacing="0.08em" mb={3} textTransform="uppercase">
                 {t('project.engineering')}
               </Text>
               <VStack align="stretch" spacing={2.5}>
@@ -156,7 +210,7 @@ const ProjectCard: React.FC<ProjectCardProps> = ({ project, index }) => {
                   </Text>
                 ))}
               </VStack>
-            </Grid>
+            </Box>
           ) : null}
 
           {/* Architecture & Tech Stack */}
@@ -372,32 +426,72 @@ const ProjectCard: React.FC<ProjectCardProps> = ({ project, index }) => {
                   maxH="full"
                   h={{ base: '420px', sm: '470px', md: '520px', lg: '570px' }}
                   aspectRatio="1290 / 2796"
-                  borderRadius={{ base: '18px', md: '24px' }}
-                  overflow="hidden"
-                  boxShadow="0 24px 60px -12px rgba(0, 0, 0, 0.85), 0 0 0 1px rgba(255, 255, 255, 0.12)"
-                  transition="transform 280ms cubic-bezier(0.16, 1, 0.3, 1), box-shadow 280ms ease"
+                  borderRadius={{ base: '26px', md: '34px' }}
+                  p={{ base: '6px', md: '8px' }}
+                  bg="rgba(0, 0, 0, 0.45)"
+                  border="2.5px solid rgba(255, 255, 255, 0.16)"
+                  boxShadow="0 24px 60px -12px rgba(0, 0, 0, 0.9), 0 0 0 1px rgba(255, 255, 255, 0.08)"
+                  transition="transform 280ms cubic-bezier(0.16, 1, 0.3, 1), box-shadow 280ms ease, border-color 280ms ease"
                   _hover={{
                     transform: 'translateY(-6px)',
-                    boxShadow: `0 36px 72px -12px rgba(0, 0, 0, 0.95), 0 0 0 1px ${tone.accent}`,
+                    borderColor: tone.accent,
+                    boxShadow: `0 36px 72px -12px rgba(0, 0, 0, 0.95), 0 0 20px -4px ${tone.accent}40`,
                   }}
                 >
-                  {currentImage ? (
-                    <Image
-                      key={currentImage.src}
-                      src={currentImage.src}
-                      srcSet={currentImage.srcSet}
-                      sizes={currentImage.sizes}
-                      alt={currentImage.alt ?? `${project.name} screen ${activeScreenIndex + 1}`}
-                      w="full"
-                      h="full"
-                      objectFit="contain"
-                      objectPosition="center"
-                      loading="lazy"
-                      draggable={false}
-                      userSelect="none"
-                      pointerEvents="none"
-                    />
-                  ) : null}
+                  {/* Native Dynamic Island Bar */}
+                  <Box
+                    position="absolute"
+                    top={{ base: '12px', md: '16px' }}
+                    left="50%"
+                    transform="translateX(-50%)"
+                    w={{ base: '56px', md: '72px' }}
+                    h={{ base: '14px', md: '17px' }}
+                    bg="rgba(0, 0, 0, 0.95)"
+                    borderRadius="full"
+                    border="1px solid rgba(255, 255, 255, 0.12)"
+                    zIndex={3}
+                    pointerEvents="none"
+                  />
+                  {/* Home Indicator Bar */}
+                  <Box
+                    position="absolute"
+                    bottom={{ base: '10px', md: '14px' }}
+                    left="50%"
+                    transform="translateX(-50%)"
+                    w={{ base: '70px', md: '96px' }}
+                    h="3.5px"
+                    bg="rgba(255, 255, 255, 0.45)"
+                    borderRadius="full"
+                    zIndex={3}
+                    pointerEvents="none"
+                  />
+
+                  {/* Rounded Inner Screen Surface */}
+                  <Box
+                    w="full"
+                    h="full"
+                    borderRadius={{ base: '20px', md: '26px' }}
+                    overflow="hidden"
+                    bg="#000000"
+                  >
+                    {currentImage ? (
+                      <Image
+                        key={currentImage.src}
+                        src={currentImage.src}
+                        srcSet={currentImage.srcSet}
+                        sizes={currentImage.sizes}
+                        alt={currentImage.alt ?? `${project.name} screen ${activeScreenIndex + 1}`}
+                        w="full"
+                        h="full"
+                        objectFit="contain"
+                        objectPosition="center"
+                        loading="lazy"
+                        draggable={false}
+                        userSelect="none"
+                        pointerEvents="none"
+                      />
+                    ) : null}
+                  </Box>
                 </Box>
               </motion.div>
             </Flex>
@@ -430,33 +524,46 @@ const ProjectCard: React.FC<ProjectCardProps> = ({ project, index }) => {
                   _hover={{ color: tone.accent, borderColor: tone.accent, bg: 'rgba(255, 255, 255, 0.05)' }}
                   onClick={handlePrevScreen}
                 />
-                <HStack spacing={1.5}>
-                  {images.map((_, i) => (
-                    <Button
-                      key={i}
-                      size="xs"
-                      variant="unstyled"
-                      display="inline-flex"
-                      alignItems="center"
-                      justifyContent="center"
-                      px={2.5}
-                      h="26px"
-                      fontFamily="mono"
-                      fontSize="9px"
-                      letterSpacing="0.06em"
-                      borderRadius="full"
-                      bg={activeScreenIndex === i ? tone.accent : 'rgba(255, 255, 255, 0.06)'}
-                      color={activeScreenIndex === i ? '#000000' : 'text.muted'}
-                      fontWeight={activeScreenIndex === i ? '700' : '400'}
-                      _hover={{
-                        bg: activeScreenIndex === i ? tone.accent : 'rgba(255, 255, 255, 0.12)',
-                        color: activeScreenIndex === i ? '#000000' : 'text.primary',
-                      }}
-                      onClick={() => setActiveScreenIndex(i)}
-                    >
-                      {String(i + 1).padStart(2, '0')}
-                    </Button>
-                  ))}
+                <HStack spacing={1.5} flexWrap="wrap" justify="center">
+                  {images.map((_, i) => {
+                    const label = project.screenLabels?.[i];
+                    const isActive = activeScreenIndex === i;
+                    return (
+                      <Button
+                        key={i}
+                        size="xs"
+                        variant="unstyled"
+                        display="inline-flex"
+                        alignItems="center"
+                        justifyContent="center"
+                        px={label ? 3 : 2.5}
+                        h="28px"
+                        fontFamily="mono"
+                        fontSize="9px"
+                        letterSpacing="0.05em"
+                        borderRadius="full"
+                        bg={isActive ? tone.accent : 'rgba(255, 255, 255, 0.06)'}
+                        color={isActive ? '#000000' : 'text.muted'}
+                        border="1px solid"
+                        borderColor={isActive ? tone.accent : 'rgba(255, 255, 255, 0.12)'}
+                        fontWeight={isActive ? '700' : '500'}
+                        _hover={{
+                          bg: isActive ? tone.accent : 'rgba(255, 255, 255, 0.12)',
+                          color: isActive ? '#000000' : 'text.primary',
+                        }}
+                        onClick={() => setActiveScreenIndex(i)}
+                      >
+                        {label ? (
+                          <>
+                            {isActive ? '● ' : ''}
+                            {label}
+                          </>
+                        ) : (
+                          String(i + 1).padStart(2, '0')
+                        )}
+                      </Button>
+                    );
+                  })}
                 </HStack>
                 <IconButton
                   aria-label="Next screen"
